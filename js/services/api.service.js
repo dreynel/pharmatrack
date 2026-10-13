@@ -12,8 +12,9 @@ class ApiService {
   determineBaseUrl() {
     if (window.API_BASE_URL) return window.API_BASE_URL;
     const path = window.location.pathname;
-    if (path.includes('/PharmaTrack')) {
-      return '/PharmaTrack/api';
+    const match = path.match(/^(\/[^/]+)/);
+    if (match && /pharmatrack/i.test(match[1])) {
+      return `${match[1]}/api`;
     }
     return '/api';
   }
@@ -42,16 +43,27 @@ class ApiService {
 
     try {
       const response = await fetch(url, config);
-      const data = await response.json();
+      let data = {};
+      try {
+        data = await response.json();
+      } catch (jsonErr) {
+        data = {};
+      }
 
       if (!response.ok) {
-        const errorMsg = data.message || `Request failed with status ${response.status}`;
+        // If 401, return authentication status object instead of breaking
+        if (response.status === 401) {
+          return { success: false, authenticated: false, user: null };
+        }
+        const errorMsg = data.error || data.message || `Request failed with status ${response.status}`;
         throw new Error(errorMsg);
       }
 
       return data;
     } catch (err) {
-      console.error(`API Error on [${options.method || 'GET'}] ${url}:`, err);
+      if (endpoint !== '/auth/me') {
+        console.error(`API Error on [${options.method || 'GET'}] ${url}:`, err);
+      }
       throw err;
     }
   }
