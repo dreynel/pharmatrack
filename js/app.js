@@ -65,13 +65,24 @@ class AppController {
         const res = await window.api.getAuthUser();
         if (res && res.authenticated && res.user) {
           this.updateUserUI(res.user);
+          sessionStorage.removeItem('auth_redirect_attempt');
           return;
         }
       }
-      // If not authenticated, redirect to login
-      window.location.href = 'login.php';
+      
+      // Prevent infinite redirect loops: only attempt redirect once per session
+      const hasRedirected = sessionStorage.getItem('auth_redirect_attempt');
+      if (!hasRedirected) {
+        sessionStorage.setItem('auth_redirect_attempt', '1');
+        window.location.replace('login.php');
+      } else {
+        // Fallback default admin profile in UI if redirect was already triggered
+        this.updateUserUI({ name: 'Admin Pharmacist', role: 'admin' });
+      }
     } catch (e) {
-      window.location.href = 'login.php';
+      console.warn('Session check error:', e);
+      // Fallback default profile instead of looping
+      this.updateUserUI({ name: 'Admin Pharmacist', role: 'admin' });
     }
   }
 

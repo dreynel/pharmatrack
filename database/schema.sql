@@ -711,7 +711,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Xyra Andrea (Admin)','admin@pharmatrack.com',NULL,'$2y$10$q8neY2yZenRbzHZc9tLsFutNG0jNjIVYLWNxOiHRPSvk45V/A6nXm','admin','ou7DM4VDyY3o90r7BQQBExwJGYYMlnhXWWdecIgfcz8ZCaz0kQEqc403Vgmk','2026-09-30 17:54:28','2026-09-30 17:54:28'),(2,'Xyra Andrea (Admin)','admin@pharmatrack.local',NULL,'$2y$12$l6wtyPdyyBJ4M63CHixN4OkkuqyjdSUvGfliUrLnubSHHRTUYFBb2','admin',NULL,'2026-09-30 17:54:28','2026-09-30 17:54:28'),(3,'Cashier Xyra','cashier@pharmatrack.local',NULL,'$2y$12$GJ2FxQy4zv2XJizrTMmWX.UZ9AooVxaIhqeWqmPJVErPyYLP6pkFa','cashier',NULL,'2026-09-30 17:54:28','2026-09-30 17:54:28'),(4,'Cashier Juan','cashier@pharmatrack.com',NULL,'$2y$10$1ssV1e4tf6N/.QfFaepi0uOylbvtIW4araUcl5moEQEEdonhQPaAm','cashier',NULL,'2026-10-13 00:45:43','2026-10-13 00:45:43');
+INSERT INTO `users` VALUES (1,'Xyra Andrea (Admin)','admin@pharmatrack.com',NULL,'$2y$10$2qBuQOrXa9qnf3SoQLEN9eruxgBQxQZYHzayDd7rG0wZHifMeONoi','admin','ou7DM4VDyY3o90r7BQQBExwJGYYMlnhXWWdecIgfcz8ZCaz0kQEqc403Vgmk','2026-09-30 17:54:28','2026-09-30 17:54:28'),(2,'Xyra Andrea (Admin)','admin@pharmatrack.local',NULL,'$2y$10$2qBuQOrXa9qnf3SoQLEN9eruxgBQxQZYHzayDd7rG0wZHifMeONoi','admin',NULL,'2026-09-30 17:54:28','2026-09-30 17:54:28'),(3,'Cashier Xyra','cashier@pharmatrack.local',NULL,'$2y$10$jkvO/wLk6AVtw95HQEtsteBqkxHi5E0cdscDBTDP9dfeqZeHbdlPC','cashier',NULL,'2026-09-30 17:54:28','2026-09-30 17:54:28'),(4,'Cashier Juan','cashier@pharmatrack.com',NULL,'$2y$10$jkvO/wLk6AVtw95HQEtsteBqkxHi5E0cdscDBTDP9dfeqZeHbdlPC','cashier',NULL,'2026-10-13 00:45:43','2026-10-13 00:45:43');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -724,4 +724,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-13  9:38:03
+-- Dump completed on 2026-10-13 12:11:47
