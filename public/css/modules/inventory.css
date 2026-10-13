@@ -1,0 +1,116 @@
+/* ==========================================================================
+   PharmaTrack - Inventory, Stock In/Out & Conversion Styles
+   ========================================================================== */
+
+/* Mini KPI Grid inside sub-modules */
+.inv-mini-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.inv-mini-kpi {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.inv-mini-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+}
+
+.inv-mini-icon.teal   { background: rgba(0, 168, 150, 0.12); color: #00a896; }
+.inv-mini-icon.amber  { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+.inv-mini-icon.red    { background: rgba(239, 68, 68, 0.12);  color: #ef4444; }
+.inv-mini-icon.blue   { background: rgba(59, 130, 246, 0.12); color: #3b82f6; }
+.inv-mini-icon.purple { background: rgba(139, 92, 246, 0.12); color: #8b5cf6; }
+
+.inv-mini-details span {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.inv-mini-details h4 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-top: 0.1rem;
+}
+
+/* Item Conversion Feature Cards */
+.conversion-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  gap: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.conversion-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.conversion-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  box-shadow: 0 6px 20px rgba(0, 168, 150, 0.12);
+}
+
+.conversion-card-flow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  gap: 0.5rem;
+}
+
+.conversion-flow-node {
+  display: flex;
+  flex-direction: column;
+}
+
+.conversion-flow-node strong {
+  font-size: 0.92rem;
+  color: var(--text-main);
+}
+
+.conversion-flow-node small {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.conversion-arrow {
+  color: var(--primary);
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+

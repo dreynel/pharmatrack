@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PharmaTrack | Xyra Andrea Pharmacy - Sales & Inventory with Demand Forecasting</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- RemixIcon Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+  
+  <!-- SweetAlert2 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Bootstrap 5.3.3 CSS Framework -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- Custom Stylesheet with Cache Buster -->
+  <link rel="stylesheet" href="css/style.css?v=bootstrap1">
+  <link rel="stylesheet" href="css/modules/inventory.css?v=bootstrap1">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Mobile Backdrop Overlay -->
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <!-- Brand Header -->
+      <div class="brand-header">
+        <div class="brand-icon">
+          <i class="ri-capsule-fill"></i>
+        </div>
+        <div class="brand-info">
+          <h1>PharmaTrack</h1>
+          <div class="brand-tag">
+            <span class="status-pulse"></span>
+            <span>Xyra Andrea Pharmacy</span>
+          </div>
+        </div>
+        <button class="mobile-close-sidebar-btn" id="mobile-close-sidebar-btn" title="Close Menu">
+          <i class="ri-close-line"></i>
+        </button>
+      </div>
+
+      <!-- Navigation Menu Groups (Scrollable) -->
+      <nav class="sidebar-content-scroll" aria-label="Main Navigation">
+        <!-- GROUP 1: OPERATIONS -->
+        <div class="nav-group">
+          <span class="nav-group-title"><i class="ri-flashlight-line"></i> Operations</span>
+          <ul class="nav-menu">
+            <li class="nav-item">
+              <button class="active" data-view="dashboard">
+                <i class="ri-dashboard-3-line"></i>
+                <span>Dashboard</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button data-view="pos">
+                <i class="ri-shopping-cart-2-line"></i>
+                <span>POS Terminal</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button data-view="sales">
+                <i class="ri-receipt-line"></i>
+                <span>Sales Logs</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- GROUP 2: INVENTORY CONTROL -->
+        <div class="nav-group">
+          <span class="nav-group-title"><i class="ri-archive-line"></i> Inventory Control</span>
+          <ul class="nav-menu">
+            <li class="nav-item">
+              <button data-view="inventory">
+                <i class="ri-medicine-bottle-line"></i>
+                <span>Stock Catalog</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button data-view="stock-in">
+                <i class="ri-inbox-archive-line"></i>
+                <span>Stock In (Receiving)</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button data-view="stock-out">
+                <i class="ri-inbox-unarchive-line"></i>
+                <span>Stock Out (Disposal)</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button data-view="conversion">
+                <i class="ri-swap-box-line"></i>
+                <span>Item Conversion</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button data-view="movements">
+                <i class="ri-history-line"></i>
+                <span>Stock Movements</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- GROUP 3: SUPPLY & ANALYTICS -->
+        <div class="nav-group">
+          <span class="nav-group-title"><i class="ri-bar-chart-box-line"></i> Supply & Analytics</span>
+          <ul class="nav-menu">
+            <li class="nav-item">
+              <button data-view="forecast">
+                <i class="ri-line-chart-line"></i>
+                <span>Demand Forecasting</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button data-view="suppliers">
+                <i class="ri-truck-line"></i>
+                <span>Suppliers</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button data-view="reports">
+                <i class="ri-file-chart-line"></i>
+                <span>Reports & Analytics</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- Sidebar Footer / User Profile -->
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="user-avatar-wrap">
+            <div class="user-avatar">XA</div>
+            <span class="avatar-status-dot" title="Online"></span>
+          </div>
+          <div class="user-details">
+            <h4>Xyra Andrea</h4>
+            <span class="user-role-badge role-admin">
+              <i class="ri-shield-check-fill"></i> Manager
+            </span>
+          </div>
+          <button type="button" class="btn-logout" id="sidebar-logout-btn" title="Sign Out">
+            <i class="ri-logout-box-r-line"></i>
+          </button>
+        </div>
+        <div class="sidebar-version-tag">
+          <span>PharmaTrack v1.2</span>
+          <span>&bull;</span>
+          <span>Dumangas, Iloilo</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <div class="main-wrapper">
+      
+      <!-- Top Bar Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobile-menu-btn" title="Open Menu">
+            <i class="ri-menu-2-line"></i>
+          </button>
+          <div class="page-title">
+            <h2 id="page-title-text">Pharmacy Analytics Overview</h2>
+            <p id="page-subtitle-text">Real-time sales, inventory status, and AI demand predictions for Xyra Andrea Pharmacy</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <div class="time-widget" id="live-clock">
+            <i class="ri-time-line"></i> 12:00:00 PM
+          </div>
+
+          <button class="header-btn" id="header-pos-shortcut" title="Quick Launch POS">
+            <i class="ri-shopping-bag-3-fill"></i>
+          </button>
+
+          <button class="header-btn" title="Alerts">
+            <i class="ri-notification-3-line"></i>
+            <span class="badge" id="alert-notification-badge">3</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Dynamic Content View Sections -->
+      <main class="content-body">
+
+        <!-- 1. DASHBOARD VIEW -->
+        <section id="view-dashboard" class="view-section active">
+          <!-- KPI Metrics Grid -->
+          <div class="row g-3 mb-4">
+            <div class="col-12 col-sm-6 col-xl-3">
+              <div class="kpi-card h-100">
+                <div class="kpi-icon teal"><i class="ri-money-dollar-circle-line"></i></div>
+                <div class="kpi-details">
+                  <span>Today's Total Sales</span>
+                  <h3 id="kpi-today-sales">₱0.00</h3>
+                  <p class="text-success"><i class="ri-arrow-up-line"></i> +14.2% vs yesterday</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+              <div class="kpi-card h-100">
+                <div class="kpi-icon warning"><i class="ri-alert-line"></i></div>
+                <div class="kpi-details">
+                  <span>Low Stock Items</span>
+                  <h3 id="kpi-low-stock">0</h3>
+                  <p class="text-warning">Reorder threshold reached</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+              <div class="kpi-card h-100">
+                <div class="kpi-icon danger"><i class="ri-calendar-close-line"></i></div>
+                <div class="kpi-details">
+                  <span>Near Expiry (30d)</span>
+                  <h3 id="kpi-near-expiry">0</h3>
+                  <p class="text-danger">Action required</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+              <div class="kpi-card h-100">
+                <div class="kpi-icon blue"><i class="ri-box-3-line"></i></div>
+                <div class="kpi-details">
+                  <span>Total Medicine Stock</span>
+                  <h3 id="kpi-total-items">0</h3>
+                  <p class="text-info">Units across SKUs</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard Charts & Alerts Layout -->
+          <div class="row g-4 mb-4">
+            <div class="col-12 col-lg-7">
+              <div class="glass-card h-100">
+                <div class="card-header">
+                  <h3><i class="ri-bar-chart-fill"></i> Today's Sales Hourly Revenue</h3>
+                  <span style="font-size: 0.8rem; color: var(--text-muted);">Real-time stream</span>
+                </div>
+                <div style="height: 260px; position: relative;">
+                  <canvas id="salesTrendChart"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- Urgent Restock Alerts Card -->
+            <div class="col-12 col-lg-5">
+              <div class="glass-card h-100">
+                <div class="card-header">
+                  <h3><i class="ri-error-warning-fill" style="color: var(--warning);"></i> Stock Level Alerts</h3>
+                  <button class="btn btn-sm btn-outline" onclick="document.querySelector('[data-view=\'inventory\']').click()">View All</button>
+                </div>
+                <div class="table-responsive" style="max-height: 260px;">
+                  <table class="custom-table">
+                    <thead>
+                      <tr>
+                        <th>Medicine</th>
+                        <th>Category</th>
+                        <th>Stock</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="dash-low-stock-table-body">
+                      <!-- Dynamic Rows -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 2. POS TERMINAL VIEW -->
+        <section id="view-pos" class="view-section">
+          <div class="pos-container">
+            
+            <!-- Products Panel -->
+            <div class="pos-products-panel">
+              <div class="pos-filters">
+                <div class="pos-search">
+                  <i class="ri-search-line"></i>
+                  <input type="text" id="pos-search-input" placeholder="Search medicine name, generic name, or barcode...">
+                </div>
+                
+                <div class="quick-search" style="max-width: 230px;">
+                  <i class="ri-barcode-line"></i>
+                  <input type="text" id="barcode-scan-input" placeholder="Barcode Scan (Enter)">
+                </div>
+              </div>
+
+              <!-- Category Filter Pills -->
+              <div class="category-pills" id="category-pills-container">
+                <!-- Dynamic Pills -->
+              </div>
+
+              <!-- Product Grid -->
+              <div class="product-grid" id="pos-products-grid">
+                <!-- Dynamic Product Cards -->
+              </div>
+            </div>
+
+            <!-- POS Cart Drawer Panel -->
+            <div class="pos-cart-panel" id="pos-cart-panel">
+              <div class="cart-header">
+                <h3><i class="ri-shopping-cart-fill" style="color: var(--primary);"></i> Current Sale</h3>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <span class="badge-pill badge-info" id="cart-count-badge">0 items</span>
+                  <button class="btn btn-sm btn-outline" id="close-cart-mobile-btn" style="display: none;" title="Close Cart">
+                    <i class="ri-close-line"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Cart Items List -->
+              <div class="cart-items-list" id="pos-cart-items">
+                <!-- Dynamic Cart Items -->
+              </div>
+
+              <!-- Cart Summary & Math -->
+              <div class="cart-summary">
+                <div class="summary-row">
+                  <span>Subtotal</span>
+                  <span id="cart-subtotal">₱0.00</span>
+                </div>
+                
+                <div class="summary-row" style="align-items: center; margin: 0.5rem 0;">
+                  <span>Discount / Privilege</span>
+                  <select id="pos-discount-select" class="form-control" style="width: auto; padding: 0.2rem 0.5rem; font-size: 0.8rem;">
+                    <option value="0">Regular (0%)</option>
+                    <option value="5">Senior Citizen (5%)</option>
+                    <option value="10">PWD Discount (10%)</option>
+                    <option value="20">Special Promo (20%)</option>
+                  </select>
+                </div>
+
+                <div class="summary-row" style="color: var(--warning);">
+                  <span>Discount Value</span>
+                  <span id="cart-discount-val">-₱0.00</span>
+                </div>
+
+                <div class="summary-row total">
+                  <span>TOTAL DUE</span>
+                  <span id="cart-total">₱0.00</span>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 0.75rem; margin-top: 0.85rem;">
+                  <button class="btn btn-outline" id="clear-cart-btn"><i class="ri-delete-bin-line"></i> Clear</button>
+                  <button class="btn btn-primary" id="checkout-btn" disabled><i class="ri-check-double-line"></i> CHECKOUT</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Mobile Floating POS Bar -->
+          <div class="mobile-cart-trigger" id="mobile-cart-trigger">
+            <div class="mobile-cart-trigger-info">
+              <span id="mobile-cart-items-count">0 items in cart</span>
+              <span id="mobile-cart-total-val">₱0.00</span>
+            </div>
+            <button class="btn btn-primary btn-sm" id="open-cart-mobile-btn">
+              <i class="ri-shopping-cart-2-line"></i> View Cart
+            </button>
+          </div>
+        </section>
+
+
+                <!-- 3. MEDICINE CATALOG & BATCH MANAGEMENT VIEW -->
+        <section id="view-inventory" class="view-section">
+          <!-- Inventory Sub-Navigation Bar -->
+          <div class="inv-subnav-bar">
+            <button class="inv-subnav-btn active" data-view="inventory" data-inv-tab="catalog">
+              <i class="ri-medicine-bottle-line"></i> Stock Catalog & Batches
+            </button>
+            <button class="inv-subnav-btn" data-view="stock-in" data-inv-tab="stock-in">
+              <i class="ri-inbox-archive-line"></i> Stock In (Receiving)
+            </button>
+            <button class="inv-subnav-btn" data-view="stock-out" data-inv-tab="stock-out">
+              <i class="ri-inbox-unarchive-line"></i> Stock Out (Disposal & Pull-outs)
+            </button>
+            <button class="inv-subnav-btn" data-view="conversion" data-inv-tab="conversion">
+              <i class="ri-swap-box-line"></i> Item Conversion (UOM Breakdown)
+            </button>
+            <button class="inv-subnav-btn" data-view="movements" data-inv-tab="movements">
+              <i class="ri-history-line"></i> Stock Movement Ledger
+            </button>
+          </div>
+
+          <div class="glass-card">
+            <div class="card-header">
+              <div>
+                <h3><i class="ri-medicine-bottle-fill"></i> Medicine Inventory & Batch Database</h3>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Real-time on-hand stock, packaging UOM, unit pricing, and batch expiry tracking</span>
+              </div>
+              
+              <div style="display: flex; gap: 0.75rem; width: 100%; max-width: 580px; justify-content: flex-end; align-items: center; flex-wrap: wrap;">
+                <div class="quick-search" style="max-width: 250px;">
+                  <i class="ri-search-line"></i>
+                  <input type="text" id="inventory-search-input" placeholder="Search medicine, SKU, batch...">
+                </div>
+                <button class="btn btn-outline btn-sm" id="btn-quick-convert-shortcut" title="Open Item Conversion">
+                  <i class="ri-swap-line"></i> Convert Unit
+                </button>
+                <button class="btn btn-primary" id="add-medicine-btn">
+                  <i class="ri-add-circle-line"></i> Add New Medicine
+                </button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>SKU Code</th>
+                    <th>Medicine & Generic Name</th>
+                    <th>Category</th>
+                    <th>Unit of Measure</th>
+                    <th>Unit Price / Cost</th>
+                    <th>Stock Qty</th>
+                    <th>Batch No.</th>
+                    <th>Expiry Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="inventory-table-body">
+                  <!-- Dynamic Inventory Rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. STOCK IN (GOODS RECEIVING) VIEW -->
+        <section id="view-stock-in" class="view-section">
+          <!-- Inventory Sub-Navigation Bar -->
+          <div class="inv-subnav-bar">
+            <button class="inv-subnav-btn" data-view="inventory" data-inv-tab="catalog">
+              <i class="ri-medicine-bottle-line"></i> Stock Catalog & Batches
+            </button>
+            <button class="inv-subnav-btn active" data-view="stock-in" data-inv-tab="stock-in">
+              <i class="ri-inbox-archive-line"></i> Stock In (Receiving)
+            </button>
+            <button class="inv-subnav-btn" data-view="stock-out" data-inv-tab="stock-out">
+              <i class="ri-inbox-unarchive-line"></i> Stock Out (Disposal & Pull-outs)
+            </button>
+            <button class="inv-subnav-btn" data-view="conversion" data-inv-tab="conversion">
+              <i class="ri-swap-box-line"></i> Item Conversion (UOM Breakdown)
+            </button>
+            <button class="inv-subnav-btn" data-view="movements" data-inv-tab="movements">
+              <i class="ri-history-line"></i> Stock Movement Ledger
+            </button>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-md-4">
+              <div class="inv-mini-kpi">
+                <div class="inv-mini-icon teal"><i class="ri-inbox-archive-line"></i></div>
+                <div class="inv-mini-details">
+                  <span>Shipments Received</span>
+                  <h4 id="stkin-kpi-count">0</h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="inv-mini-kpi">
+                <div class="inv-mini-icon blue"><i class="ri-money-dollar-circle-line"></i></div>
+                <div class="inv-mini-details">
+                  <span>Total Delivery Value</span>
+                  <h4 id="stkin-kpi-value">₱0.00</h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="inv-mini-kpi">
+                <div class="inv-mini-icon amber"><i class="ri-truck-line"></i></div>
+                <div class="inv-mini-details">
+                  <span>Primary Distributor</span>
+                  <h4 id="stkin-kpi-distributor">Unilab</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2-Panel Split Layout: Left = Details per Parent, Right = Main Records List -->
+          <div class="stock-split-container row g-4 align-items-start mt-1">
+            <!-- Left Panel: Delivery Slip & Children Breakdown -->
+            <div class="col-12 col-lg-5 stock-panel-doc sticky-top" style="top: 1.25rem;">
+              <div id="stockin-document-container">
+                <!-- Dynamically rendered delivery slip & children items -->
+              </div>
+            </div>
+
+            <!-- Right Panel: Main Records (Shipments List) -->
+            <div class="col-12 col-lg-7 stock-panel-list glass-card">
+              <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
+                <div>
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-success-subtle text-success border border-success-subtle text-uppercase fw-bold">Main Records</span>
+                    <h3 style="font-size: 1.1rem; margin: 0;"><i class="ri-file-download-line text-success"></i> Shipment Delivery Receipts</h3>
+                  </div>
+                  <span style="font-size: 0.78rem; color: var(--text-muted); display: block; margin-top: 0.25rem;">
+                    Click any parent record to view its children items & full document breakdown on the left panel
+                  </span>
+                </div>
+                
+                <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                  <div class="quick-search" style="max-width: 200px;">
+                    <i class="ri-search-line"></i>
+                    <input type="text" id="stockin-search-input" placeholder="Search DR #, supplier...">
+                  </div>
+                  <button class="btn btn-primary btn-sm" id="btn-open-stockin-modal">
+                    <i class="ri-add-line"></i> Receive Shipment
+                  </button>
+                </div>
+              </div>
+
+              <div class="table-responsive" style="max-height: 580px; overflow-y: auto;">
+                <table class="custom-table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Ref / DR #</th>
+                      <th>Date Received</th>
+                      <th>Supplier / Distributor</th>
+                      <th>Total Cost</th>
+                      <th>Received By</th>
+                      <th class="text-end">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stockin-table-body">
+                    <!-- Dynamic Stock In Rows -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. STOCK OUT (DISPOSALS & WRITE-OFFS) VIEW -->
+        <section id="view-stock-out" class="view-section">
+          <!-- Inventory Sub-Navigation Bar -->
+          <div class="inv-subnav-bar">
+            <button class="inv-subnav-btn" data-view="inventory" data-inv-tab="catalog">
+              <i class="ri-medicine-bottle-line"></i> Stock Catalog & Batches
+            </button>
+            <button class="inv-subnav-btn" data-view="stock-in" data-inv-tab="stock-in">
+              <i class="ri-inbox-archive-line"></i> Stock In (Receiving)
+            </button>
+            <button class="inv-subnav-btn active" data-view="stock-out" data-inv-tab="stock-out">
+              <i class="ri-inbox-unarchive-line"></i> Stock Out (Disposal & Pull-outs)
+            </button>
+            <button class="inv-subnav-btn" data-view="conversion" data-inv-tab="conversion">
+              <i class="ri-swap-box-line"></i> Item Conversion (UOM Breakdown)
+            </button>
+            <button class="inv-subnav-btn" data-view="movements" data-inv-tab="movements">
+              <i class="ri-history-line"></i> Stock Movement Ledger
+            </button>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-md-4">
+              <div class="inv-mini-kpi">
+                <div class="inv-mini-icon red"><i class="ri-delete-bin-line"></i></div>
+                <div class="inv-mini-details">
+                  <span>Total Write-Offs</span>
+                  <h4 id="stkout-kpi-count">0</h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="inv-mini-kpi">
+                <div class="inv-mini-icon amber"><i class="ri-calendar-close-line"></i></div>
+                <div class="inv-mini-details">
+                  <span>Expired Medicine Pulled</span>
+                  <h4 id="stkout-kpi-expired">0 units</h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="inv-mini-kpi">
+                <div class="inv-mini-icon purple"><i class="ri-heart-pulse-line"></i></div>
+                <div class="inv-mini-details">
+                  <span>Clinic / Internal Use</span>
+                  <h4 id="stkout-kpi-clinic">0 units</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2-Panel Split Layout: Left = Document / Voucher Details, Right = Disposals List -->
+          <div class="stock-split-container row g-4 align-items-start mt-1">
+            <!-- Left Panel: Disposal Voucher & Children Breakdown -->
+            <div class="col-12 col-lg-5 stock-panel-doc sticky-top" style="top: 1.25rem;">
+              <div id="stockout-document-container">
+                <!-- Dynamically rendered disposal voucher & children items -->
+              </div>
+            </div>
+
+            <!-- Right Panel: Main Records (Disposals List) -->
+            <div class="col-12 col-lg-7 stock-panel-list glass-card">
+              <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
+                <div>
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle text-uppercase fw-bold">Main Records</span>
+                    <h3 style="font-size: 1.1rem; margin: 0;"><i class="ri-inbox-unarchive-line text-danger"></i> Disposal & Loss Vouchers</h3>
+                  </div>
+                  <span style="font-size: 0.78rem; color: var(--text-muted); display: block; margin-top: 0.25rem;">
+                    Click any parent record to view its children items & write-off breakdown on the left panel
+                  </span>
+                </div>
+                
+                <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                  <div class="quick-search" style="max-width: 200px;">
+                    <i class="ri-search-line"></i>
+                    <input type="text" id="stockout-search-input" placeholder="Search SO #, reason...">
+                  </div>
+                  <button class="btn btn-danger btn-sm" id="btn-open-stockout-modal">
+                    <i class="ri-indeterminate-circle-line"></i> Record Stock Out
+                  </button>
+                </div>
+              </div>
+
+              <div class="table-responsive" style="max-height: 580px; overflow-y: auto;">
+                <table class="custom-table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Voucher Ref #</th>
+                      <th>Date Authorized</th>
+                      <th>Deduction Reason</th>
+                      <th>Loss Valuation</th>
+                      <th>Authorized By</th>
+                      <th class="text-end">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stockout-table-body">
+                    <!-- Dynamic Stock Out Rows -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. ITEM CONVERSION (UOM BREAKDOWN) VIEW -->
+        <section id="view-conversion" class="view-section">
+          <!-- Inventory Sub-Navigation Bar -->
+          <div class="inv-subnav-bar">
+            <button class="inv-subnav-btn" data-view="inventory" data-inv-tab="catalog">
+              <i class="ri-medicine-bottle-line"></i> Stock Catalog & Batches
+            </button>
+            <button class="inv-subnav-btn" data-view="stock-in" data-inv-tab="stock-in">
+              <i class="ri-inbox-archive-line"></i> Stock In (Receiving)
+            </button>
+            <button class="inv-subnav-btn" data-view="stock-out" data-inv-tab="stock-out">
+              <i class="ri-inbox-unarchive-line"></i> Stock Out (Disposal & Pull-outs)
+            </button>
+            <button class="inv-subnav-btn active" data-view="conversion" data-inv-tab="conversion">
+              <i class="ri-swap-box-line"></i> Item Conversion (UOM Breakdown)
+            </button>
+            <button class="inv-subnav-btn" data-view="movements" data-inv-tab="movements">
+              <i class="ri-history-line"></i> Stock Movement Ledger
+            </button>
+          </div>
+
+          <div class="forecast-banner" style="background: linear-gradient(135deg, rgba(0,168,150,0.08), rgba(2,128,144,0.05)); border: 1px solid rgba(0,168,150,0.25); margin-bottom: 1.25rem;">
+            <div class="forecast-banner-content">
+              <h3 style="color: #00a896;"><i class="ri-swap-box-fill"></i> Pharmaceutical Unit Conversion & Breakdown Module</h3>
+              <p>Seamlessly break down wholesale bulk cartons (Boxes, Packs) into retail dispensing units (Tablets, Capsules, Strips). Preserves complete batch number traceability and auto-apportions unit costs.</p>
+            </div>
+            <button class="btn btn-primary" id="btn-open-conversion-modal">
+              <i class="ri-swap-line"></i> Custom Conversion
+            </button>
+          </div>
+
+          <!-- Quick Conversion Action Cards Grid -->
+          <div class="conversion-cards-grid" id="conversion-quick-cards">
+            <!-- Dynamically rendered conversion cards -->
+          </div>
+
+          <div class="glass-card">
+            <div class="card-header">
+              <div>
+                <h3><i class="ri-history-line" style="color: var(--primary);"></i> Item Conversion History</h3>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Audited log of all bulk unboxing and retail repackaging operations</span>
+              </div>
+              <div class="quick-search" style="max-width: 250px;">
+                <i class="ri-search-line"></i>
+                <input type="text" id="conversion-search-input" placeholder="Search conversion log...">
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Conversion ID</th>
+                    <th>Timestamp</th>
+                    <th>Source Bulk Deducted</th>
+                    <th>Target Retail Credited</th>
+                    <th>Ratio</th>
+                    <th>Preserved Batch & Expiry</th>
+                    <th>Pharmacist</th>
+                    <th>Notes</th>
+                  </tr>
+                </thead>
+                <tbody id="conversion-table-body">
+                  <!-- Dynamic Conversion Rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 7. STOCK MOVEMENT AUDIT TRAIL VIEW -->
+        <section id="view-movements" class="view-section">
+          <!-- Inventory Sub-Navigation Bar -->
+          <div class="inv-subnav-bar">
+            <button class="inv-subnav-btn" data-view="inventory" data-inv-tab="catalog">
+              <i class="ri-medicine-bottle-line"></i> Stock Catalog & Batches
+            </button>
+            <button class="inv-subnav-btn" data-view="stock-in" data-inv-tab="stock-in">
+              <i class="ri-inbox-archive-line"></i> Stock In (Receiving)
+            </button>
+            <button class="inv-subnav-btn" data-view="stock-out" data-inv-tab="stock-out">
+              <i class="ri-inbox-unarchive-line"></i> Stock Out (Disposal & Pull-outs)
+            </button>
+            <button class="inv-subnav-btn" data-view="conversion" data-inv-tab="conversion">
+              <i class="ri-swap-box-line"></i> Item Conversion (UOM Breakdown)
+            </button>
+            <button class="inv-subnav-btn active" data-view="movements" data-inv-tab="movements">
+              <i class="ri-history-line"></i> Stock Movement Ledger
+            </button>
+          </div>
+
+          <div class="glass-card">
+            <div class="card-header">
+              <div>
+                <h3><i class="ri-file-list-3-line" style="color: var(--primary);"></i> Consolidated Stock Movement Audit Trail</h3>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Real-time inventory ledger recording all incoming, outgoing, sales, and conversion movements</span>
+              </div>
+              
+              <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                <select id="movement-type-filter" class="form-control" style="width: auto; padding: 0.5rem 0.8rem; border-radius: 8px; font-size: 0.85rem; border: 1px solid var(--border-color);">
+                  <option value="ALL">All Movement Types</option>
+                  <option value="STOCK_IN">Stock In (Deliveries)</option>
+                  <option value="STOCK_OUT">Stock Out (Disposals)</option>
+                  <option value="POS_SALE">POS Sales (Counter)</option>
+                  <option value="CONVERT_IN">Conversion In (Retail)</option>
+                  <option value="CONVERT_OUT">Conversion Out (Bulk)</option>
+                </select>
+
+                <div class="quick-search" style="max-width: 250px;">
+                  <i class="ri-search-line"></i>
+                  <input type="text" id="movement-search-input" placeholder="Search reference, item...">
+                </div>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Movement ID</th>
+                    <th>Timestamp</th>
+                    <th>Medicine Name</th>
+                    <th>Type</th>
+                    <th>Prev Stock</th>
+                    <th>Change</th>
+                    <th>New Stock</th>
+                    <th>Reference ID</th>
+                    <th>Remarks</th>
+                  </tr>
+                </thead>
+                <tbody id="movement-table-body">
+                  <!-- Dynamic Movement Rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+<!-- 4. DEMAND FORECASTING VIEW -->
+        <section id="view-forecast" class="view-section">
+          <div class="forecast-banner">
+            <div class="forecast-banner-content">
+              <h3><i class="ri-magic-line"></i> Intelligent Demand Forecasting Engine</h3>
+              <p>Predictive consumption algorithms based on historical moving averages & safety stock parameters for Xyra Andrea Pharmacy.</p>
+            </div>
+            <div>
+              <span class="badge-pill badge-success" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+                <i class="ri-radar-line"></i> Model Accuracy: 96.4%
+              </span>
+            </div>
+          </div>
+
+          <div class="dashboard-grid" style="margin-bottom: 1.5rem;">
+            <div class="glass-card" style="margin-bottom: 0;">
+              <div class="card-header">
+                <h3><i class="ri-line-chart-fill"></i> 30-Day Demand Trend Prediction</h3>
+              </div>
+              <div style="height: 260px; position: relative;">
+                <canvas id="demandForecastChart"></canvas>
+              </div>
+            </div>
+
+            <div class="glass-card" style="margin-bottom: 0;">
+              <div class="card-header">
+                <h3><i class="ri-pie-chart-2-fill"></i> Category Demand Share</h3>
+              </div>
+              <div style="height: 260px; position: relative;">
+                <canvas id="categoryForecastChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <div class="card-header">
+              <h3><i class="ri-calculator-line"></i> Automated Purchase Order Recommendations</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Medicine & Category</th>
+                    <th>Current Stock</th>
+                    <th>Avg. Daily Sales</th>
+                    <th>30-Day Forecasted Demand</th>
+                    <th>Safety Stock Buffer</th>
+                    <th>Stock Depletion Risk</th>
+                    <th>Purchase Order Action</th>
+                  </tr>
+                </thead>
+                <tbody id="forecast-table-body">
+                  <!-- Dynamic Forecast Rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 5. SALES HISTORY VIEW -->
+        <section id="view-sales" class="view-section">
+          <div class="glass-card">
+            <div class="card-header">
+              <h3><i class="ri-history-line"></i> Complete Transaction History</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Order OR #</th>
+                    <th>Date & Time</th>
+                    <th>Cashier</th>
+                    <th>Item Count</th>
+                    <th>Payment Method</th>
+                    <th>Total Revenue</th>
+                    <th>Receipt</th>
+                  </tr>
+                </thead>
+                <tbody id="sales-table-body">
+                  <!-- Dynamic Sales Rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 6. SUPPLIERS VIEW -->
+        <section id="view-suppliers" class="view-section">
+          <!-- Suppliers Header Banner & Action Bar -->
+          <div class="glass-card mb-4">
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+              <div>
+                <h3 class="fs-5 fw-bold text-dark d-flex align-items-center gap-2 mb-1">
+                  <i class="ri-building-4-line text-success"></i> Distributor & Supplier Directory
+                </h3>
+                <p class="small text-muted mb-0">
+                  Manage accredited pharmaceutical distributors, manufacturing partners, contact points, and supply procurement channels.
+                </p>
+              </div>
+
+              <div class="d-flex align-items-center gap-3 flex-wrap">
+                <div class="quick-search" style="min-width: 250px;">
+                  <i class="ri-search-line"></i>
+                  <input
+                    type="text"
+                    id="supplier-search-input"
+                    placeholder="Search distributor, contact, phone..."
+                  >
+                </div>
+                <button
+                  class="btn btn-primary d-flex align-items-center gap-2"
+                  id="btn-open-supplier-modal"
+                >
+                  <i class="ri-add-line fw-bold"></i> Add New Supplier
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;" id="suppliers-grid-container">
+            <!-- Dynamic Suppliers Cards -->
+          </div>
+        </section>
+
+        <!-- 7. REPORTS & ANALYTICS VIEW -->
+        <section id="view-reports" class="view-section">
+          <!-- Print-Only Official Pharmacy Header -->
+          <div class="report-print-header">
+            <h2 style="font-family: var(--font-heading); margin: 0; color: #0f172a;">XYRA ANDREA PHARMACY</h2>
+            <p style="margin: 0.2rem 0; font-size: 0.85rem; color: #64748b;">FDA/DOH Regulated Community Drugstore | Sales & Inventory Audit</p>
+            <h3 id="report-print-title" style="margin-top: 0.5rem; color: var(--primary);">Sales & Revenue Summary Report</h3>
+            <span id="report-print-timestamp" style="font-size: 0.8rem; color: #94a3b8;">Generated on: -</span>
+          </div>
+
+          <!-- Interactive Filter & Action Bar -->
+          <div class="report-filter-bar">
+            <div class="report-type-pills">
+              <button class="report-pill-btn active" data-report-type="sales">
+                <i class="ri-receipt-line"></i> Sales & Revenue
+              </button>
+              <button class="report-pill-btn" data-report-type="inventory">
+                <i class="ri-store-2-line"></i> Inventory Valuation
+              </button>
+              <button class="report-pill-btn" data-report-type="losses">
+                <i class="ri-delete-bin-line"></i> Disposals & Losses
+              </button>
+              <button class="report-pill-btn" data-report-type="fast-moving">
+                <i class="ri-speed-up-line"></i> Fast/Slow Moving (FSN)
+              </button>
+            </div>
+
+            <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+              <select id="report-date-range" class="form-control" style="width: auto; padding: 0.45rem 0.8rem; border-radius: 8px; font-size: 0.85rem; border: 1px solid var(--border-color);">
+                <option value="all">All Recorded Dates</option>
+                <option value="today">Today</option>
+                <option value="week">Past 7 Days</option>
+                <option value="month">This Month</option>
+              </select>
+
+              <div class="quick-search" style="max-width: 200px;">
+                <i class="ri-search-line"></i>
+                <input type="text" id="report-search-input" placeholder="Search report...">
+              </div>
+
+              <button class="btn btn-outline btn-sm" id="btn-export-report-csv" title="Download CSV Spreadsheet">
+                <i class="ri-file-excel-2-line"></i> Export CSV
+              </button>
+              <button class="btn btn-primary btn-sm" id="btn-print-report" title="Print Clean Audit Report">
+                <i class="ri-printer-line"></i> Print
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Report KPI Summary Cards -->
+          <div class="inv-mini-kpi-grid" id="report-kpi-summary">
+            <!-- Dynamically populated KPI cards -->
+          </div>
+
+          <!-- Report Data Table Card -->
+          <div class="glass-card">
+            <div class="card-header">
+              <div>
+                <h3 id="report-active-title"><i class="ri-file-chart-fill" style="color: var(--primary);"></i> Sales & Revenue Summary Report</h3>
+                <span id="report-active-desc" style="font-size: 0.8rem; color: var(--text-muted);">Detailed revenue receipts, payment distributions, and discount deductions</span>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead id="report-table-head">
+                  <!-- Dynamic headers based on report type -->
+                </thead>
+                <tbody id="report-table-body">
+                  <!-- Dynamic report rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap 5.3.3 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <!-- JavaScript Scripts (Layered Modular Architecture) -->
+  <!-- 1. Service & State Layer -->
+  <script src="js/services/api.service.js"></script>
+
+  <!-- 2. UI Dialogs & Alerts -->
+  <script src="js/ui/swal.helpers.js"></script>
+
+  <!-- 3. Feature Controllers -->
+  <script src="js/modules/dashboard.controller.js"></script>
+  <script src="js/modules/pos.controller.js"></script>
+  <script src="js/modules/inventory.controller.js"></script>
+  <script src="js/modules/stock-in.controller.js"></script>
+  <script src="js/modules/stock-out.controller.js"></script>
+  <script src="js/modules/conversion.controller.js"></script>
+  <script src="js/modules/movements.controller.js"></script>
+  <script src="js/modules/forecast.controller.js"></script>
+  <script src="js/modules/sales.controller.js"></script>
+  <script src="js/modules/suppliers.controller.js"></script>
+  <script src="js/modules/reports.controller.js"></script>
+
+  <!-- 4. Main App Controller & Navigation Router -->
+  <script src="js/app.js"></script>
+</body>
+</html>

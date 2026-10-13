@@ -1,0 +1,48 @@
+/* ==========================================================================
+   PharmaTrack - Design System Variables & Tokens
+   Xyra Andrea Pharmacy - Clean Clinical Medical Palette
+   ========================================================================== */
+
+:root {
+  /* Clean Light Medical Palette */
+  --bg-dark: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --bg-input: #ffffff;
+  --border-color: #e2e8f0;
+  --border-glow: rgba(0, 168, 150, 0.3);
+
+  /* Primary Brand Colors - Medical Teal & Emerald */
+  --primary: #00a896;
+  --primary-hover: #028090;
+  --primary-light: rgba(0, 168, 150, 0.1);
+  --secondary: #028090;
+  --accent: #05668d;
+  
+  /* Status Colors */
+  --success: #10b981;
+  --success-bg: rgba(16, 185, 129, 0.12);
+  --warning: #f59e0b;
+  --warning-bg: rgba(245, 158, 11, 0.12);
+  --danger: #ef4444;
+  --danger-bg: rgba(239, 68, 68, 0.12);
+  --info: #3b82f6;
+  --info-bg: rgba(59, 130, 246, 0.12);
+
+  /* Typography */
+  --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: 'Outfit', sans-serif;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-dim: #94a3b8;
+
+  /* Radius & Shadows */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 10px 25px rgba(15, 23, 42, 0.08);
+  --shadow-glow: 0 4px 20px rgba(0, 168, 150, 0.2);
+  --transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
