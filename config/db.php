@@ -49,7 +49,10 @@ function getDatabaseConnection(): PDO {
         try {
             $check = $dbInstance->query("SHOW TABLES LIKE 'products'")->fetch();
             if (!$check) {
-                $schemaFile = __DIR__ . '/../database/schema.sql';
+                $schemaFile = __DIR__ . '/../database/pharmatrack_db.sql';
+                if (!file_exists($schemaFile)) {
+                    $schemaFile = __DIR__ . '/../database/schema.sql';
+                }
                 if (file_exists($schemaFile)) {
                     $sql = file_get_contents($schemaFile);
                     if (!empty($sql)) {

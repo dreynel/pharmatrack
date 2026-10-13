@@ -69,12 +69,12 @@ When you clone or copy **PharmaTrack** to another computer:
 1. Copy or clone `PharmaTrack` into your web server directory (e.g. `d:/xampp/htdocs/PharmaTrack` or `c:/xampp/htdocs/PharmaTrack`).
 2. Start **Apache** and **MySQL** in your XAMPP Control Panel.
 3. Open `http://localhost/PharmaTrack/` in your browser.
-4. **Auto-Provisioning**: PharmaTrack's native connection handler (`config/db.php`) will automatically detect if the database `pharmatrack_db` or required tables are missing. It connects to MySQL, executes `CREATE DATABASE IF NOT EXISTS pharmatrack_db`, and imports `database/schema.sql` automatically.
+4. **Auto-Provisioning**: PharmaTrack's native connection handler (`config/db.php`) will automatically detect if the database `pharmatrack_db` or required tables are missing. It connects to MySQL, executes `CREATE DATABASE IF NOT EXISTS pharmatrack_db`, and automatically imports `database/pharmatrack_db.sql`.
 
 ### Option B: Manual Import (phpMyAdmin / MySQL CLI)
 ```bash
 mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS pharmatrack_db;"
-mysql -u root -p pharmatrack_db < database/schema.sql
+mysql -u root -p pharmatrack_db < database/pharmatrack_db.sql
 ```
 
 ---
@@ -85,8 +85,8 @@ mysql -u root -p pharmatrack_db < database/schema.sql
 - **Database**: `pharmatrack_db`
 - **Default Database User**: `root` (works with both empty password and `007622`)
 - **Default Login Portal**:
-  - **Email / Username**: `admin@pharmatrack.com`
-  - **Password**: `password` (or standard admin credentials)
+  - **Admin**: `admin@pharmatrack.com` | Password: `admin123`
+  - **Cashier**: `cashier@pharmatrack.com` | Password: `cashier123`
 
 ---
 
