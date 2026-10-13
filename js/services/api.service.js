@@ -1,6 +1,6 @@
 /**
  * PharmaTrack - Real API Client Service Layer
- * Interacts with PHP Laravel 12 & MySQL 8.0 Backend
+ * Interacts with Native PHP & MySQL Backend
  * Custom Designed for Xyra Andrea Pharmacy
  */
 
@@ -12,9 +12,6 @@ class ApiService {
   determineBaseUrl() {
     if (window.API_BASE_URL) return window.API_BASE_URL;
     const path = window.location.pathname;
-    if (path.includes('/PharmaTrack/public')) {
-      return '/PharmaTrack/public/api';
-    }
     if (path.includes('/PharmaTrack')) {
       return '/PharmaTrack/api';
     }
