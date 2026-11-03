@@ -1,0 +1,313 @@
+/* ==========================================================================
+   PharmaTrack - Executive Medical Design System
+   Modern UI Components, Adaptive Container Queries & Precision Telemetry
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Modern Container Queries & Adaptive Card Architecture
+   -------------------------------------------------------------------------- */
+.kpi-card,
+.glass-card,
+.inv-mini-kpi,
+.product-card,
+.stat-summary-card {
+  container-type: inline-size;
+}
+
+@container (max-width: 260px) {
+  .kpi-details h3 {
+    font-size: 1.35rem !important;
+  }
+  .kpi-icon {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 1.25rem !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. Executive Medical Data Tables & Precision Micro-Typography
+   -------------------------------------------------------------------------- */
+.table-responsive {
+  border-radius: 16px !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  background: #ffffff !important;
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.03) !important;
+  overflow: hidden;
+}
+
+.custom-table, .table {
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 0 !important;
+}
+
+.custom-table th, .table th {
+  background: #f8fafc !important;
+  color: #475569 !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 0.74rem !important;
+  letter-spacing: 0.07em !important;
+  text-transform: uppercase !important;
+  padding: 1rem 1.15rem !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  white-space: nowrap;
+}
+
+.custom-table td, .table td {
+  padding: 0.95rem 1.15rem !important;
+  font-size: 0.88rem !important;
+  color: var(--text-main, #1e293b) !important;
+  border-bottom: 1px solid var(--border-color, #f1f5f9) !important;
+  vertical-align: middle !important;
+  transition: background-color 0.15s ease;
+}
+
+.custom-table tbody tr:hover, .table tbody tr:hover {
+  background-color: rgba(0, 168, 150, 0.03) !important;
+}
+
+.custom-table tbody tr:last-child td, .table tbody tr:last-child td {
+  border-bottom: none !important;
+}
+
+/* Action Icon Buttons */
+.btn-action-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #64748b;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-action-icon:hover {
+  border-color: #00a896;
+  color: #00a896;
+  background: rgba(0, 168, 150, 0.08);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 168, 150, 0.15);
+}
+
+.btn-action-icon.btn-danger-icon:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.15);
+}
+
+/* --------------------------------------------------------------------------
+   3. FEFO Real-Time Expiry Status Badges & Pill System
+   -------------------------------------------------------------------------- */
+.fefo-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.fefo-pill.fefo-safe {
+  background: rgba(16, 185, 129, 0.12);
+  color: #047857;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.fefo-pill.fefo-warning {
+  background: rgba(245, 158, 11, 0.12);
+  color: #b45309;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.fefo-pill.fefo-urgent {
+  background: rgba(239, 68, 68, 0.12);
+  color: #b91c1c;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+  animation: urgentPulse 2s infinite ease-in-out;
+}
+
+@keyframes urgentPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  50% { box-shadow: 0 0 0 4px rgba(239, 68, 68, 0); }
+}
+
+/* --------------------------------------------------------------------------
+   4. Item Conversion Visual Flow & Split-Panel Elevation
+   -------------------------------------------------------------------------- */
+.conv-flow-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.conv-flow-arrow {
+  color: #00a896;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+}
+
+.conv-ratio-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  background: rgba(0, 168, 150, 0.12);
+  color: #008779;
+  font-size: 0.76rem;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.03em;
+}
+
+/* --------------------------------------------------------------------------
+   5. Top Header & Glassmorphic HUD Polish
+   -------------------------------------------------------------------------- */
+.top-header {
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.85) !important;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04) !important;
+}
+
+.header-system-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 9999px;
+  background: rgba(0, 168, 150, 0.08);
+  border: 1px solid rgba(0, 168, 150, 0.25);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #008779;
+  letter-spacing: 0.02em;
+}
+
+.header-btn {
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #475569 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.header-btn:hover {
+  background: #f8fafc !important;
+  color: #00a896 !important;
+  border-color: rgba(0, 168, 150, 0.4) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(0, 168, 150, 0.15) !important;
+}
+
+#header-pos-shortcut {
+  background: linear-gradient(135deg, #00a896 0%, #028090 100%) !important;
+  border-color: transparent !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(0, 168, 150, 0.35) !important;
+}
+
+#header-pos-shortcut:hover {
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 0 6px 20px rgba(0, 168, 150, 0.45) !important;
+  color: #ffffff !important;
+}
+
+.time-widget {
+  background: rgba(0, 168, 150, 0.08) !important;
+  border: 1px solid rgba(0, 168, 150, 0.25) !important;
+  box-shadow: 0 2px 8px rgba(0, 168, 150, 0.08) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   6. Demand Forecasting Data Science Card Polish
+   -------------------------------------------------------------------------- */
+.forecast-math-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #38bdf8;
+  font-family: 'Outfit', monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+}
+
+.forecast-ols-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   7. Smooth Dialog & Modal Entry Transitions (@starting-style)
+   -------------------------------------------------------------------------- */
+.modal.fade .modal-dialog {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease !important;
+}
+
+.modal.show .modal-dialog {
+  transform: none !important;
+}
+
+.modal-content {
+  border-radius: 20px !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.25) !important;
+  overflow: hidden;
+}
+
+.modal-header {
+  background: #f8fafc !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  padding: 1.25rem 1.75rem !important;
+}
+
+.modal-header .modal-title {
+  font-family: 'Outfit', sans-serif !important;
+  font-weight: 800 !important;
+  font-size: 1.25rem !important;
+  color: #0f172a !important;
+}
+
+.modal-body {
+  padding: 1.75rem !important;
+}
+
+.modal-footer {
+  background: #f8fafc !important;
+  border-top: 1px solid #e2e8f0 !important;
+  padding: 1rem 1.75rem !important;
+}

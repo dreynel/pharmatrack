@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
   <!-- PharmaTrack Stylesheet -->
-  <link rel="stylesheet" href="css/style.css?v=login1">
+  <link rel="stylesheet" href="css/style.css?v=20261102_v9">
 
   <style>
     body {
@@ -72,65 +72,151 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       justify-content: center;
       background: #f8fafc;
       background-image: 
-        radial-gradient(at 15% 15%, rgba(0, 168, 150, 0.08) 0px, transparent 55%),
-        radial-gradient(at 85% 85%, rgba(2, 128, 144, 0.08) 0px, transparent 55%);
+        radial-gradient(at 0% 0%, rgba(0, 168, 150, 0.09) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(2, 128, 144, 0.08) 0px, transparent 50%),
+        radial-gradient(rgba(0, 168, 150, 0.05) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 28px 28px;
       background-attachment: fixed;
       padding: 1.5rem;
+      position: relative;
+      overflow-x: hidden;
     }
     .login-container {
       width: 100%;
       max-width: 440px;
+      position: relative;
+      z-index: 2;
+    }
+    .login-ambient-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(circle, rgba(0, 168, 150, 0.22) 0%, rgba(2, 128, 144, 0.08) 50%, transparent 70%);
+      filter: blur(45px);
+      pointer-events: none;
+      z-index: 1;
     }
     .login-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 18px;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
-      padding: 2.25rem 2rem;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 168, 150, 0.28);
+      border-radius: 22px;
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.14), 0 0 25px rgba(0, 168, 150, 0.08);
+      padding: 2.75rem 2.25rem;
       position: relative;
     }
     .brand-logo-badge {
-      width: 60px;
-      height: 60px;
-      border-radius: 16px;
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
       background: linear-gradient(135deg, #00a896 0%, #028090 100%);
       color: #ffffff;
-      font-size: 2rem;
+      font-size: 2.2rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 6px 16px rgba(0, 168, 150, 0.28);
-      margin-bottom: 1rem;
+      box-shadow: 0 8px 20px rgba(0, 168, 150, 0.35);
+      margin-bottom: 1.15rem;
+      animation: floatBadge 3.5s ease-in-out infinite alternate;
+    }
+    @keyframes floatBadge {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-6px); }
     }
     .demo-badge-btn {
-      background: #f1f5f9;
+      background: #f8fafc;
       border: 1px solid #e2e8f0;
       color: #334155;
       font-size: 0.78rem;
       font-weight: 600;
-      padding: 0.4rem 0.75rem;
-      border-radius: 8px;
+      padding: 0.45rem 0.85rem;
+      border-radius: 10px;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
+      gap: 0.4rem;
     }
     .demo-badge-btn:hover {
-      background: #e2e8f0;
-      border-color: #cbd5e1;
-      color: #0f172a;
+      background: #ffffff;
+      border-color: #00a896;
+      color: #008779;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 168, 150, 0.15);
     }
-    .demo-badge-btn.active-admin {
-      background: rgba(0, 168, 150, 0.12);
-      border-color: rgba(0, 168, 150, 0.3);
-      color: #00a896;
+    .form-control:focus {
+      border-color: #00a896 !important;
+      box-shadow: 0 0 0 3px rgba(0, 168, 150, 0.18) !important;
+    }
+
+    /* Cyber-Deck Mode for Login */
+    body.cyber-theme {
+      background-color: #060913 !important;
+      background-image: 
+        radial-gradient(at 15% 15%, rgba(0, 242, 254, 0.15) 0px, transparent 55%),
+        radial-gradient(at 85% 85%, rgba(0, 229, 204, 0.12) 0px, transparent 55%),
+        linear-gradient(to right, rgba(0, 242, 254, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 242, 254, 0.04) 1px, transparent 1px) !important;
+      background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px !important;
+    }
+    body.cyber-theme .login-card {
+      background: rgba(11, 18, 33, 0.94) !important;
+      border: 1px solid rgba(0, 242, 254, 0.3) !important;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(0, 242, 254, 0.2) !important;
+      color: #f1f5f9;
+    }
+    body.cyber-theme .login-card h2 {
+      color: #ffffff !important;
+      text-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+    }
+    body.cyber-theme .form-control {
+      background: rgba(15, 23, 42, 0.9) !important;
+      border-color: rgba(0, 242, 254, 0.25) !important;
+      color: #ffffff !important;
+    }
+    body.cyber-theme .input-group-text {
+      background: rgba(15, 23, 42, 0.95) !important;
+      border-color: rgba(0, 242, 254, 0.25) !important;
+      color: #00f2fe !important;
+    }
+    body.cyber-theme .demo-badge-btn {
+      background: rgba(15, 23, 42, 0.85) !important;
+      border-color: rgba(0, 242, 254, 0.25) !important;
+      color: #94a3b8 !important;
+    }
+    body.cyber-theme .demo-badge-btn:hover {
+      background: rgba(0, 242, 254, 0.15) !important;
+      border-color: #00f2fe !important;
+      color: #00f2fe !important;
+    }
+    body.cyber-theme .form-check-label {
+      color: #cbd5e1 !important;
+    }
+    body.cyber-theme .badge.bg-light {
+      background: rgba(15, 23, 42, 0.95) !important;
+      color: #cbd5e1 !important;
+      border-color: rgba(0, 242, 254, 0.25) !important;
     }
   </style>
+  <script>
+    (function() {
+      const theme = localStorage.getItem('pharmatrack_theme') || 'cyber';
+      if (theme === 'cyber') {
+        document.documentElement.setAttribute('data-theme', 'cyber');
+        document.addEventListener('DOMContentLoaded', () => {
+          if (document.body) document.body.classList.add('cyber-theme');
+        });
+      }
+    })();
+  </script>
 </head>
 <body>
 
   <div class="login-container">
+    <div class="login-ambient-glow"></div>
     <div class="login-card">
       
       <!-- Brand Header -->
@@ -239,6 +325,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <!-- Bootstrap 5.3.3 JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Sound Engine -->
+  <script src="js/ui/sound-fx.js?v=20261029_cyber"></script>
 
   <script>
     // Toggle Password Visibility

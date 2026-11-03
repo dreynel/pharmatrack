@@ -1,35 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>PharmaTrack | Xyra Andrea Pharmacy - Sales & Inventory with Demand Forecasting</title>
-  
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
   <!-- RemixIcon Icons -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
-  
+
   <!-- SweetAlert2 CDN -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  
+
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-  <!-- Bootstrap 5.3.3 CSS Framework -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-  <!-- Custom Stylesheet with Cache Buster -->
-  <link rel="stylesheet" href="css/style.css?v=bootstrap1">
-  <link rel="stylesheet" href="css/modules/inventory.css?v=bootstrap1">
+
+  <!-- Bootstrap 5.3.3 CSS Framework -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- Custom Master Design System Stylesheet -->
+  <link rel="stylesheet" href="css/style.css?v=20261103_v1">
+  <script>
+    (function () {
+      const theme = localStorage.getItem('pharmatrack_theme') || 'cyber';
+      if (theme === 'cyber') {
+        document.documentElement.setAttribute('data-theme', 'cyber');
+      }
+    })();
+  </script>
 </head>
+
 <body>
 
   <div class="app-container">
-    
+
     <!-- Mobile Backdrop Overlay -->
     <div class="mobile-overlay" id="mobile-overlay"></div>
 
@@ -83,7 +97,7 @@
         <div class="nav-group">
           <span class="nav-group-title"><i class="ri-archive-line"></i> Inventory Control</span>
           <ul class="nav-menu">
-            <li class="nav-item">
+            <li class="nav-item" id="nav-item-inventory">
               <button data-view="inventory">
                 <i class="ri-medicine-bottle-line"></i>
                 <span>Stock Catalog</span>
@@ -126,7 +140,7 @@
                 <span>Demand Forecasting</span>
               </button>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" id="nav-item-suppliers">
               <button data-view="suppliers">
                 <i class="ri-truck-line"></i>
                 <span>Suppliers</span>
@@ -169,7 +183,7 @@
 
     <!-- Main Workspace Area -->
     <div class="main-wrapper">
-      
+
       <!-- Top Bar Header -->
       <header class="top-header">
         <div class="header-left">
@@ -178,14 +192,42 @@
           </button>
           <div class="page-title">
             <h2 id="page-title-text">Pharmacy Analytics Overview</h2>
-            <p id="page-subtitle-text">Real-time sales, inventory status, and AI demand predictions for Xyra Andrea Pharmacy</p>
+            <p id="page-subtitle-text">Real-time sales, inventory status, and seasonal demand forecasting for Xyra Andrea
+              Pharmacy</p>
           </div>
         </div>
 
         <div class="header-actions">
+          <div class="header-system-chip d-none d-xl-inline-flex" title="Real-time transaction consistency guaranteed">
+            <span class="pharma-live-beacon"></span>
+            <span>Terminal Online • 100% ACID</span>
+          </div>
+
           <div class="time-widget" id="live-clock">
             <i class="ri-time-line"></i> 12:00:00 PM
           </div>
+
+          <!-- Real-Time Medical EKG Telemetry Waveform -->
+          <div class="ekg-container d-none d-lg-inline-flex" title="Live Heartbeat & Inventory Flow Velocity">
+            <canvas id="ekg-canvas"></canvas>
+            <div class="ekg-telemetry-meta">
+              <span class="ekg-bpm"><i class="ri-heart-pulse-fill text-danger"></i> 72 BPM</span>
+              <span class="ekg-status">TELEMETRY SYNC</span>
+            </div>
+          </div>
+
+          <!-- Theme Switcher Pill -->
+          <button type="button" class="btn-theme-switcher" id="header-theme-toggle"
+            title="Switch between Cyber-Deck 2030 and Clinical Light">
+            <i class="ri-moon-clear-fill text-info"></i>
+            <span class="theme-label">Cyber-Deck 2030</span>
+          </button>
+
+          <!-- Tactile Sound FX Toggle -->
+          <button type="button" class="header-btn" id="header-sound-toggle"
+            title="Sound Feedback: Muted (Click to Enable)">
+            <i class="ri-volume-mute-line text-muted"></i>
+          </button>
 
           <button class="header-btn" id="header-pos-shortcut" title="Quick Launch POS">
             <i class="ri-shopping-bag-3-fill"></i>
@@ -269,7 +311,8 @@
               <div class="glass-card h-100">
                 <div class="card-header">
                   <h3><i class="ri-error-warning-fill" style="color: var(--warning);"></i> Stock Level Alerts</h3>
-                  <button class="btn btn-sm btn-outline" onclick="document.querySelector('[data-view=\'inventory\']').click()">View All</button>
+                  <button class="btn btn-sm btn-outline" id="dash-view-inventory-btn"
+                    onclick="document.querySelector('[data-view=\'inventory\']')?.click()">View All</button>
                 </div>
                 <div class="table-responsive" style="max-height: 260px;">
                   <table class="custom-table">
@@ -296,18 +339,40 @@
         <!-- 2. POS TERMINAL VIEW -->
         <section id="view-pos" class="view-section">
           <div class="pos-container">
-            
+
             <!-- Products Panel -->
             <div class="pos-products-panel">
               <div class="pos-filters">
                 <div class="pos-search">
                   <i class="ri-search-line"></i>
-                  <input type="text" id="pos-search-input" placeholder="Search medicine name, generic name, or barcode...">
+                  <input type="text" id="pos-search-input"
+                    placeholder="Search medicine name, generic name, SKU, or barcode...">
                 </div>
-                
-                <div class="quick-search" style="max-width: 230px;">
+
+                <div class="quick-search" style="max-width: 210px;">
                   <i class="ri-barcode-line"></i>
                   <input type="text" id="barcode-scan-input" placeholder="Barcode Scan (Enter)">
+                </div>
+
+                <!-- POS View Options Switcher (Cards, Compact Grid, List, Table) -->
+                <div class="pos-view-switcher" id="pos-view-switcher" role="group"
+                  aria-label="POS Product Display Mode">
+                  <button type="button" class="pos-view-btn active" data-pos-view="cards" title="Detailed Cards View">
+                    <i class="ri-layout-grid-fill"></i>
+                    <span>Cards</span>
+                  </button>
+                  <button type="button" class="pos-view-btn" data-pos-view="grid" title="Compact Tiles Grid View">
+                    <i class="ri-apps-2-line"></i>
+                    <span>Grid</span>
+                  </button>
+                  <button type="button" class="pos-view-btn" data-pos-view="list" title="Horizontal List View">
+                    <i class="ri-list-check-2"></i>
+                    <span>List</span>
+                  </button>
+                  <button type="button" class="pos-view-btn" data-pos-view="table" title="Dense Table View">
+                    <i class="ri-table-line"></i>
+                    <span>Table</span>
+                  </button>
                 </div>
               </div>
 
@@ -316,10 +381,13 @@
                 <!-- Dynamic Pills -->
               </div>
 
-              <!-- Product Grid -->
-              <div class="product-grid" id="pos-products-grid">
-                <!-- Dynamic Product Cards -->
+              <!-- Product Display Container (Cards / Grid / List / Table) -->
+              <div class="product-grid view-cards" id="pos-products-grid">
+                <!-- Dynamic Product Items -->
               </div>
+
+              <!-- POS Pagination Controls -->
+              <div class="pos-pagination-bar" id="pos-pagination-bar"></div>
             </div>
 
             <!-- POS Cart Drawer Panel -->
@@ -328,7 +396,8 @@
                 <h3><i class="ri-shopping-cart-fill" style="color: var(--primary);"></i> Current Sale</h3>
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
                   <span class="badge-pill badge-info" id="cart-count-badge">0 items</span>
-                  <button class="btn btn-sm btn-outline" id="close-cart-mobile-btn" style="display: none;" title="Close Cart">
+                  <button class="btn btn-sm btn-outline" id="close-cart-mobile-btn" style="display: none;"
+                    title="Close Cart">
                     <i class="ri-close-line"></i>
                   </button>
                 </div>
@@ -342,17 +411,17 @@
               <!-- Cart Summary & Math -->
               <div class="cart-summary">
                 <div class="summary-row">
-                  <span>Subtotal</span>
+                  <span>Gross Sales (VAT-Inc)</span>
                   <span id="cart-subtotal">₱0.00</span>
                 </div>
-                
-                <div class="summary-row" style="align-items: center; margin: 0.5rem 0;">
-                  <span>Discount / Privilege</span>
-                  <select id="pos-discount-select" class="form-control" style="width: auto; padding: 0.2rem 0.5rem; font-size: 0.8rem;">
-                    <option value="0">Regular (0%)</option>
-                    <option value="5">Senior Citizen (5%)</option>
-                    <option value="10">PWD Discount (10%)</option>
-                    <option value="20">Special Promo (20%)</option>
+
+                <div class="summary-row" style="align-items: center; margin: 0.4rem 0;">
+                  <span>Customer / Discount</span>
+                  <select id="pos-discount-select" class="form-control"
+                    style="width: auto; padding: 0.2rem 0.5rem; font-size: 0.8rem;">
+                    <option value="0" selected>Regular Customer (0%)</option>
+                    <option value="20">Senior Citizen (20% + VAT Exempt)</option>
+                    <option value="20_pwd">PWD (20% + VAT Exempt)</option>
                   </select>
                 </div>
 
@@ -361,14 +430,29 @@
                   <span id="cart-discount-val">-₱0.00</span>
                 </div>
 
-                <div class="summary-row total">
+                <!-- BIR Standard VAT Breakdown (12% Philippines VAT) -->
+                <div class="summary-row" style="font-size: 0.76rem; color: #64748b; margin-top: 2px;">
+                  <span>VATable Sales (Net of VAT)</span>
+                  <span id="cart-vatable-sales" style="font-family: monospace;">₱0.00</span>
+                </div>
+                <div class="summary-row" style="font-size: 0.76rem; color: #64748b;">
+                  <span>VAT Amount (12%)</span>
+                  <span id="cart-vat-amount" style="font-family: monospace;">₱0.00</span>
+                </div>
+                <div class="summary-row" id="cart-vat-exempt-row" style="font-size: 0.76rem; color: #64748b; display: none;">
+                  <span>VAT-Exempt Sales</span>
+                  <span id="cart-vat-exempt-sales" style="font-family: monospace;">₱0.00</span>
+                </div>
+
+                <div class="summary-row total" style="margin-top: 0.35rem; padding-top: 0.4rem; border-top: 1px dashed var(--border-color, #cbd5e1);">
                   <span>TOTAL DUE</span>
                   <span id="cart-total">₱0.00</span>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 0.75rem; margin-top: 0.85rem;">
                   <button class="btn btn-outline" id="clear-cart-btn"><i class="ri-delete-bin-line"></i> Clear</button>
-                  <button class="btn btn-primary" id="checkout-btn" disabled><i class="ri-check-double-line"></i> CHECKOUT</button>
+                  <button class="btn btn-primary" id="checkout-btn" disabled><i class="ri-check-double-line"></i>
+                    CHECKOUT</button>
                 </div>
               </div>
             </div>
@@ -388,7 +472,7 @@
         </section>
 
 
-                <!-- 3. MEDICINE CATALOG & BATCH MANAGEMENT VIEW -->
+        <!-- 3. MEDICINE CATALOG & BATCH MANAGEMENT VIEW -->
         <section id="view-inventory" class="view-section">
           <!-- Inventory Sub-Navigation Bar -->
           <div class="inv-subnav-bar">
@@ -413,18 +497,26 @@
             <div class="card-header">
               <div>
                 <h3><i class="ri-medicine-bottle-fill"></i> Medicine Inventory & Batch Database</h3>
-                <span style="font-size: 0.8rem; color: var(--text-muted);">Real-time on-hand stock, packaging UOM, unit pricing, and batch expiry tracking</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Real-time on-hand stock, packaging UOM, unit
+                  pricing, and batch expiry tracking</span>
               </div>
-              
-              <div style="display: flex; gap: 0.75rem; width: 100%; max-width: 580px; justify-content: flex-end; align-items: center; flex-wrap: wrap;">
-                <div class="quick-search" style="max-width: 250px;">
+
+              <div
+                style="display: flex; gap: 0.65rem; width: 100%; max-width: 680px; justify-content: flex-end; align-items: center; flex-wrap: wrap;">
+                <div class="quick-search" style="max-width: 200px;">
                   <i class="ri-search-line"></i>
                   <input type="text" id="inventory-search-input" placeholder="Search medicine, SKU, batch...">
                 </div>
+                <button class="btn btn-outline btn-sm" id="btn-manage-categories" title="Manage Medicine Categories">
+                  <i class="ri-folder-settings-line"></i> Categories
+                </button>
+                <button class="btn btn-outline btn-sm" id="btn-manage-uoms" title="Manage Units of Measure">
+                  <i class="ri-scales-3-line"></i> Units (UOM)
+                </button>
                 <button class="btn btn-outline btn-sm" id="btn-quick-convert-shortcut" title="Open Item Conversion">
                   <i class="ri-swap-line"></i> Convert Unit
                 </button>
-                <button class="btn btn-primary" id="add-medicine-btn">
+                <button class="btn btn-primary btn-sm" id="add-medicine-btn">
                   <i class="ri-add-circle-line"></i> Add New Medicine
                 </button>
               </div>
@@ -440,8 +532,6 @@
                     <th>Unit of Measure</th>
                     <th>Unit Price / Cost</th>
                     <th>Stock Qty</th>
-                    <th>Batch No.</th>
-                    <th>Expiry Date</th>
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>
@@ -451,6 +541,9 @@
                 </tbody>
               </table>
             </div>
+
+            <!-- Inventory Catalog Pagination Controls -->
+            <div class="pos-pagination-bar mt-3" id="inventory-pagination-bar"></div>
           </div>
         </section>
 
@@ -505,55 +598,46 @@
             </div>
           </div>
 
-          <!-- 2-Panel Split Layout: Left = Details per Parent, Right = Main Records List -->
-          <div class="stock-split-container row g-4 align-items-start mt-1">
-            <!-- Left Panel: Delivery Slip & Children Breakdown -->
-            <div class="col-12 col-lg-5 stock-panel-doc sticky-top" style="top: 1.25rem;">
-              <div id="stockin-document-container">
-                <!-- Dynamically rendered delivery slip & children items -->
+          <!-- 2-Panel Split Layout: Left (col-lg-4) = Parent List, Right (col-lg-8) = Wide Document Sheet -->
+          <div class="row g-4 align-items-stretch mt-1">
+            <!-- Left Panel: Parent Documents List -->
+            <div class="col-12 col-lg-4">
+              <div class="stock-list-card">
+                <div class="stock-list-header">
+                  <h3>Receiving Documents</h3>
+                  <div class="stock-list-controls">
+                    <div class="quick-search">
+                      <i class="ri-search-line"></i>
+                      <input type="text" id="stockin-search-input" placeholder="Search DR #, supplier...">
+                    </div>
+                    <button class="btn btn-primary btn-sm text-nowrap" id="btn-open-stockin-modal">
+                      <i class="ri-add-line"></i> New
+                    </button>
+                  </div>
+                </div>
+
+                <div class="stock-table-wrap">
+                  <table class="stock-records-table">
+                    <thead>
+                      <tr>
+                        <th>Document #</th>
+                        <th>Supplier</th>
+                        <th class="text-center">Items</th>
+                        <th class="text-end">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody id="stockin-table-body">
+                      <!-- Dynamic Parent Stock In Rows -->
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 
-            <!-- Right Panel: Main Records (Shipments List) -->
-            <div class="col-12 col-lg-7 stock-panel-list glass-card">
-              <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
-                <div>
-                  <div class="d-flex align-items-center gap-2">
-                    <span class="badge bg-success-subtle text-success border border-success-subtle text-uppercase fw-bold">Main Records</span>
-                    <h3 style="font-size: 1.1rem; margin: 0;"><i class="ri-file-download-line text-success"></i> Shipment Delivery Receipts</h3>
-                  </div>
-                  <span style="font-size: 0.78rem; color: var(--text-muted); display: block; margin-top: 0.25rem;">
-                    Click any parent record to view its children items & full document breakdown on the left panel
-                  </span>
-                </div>
-                
-                <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-                  <div class="quick-search" style="max-width: 200px;">
-                    <i class="ri-search-line"></i>
-                    <input type="text" id="stockin-search-input" placeholder="Search DR #, supplier...">
-                  </div>
-                  <button class="btn btn-primary btn-sm" id="btn-open-stockin-modal">
-                    <i class="ri-add-line"></i> Receive Shipment
-                  </button>
-                </div>
-              </div>
-
-              <div class="table-responsive" style="max-height: 580px; overflow-y: auto;">
-                <table class="custom-table table-hover">
-                  <thead>
-                    <tr>
-                      <th>Ref / DR #</th>
-                      <th>Date Received</th>
-                      <th>Supplier / Distributor</th>
-                      <th>Total Cost</th>
-                      <th>Received By</th>
-                      <th class="text-end">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="stockin-table-body">
-                    <!-- Dynamic Stock In Rows -->
-                  </tbody>
-                </table>
+            <!-- Right Panel: Wide Document Sheet -->
+            <div class="col-12 col-lg-8 stock-panel-doc">
+              <div id="stockin-document-container">
+                <!-- Dynamically rendered document details & children items -->
               </div>
             </div>
           </div>
@@ -610,61 +694,52 @@
             </div>
           </div>
 
-          <!-- 2-Panel Split Layout: Left = Document / Voucher Details, Right = Disposals List -->
-          <div class="stock-split-container row g-4 align-items-start mt-1">
-            <!-- Left Panel: Disposal Voucher & Children Breakdown -->
-            <div class="col-12 col-lg-5 stock-panel-doc sticky-top" style="top: 1.25rem;">
-              <div id="stockout-document-container">
-                <!-- Dynamically rendered disposal voucher & children items -->
+          <!-- 2-Panel Split Layout: Left (col-lg-4) = Parent List, Right (col-lg-8) = Wide Document Sheet -->
+          <div class="row g-4 align-items-stretch mt-1">
+            <!-- Left Panel: Parent Documents List -->
+            <div class="col-12 col-lg-4">
+              <div class="stock-list-card">
+                <div class="stock-list-header">
+                  <h3>Stock-Out Documents</h3>
+                  <div class="stock-list-controls">
+                    <div class="quick-search">
+                      <i class="ri-search-line"></i>
+                      <input type="text" id="stockout-search-input" placeholder="Search SO #, reason...">
+                    </div>
+                    <button class="btn btn-danger btn-sm text-nowrap" id="btn-open-stockout-modal">
+                      <i class="ri-add-line"></i> New
+                    </button>
+                  </div>
+                </div>
+
+                <div class="stock-table-wrap">
+                  <table class="stock-records-table">
+                    <thead>
+                      <tr>
+                        <th>Document #</th>
+                        <th>Reason</th>
+                        <th class="text-center">Items</th>
+                        <th class="text-end">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody id="stockout-table-body">
+                      <!-- Dynamic Parent Stock Out Rows -->
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 
-            <!-- Right Panel: Main Records (Disposals List) -->
-            <div class="col-12 col-lg-7 stock-panel-list glass-card">
-              <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
-                <div>
-                  <div class="d-flex align-items-center gap-2">
-                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle text-uppercase fw-bold">Main Records</span>
-                    <h3 style="font-size: 1.1rem; margin: 0;"><i class="ri-inbox-unarchive-line text-danger"></i> Disposal & Loss Vouchers</h3>
-                  </div>
-                  <span style="font-size: 0.78rem; color: var(--text-muted); display: block; margin-top: 0.25rem;">
-                    Click any parent record to view its children items & write-off breakdown on the left panel
-                  </span>
-                </div>
-                
-                <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-                  <div class="quick-search" style="max-width: 200px;">
-                    <i class="ri-search-line"></i>
-                    <input type="text" id="stockout-search-input" placeholder="Search SO #, reason...">
-                  </div>
-                  <button class="btn btn-danger btn-sm" id="btn-open-stockout-modal">
-                    <i class="ri-indeterminate-circle-line"></i> Record Stock Out
-                  </button>
-                </div>
-              </div>
-
-              <div class="table-responsive" style="max-height: 580px; overflow-y: auto;">
-                <table class="custom-table table-hover">
-                  <thead>
-                    <tr>
-                      <th>Voucher Ref #</th>
-                      <th>Date Authorized</th>
-                      <th>Deduction Reason</th>
-                      <th>Loss Valuation</th>
-                      <th>Authorized By</th>
-                      <th class="text-end">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="stockout-table-body">
-                    <!-- Dynamic Stock Out Rows -->
-                  </tbody>
-                </table>
+            <!-- Right Panel: Wide Document Sheet -->
+            <div class="col-12 col-lg-8 stock-panel-doc">
+              <div id="stockout-document-container">
+                <!-- Dynamically rendered disposal voucher details & children items -->
               </div>
             </div>
           </div>
         </section>
 
-        <!-- 6. ITEM CONVERSION (UOM BREAKDOWN) VIEW -->
+        <!-- 6. ITEM CONVERSION (UOM BREAKDOWN) VIEW - 2-PANEL LAYOUT -->
         <section id="view-conversion" class="view-section">
           <!-- Inventory Sub-Navigation Bar -->
           <div class="inv-subnav-bar">
@@ -685,51 +760,116 @@
             </button>
           </div>
 
-          <div class="forecast-banner" style="background: linear-gradient(135deg, rgba(0,168,150,0.08), rgba(2,128,144,0.05)); border: 1px solid rgba(0,168,150,0.25); margin-bottom: 1.25rem;">
-            <div class="forecast-banner-content">
-              <h3 style="color: #00a896;"><i class="ri-swap-box-fill"></i> Pharmaceutical Unit Conversion & Breakdown Module</h3>
-              <p>Seamlessly break down wholesale bulk cartons (Boxes, Packs) into retail dispensing units (Tablets, Capsules, Strips). Preserves complete batch number traceability and auto-apportions unit costs.</p>
-            </div>
-            <button class="btn btn-primary" id="btn-open-conversion-modal">
-              <i class="ri-swap-line"></i> Custom Conversion
-            </button>
-          </div>
-
-          <!-- Quick Conversion Action Cards Grid -->
-          <div class="conversion-cards-grid" id="conversion-quick-cards">
-            <!-- Dynamically rendered conversion cards -->
-          </div>
-
-          <div class="glass-card">
-            <div class="card-header">
-              <div>
-                <h3><i class="ri-history-line" style="color: var(--primary);"></i> Item Conversion History</h3>
-                <span style="font-size: 0.8rem; color: var(--text-muted);">Audited log of all bulk unboxing and retail repackaging operations</span>
-              </div>
-              <div class="quick-search" style="max-width: 250px;">
-                <i class="ri-search-line"></i>
-                <input type="text" id="conversion-search-input" placeholder="Search conversion log...">
+          <!-- Conversion KPI Metrics Strip -->
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-md-4">
+              <div class="inv-mini-kpi">
+                <div class="inv-mini-icon teal"><i class="ri-settings-4-line"></i></div>
+                <div class="inv-mini-details">
+                  <span>Configured Conversion Rules</span>
+                  <h4 id="conv-kpi-rules-count">0</h4>
+                </div>
               </div>
             </div>
+            <div class="col-12 col-md-4">
+              <div class="inv-mini-kpi">
+                <div class="inv-mini-icon blue"><i class="ri-swap-line"></i></div>
+                <div class="inv-mini-details">
+                  <span>Total Conversions Run</span>
+                  <h4 id="conv-kpi-total-ops">0</h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-4">
+              <div class="inv-mini-kpi">
+                <div class="inv-mini-icon amber"><i class="ri-medicine-bottle-line"></i></div>
+                <div class="inv-mini-details">
+                  <span>Retail Units Unboxed</span>
+                  <h4 id="conv-kpi-retail-units">0</h4>
+                </div>
+              </div>
+            </div>
+          </div>
 
-            <div class="table-responsive">
-              <table class="custom-table">
-                <thead>
-                  <tr>
-                    <th>Conversion ID</th>
-                    <th>Timestamp</th>
-                    <th>Source Bulk Deducted</th>
-                    <th>Target Retail Credited</th>
-                    <th>Ratio</th>
-                    <th>Preserved Batch & Expiry</th>
-                    <th>Pharmacist</th>
-                    <th>Notes</th>
-                  </tr>
-                </thead>
-                <tbody id="conversion-table-body">
-                  <!-- Dynamic Conversion Rows -->
-                </tbody>
-              </table>
+          <!-- 2-Panel Split Architecture -->
+          <div class="row g-3 align-items-stretch">
+            <!-- LEFT PANEL: Conversion Settings / Rules (Tabular) -->
+            <div class="col-12 col-xl-6">
+              <div class="glass-card" style="height: 100%; display: flex; flex-direction: column;">
+                <div class="card-header" style="flex-wrap: wrap; gap: 0.6rem;">
+                  <div>
+                    <h3 style="margin-bottom: 0.15rem;"><i class="ri-settings-4-fill"
+                        style="color: var(--primary);"></i> Conversion Settings & Ratios</h3>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Packaging ratios linking wholesale bulk
+                      items to retail dispensing units</span>
+                  </div>
+                  <div style="display: flex; gap: 0.45rem; align-items: center; flex-wrap: wrap;">
+                    <div class="quick-search" style="max-width: 170px;">
+                      <i class="ri-search-line"></i>
+                      <input type="text" id="conversion-settings-search" placeholder="Search rules...">
+                    </div>
+                    <button class="btn btn-outline btn-sm text-nowrap" id="btn-add-conversion-rule"
+                      title="Configure New Conversion Link">
+                      <i class="ri-add-line"></i> Link Rule
+                    </button>
+                    <button class="btn btn-primary btn-sm text-nowrap" id="btn-open-conversion-modal"
+                      title="Perform custom conversion with selected batch">
+                      <i class="ri-swap-line"></i> Custom Convert
+                    </button>
+                  </div>
+                </div>
+
+                <div class="table-responsive" style="flex: 1; max-height: 580px; overflow-y: auto;">
+                  <table class="custom-table" style="margin: 0; font-size: 0.84rem; width: 100%;">
+                    <thead>
+                      <tr>
+                        <th style="min-width: 170px;">Bulk Item (Source)</th>
+                        <th style="min-width: 170px;">Retail Item (Target)</th>
+                        <th style="min-width: 100px; text-align: center;">Packaging Ratio</th>
+                        <th style="min-width: 150px; text-align: right;">Quick Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="conversion-settings-table-body">
+                      <!-- Rendered dynamically -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT PANEL: Conversion Audit History (Tabular) -->
+            <div class="col-12 col-xl-6">
+              <div class="glass-card" style="height: 100%; display: flex; flex-direction: column;">
+                <div class="card-header" style="flex-wrap: wrap; gap: 0.6rem;">
+                  <div>
+                    <h3 style="margin-bottom: 0.15rem;"><i class="ri-history-fill" style="color: var(--primary);"></i>
+                      Conversion History</h3>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Audited log of bulk unboxing & retail
+                      repackaging</span>
+                  </div>
+                  <div class="quick-search" style="max-width: 220px;">
+                    <i class="ri-search-line"></i>
+                    <input type="text" id="conversion-search-input" placeholder="Search history log...">
+                  </div>
+                </div>
+
+                <div class="table-responsive" style="flex: 1; max-height: 580px; overflow-y: auto;">
+                  <table class="custom-table" style="margin: 0; font-size: 0.84rem; width: 100%;">
+                    <thead>
+                      <tr>
+                        <th style="min-width: 110px;">ID & Date</th>
+                        <th style="min-width: 130px;">Source Bulk (-)</th>
+                        <th style="min-width: 130px;">Retail Credited (+)</th>
+                        <th style="min-width: 110px;">Batch & Expiry</th>
+                        <th style="min-width: 90px;">Staff</th>
+                      </tr>
+                    </thead>
+                    <tbody id="conversion-table-body">
+                      <!-- Rendered dynamically -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -758,23 +898,27 @@
           <div class="glass-card">
             <div class="card-header">
               <div>
-                <h3><i class="ri-file-list-3-line" style="color: var(--primary);"></i> Consolidated Stock Movement Audit Trail</h3>
-                <span style="font-size: 0.8rem; color: var(--text-muted);">Real-time inventory ledger recording all incoming, outgoing, sales, and conversion movements</span>
+                <h3><i class="ri-file-list-3-line" style="color: var(--primary);"></i> Inventory Sub-Ledger (Accounting
+                  Impact Trail)</h3>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Accounting-style inventory ledger recording
+                  positive (+) and negative (-) stock impacts tagged by Transaction Code</span>
               </div>
-              
+
               <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-                <select id="movement-type-filter" class="form-control" style="width: auto; padding: 0.5rem 0.8rem; border-radius: 8px; font-size: 0.85rem; border: 1px solid var(--border-color);">
-                  <option value="ALL">All Movement Types</option>
-                  <option value="STOCK_IN">Stock In (Deliveries)</option>
-                  <option value="STOCK_OUT">Stock Out (Disposals)</option>
-                  <option value="POS_SALE">POS Sales (Counter)</option>
-                  <option value="CONVERT_IN">Conversion In (Retail)</option>
-                  <option value="CONVERT_OUT">Conversion Out (Bulk)</option>
+                <select id="movement-type-filter" class="form-control"
+                  style="width: auto; padding: 0.5rem 0.8rem; border-radius: 8px; font-size: 0.85rem; border: 1px solid var(--border-color);">
+                  <option value="ALL">All Transaction Codes</option>
+                  <option value="POS">POS (Counter Sales -)</option>
+                  <option value="StockIn">StockIn (Deliveries +)</option>
+                  <option value="StockOut">StockOut (Disposals -)</option>
+                  <option value="Conversion">Conversion (Bulk/Retail +/-)</option>
+                  <option value="OpeningBalance">OpeningBalance (+)</option>
+                  <option value="Adjustment">Adjustment (+/-)</option>
                 </select>
 
                 <div class="quick-search" style="max-width: 250px;">
                   <i class="ri-search-line"></i>
-                  <input type="text" id="movement-search-input" placeholder="Search reference, item...">
+                  <input type="text" id="movement-search-input" placeholder="Search code, ref, item...">
                 </div>
               </div>
             </div>
@@ -783,43 +927,210 @@
               <table class="custom-table">
                 <thead>
                   <tr>
-                    <th>Movement ID</th>
+                    <th>Entry No.</th>
                     <th>Timestamp</th>
                     <th>Medicine Name</th>
-                    <th>Type</th>
-                    <th>Prev Stock</th>
-                    <th>Change</th>
-                    <th>New Stock</th>
-                    <th>Reference ID</th>
+                    <th>Batch / Lot</th>
+                    <th>Transaction Code</th>
+                    <th>Prev Balance</th>
+                    <th>Net Qty (+/-)</th>
+                    <th>Running Balance</th>
+                    <th>Reference No.</th>
                     <th>Remarks</th>
                   </tr>
                 </thead>
                 <tbody id="movement-table-body">
-                  <!-- Dynamic Movement Rows -->
+                  <!-- Dynamic Inventory Ledger Rows -->
                 </tbody>
               </table>
             </div>
           </div>
         </section>
 
-<!-- 4. DEMAND FORECASTING VIEW -->
+        <!-- 4. DEMAND FORECASTING VIEW -->
         <section id="view-forecast" class="view-section">
           <div class="forecast-banner">
             <div class="forecast-banner-content">
-              <h3><i class="ri-magic-line"></i> Intelligent Demand Forecasting Engine</h3>
-              <p>Predictive consumption algorithms based on historical moving averages & safety stock parameters for Xyra Andrea Pharmacy.</p>
+              <h3><i class="ri-line-chart-fill" style="color: var(--primary);"></i> Demand Forecasting &amp; Smart Restocking</h3>
+              <p>Analyzes past sales to predict customer medicine demand and calculates how many units to reorder before shelves run empty. <a href="javascript:void(0)" onclick="window.forecastController.showModelGuideModal()"
+                  style="font-weight: 700; color: var(--primary); text-decoration: underline; margin-left: 6px;"><i
+                    class="ri-information-line"></i> How Forecasting Works (Guide)</a></p>
             </div>
-            <div>
-              <span class="badge-pill badge-success" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
-                <i class="ri-radar-line"></i> Model Accuracy: 96.4%
-              </span>
+
+            <!-- Seasonal Horizon & Restock Controls -->
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <!-- Modalized Medicine Selection Trigger -->
+              <div class="d-flex align-items-center gap-1">
+                <button type="button" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1" id="btn-select-forecast-medicines" title="Select which medicines to include in the forecast">
+                  <i class="ri-medicine-bottle-line"></i>
+                  <span class="d-none d-sm-inline fw-semibold">Medicines:</span>
+                  <span class="badge bg-primary text-white" id="forecast-selected-count-badge">All</span>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger d-none" id="btn-reset-forecast-selection" title="Reset selection to include all medicines">
+                  <i class="ri-refresh-line"></i>
+                </button>
+              </div>
+
+              <!-- Month / Season Selector -->
+              <div class="d-flex align-items-center gap-1">
+                <span class="text-muted small fw-semibold d-none d-md-inline"><i class="ri-calendar-event-line me-1"></i>Month:</span>
+                <input type="month" id="forecast-month-input" class="form-control form-control-sm" style="width: 160px; font-weight: 600;" title="Select month to compare against last year">
+              </div>
+
+              <!-- Quick Depletion Risk Filter -->
+              <div class="btn-group btn-group-sm" role="group" id="forecast-risk-filter-group" aria-label="Risk Filter">
+                <button type="button" class="btn btn-primary forecast-risk-filter-btn active" data-risk="all">All</button>
+                <button type="button" class="btn btn-outline-danger forecast-risk-filter-btn" data-risk="critical"><i class="ri-alarm-warning-line me-1"></i>High Risk / Low Stock</button>
+                <button type="button" class="btn btn-outline-success forecast-risk-filter-btn" data-risk="adequate"><i class="ri-checkbox-circle-line me-1"></i>Adequate</button>
+              </div>
             </div>
+          </div>
+
+          <!-- On-Page Seasonal Demand & Reorder Explainer Guide -->
+          <div class="forecast-explainer-card glass-card mb-4" id="forecast-math-explainer">
+            <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2 py-3 px-3 px-md-4">
+              <div class="d-flex align-items-center gap-2">
+                <div class="forecast-explainer-badge">
+                  <i class="ri-lightbulb-line"></i>
+                </div>
+                <div>
+                  <h3 class="mb-0 fs-6 fw-bold"><i class="ri-line-chart-fill" style="color: var(--primary);"></i> How Seasonal Forecasting Works: 3-Step Guide</h3>
+                  <small class="text-muted">Comparing what sold during this month last year against current stock to restock before you run out</small>
+                </div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <button type="button" class="btn btn-sm btn-primary text-nowrap"
+                  onclick="window.forecastController.showModelGuideModal()">
+                  <i class="ri-question-line me-1"></i> How It Works (Full Guide)
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-toggle-forecast-explainer"
+                  onclick="document.getElementById('forecast-explainer-body').classList.toggle('d-none'); this.querySelector('i').classList.toggle('ri-arrow-up-s-line'); this.querySelector('i').classList.toggle('ri-arrow-down-s-line');"
+                  title="Collapse or Expand Guide">
+                  <i class="ri-arrow-up-s-line"></i>
+                </button>
+              </div>
+            </div>
+
+            <div id="forecast-explainer-body" class="card-body p-3 p-md-4 border-top">
+              <div class="row g-3">
+                <!-- Step 1: Check Last Year Demand -->
+                <div class="col-12 col-md-4">
+                  <div class="explainer-formula-box h-100 p-3 rounded-3">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                      <span class="badge" style="background: rgba(0, 168, 150, 0.15); color: #008779; font-weight: 700;">
+                        Step 1: Check Last Year Demand
+                      </span>
+                      <span class="badge bg-light text-secondary border font-monospace">Same Month History</span>
+                    </div>
+                    <p class="small mb-2 text-muted"><strong>What the system does:</strong> Reads units sold during this exact calendar month last year (e.g. November 2025).</p>
+                    <div class="formula-code-snippet p-2 rounded mb-2 font-monospace small" style="line-height: 1.5;">
+                      <strong>Last Year Demand</strong> = Real sales volume in same month<br>
+                      <em>Example:</em> 44 boxes sold last November
+                    </div>
+                    <small class="text-muted d-block">
+                      <i class="ri-checkbox-circle-line text-success me-1"></i>Captures seasonal surges (flu, rainy weather, fever epidemics).
+                    </small>
+                  </div>
+                </div>
+
+                <!-- Step 2: Compare Current Shelf Stock -->
+                <div class="col-12 col-md-4">
+                  <div class="explainer-formula-box h-100 p-3 rounded-3">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                      <span class="badge" style="background: rgba(2, 128, 144, 0.15); color: #028090; font-weight: 700;">
+                        Step 2: Compare Shelf Stock
+                      </span>
+                      <span class="badge bg-light text-secondary border font-monospace">Depletion Risk</span>
+                    </div>
+                    <p class="small mb-2 text-muted"><strong>What the system does:</strong> Compares current units on shelf against last year's proven monthly demand.</p>
+                    <div class="formula-code-snippet p-2 rounded mb-2 font-monospace small" style="line-height: 1.5;">
+                      <strong>Depletion Risk</strong> = Current Stock vs. Last Year Demand<br>
+                      <em>Example:</em> 8 on shelf vs. 44 sold = <strong>High Risk (Restock!)</strong>
+                    </div>
+                    <small class="text-muted d-block">
+                      <i class="ri-alarm-warning-line text-danger me-1"></i>Immediately alerts you before your shelves run empty.
+                    </small>
+                  </div>
+                </div>
+
+                <!-- Step 3: Calculate Suggested Reorder -->
+                <div class="col-12 col-md-4">
+                  <div class="explainer-formula-box h-100 p-3 rounded-3">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                      <span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #d97706; font-weight: 700;">
+                        Step 3: Calculate Reorder
+                      </span>
+                      <span class="badge bg-light text-secondary border font-monospace">Suggested PO</span>
+                    </div>
+                    <p class="small mb-2 text-muted"><strong>What the system does:</strong> Adds supplier safety cushion and subtracts current stock.</p>
+                    <div class="formula-code-snippet p-2 rounded mb-2 font-monospace small" style="line-height: 1.5;">
+                      <strong>To Order</strong> = (Last Year Demand + Safety Cushion) − Stock<br>
+                      <em>Example:</em> (44 + 9 buffer) − 8 on shelf = <strong>45 boxes to order</strong>
+                    </div>
+                    <small class="text-muted d-block">
+                      <i class="ri-shield-check-line text-success me-1"></i>Ensures sufficient stock plus safety buffer for distributor lead time.
+                    </small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Operational Pharmacy Practice Note -->
+              <div class="explainer-advisory-tip mt-3 p-3 rounded-3 d-flex align-items-start gap-2">
+                <i class="ri-shield-check-line text-success fs-5 flex-shrink-0 mt-1"></i>
+                <div class="small">
+                  <strong class="d-block mb-1 text-dark">Why Year-Over-Year Seasonal Forecasting is Best for Retail Pharmacies</strong>
+                  <span>Medicine consumption is strongly seasonal. Cough and cold syrups spike during the rainy/cool season, antibiotics surge following weather shifts, and vitamins peak around school and holiday months. Comparing current shelf stock directly against last year's same-month demand provides clear, actionable restock guidance without complicated guesswork.</span>
+                </div>
+              </div>
+
+              <!-- Abbreviations & Nomenclature Legend -->
+              <div class="explainer-legend-box mt-3 p-3 rounded-3">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <span class="small fw-bold text-uppercase" style="letter-spacing: 0.5px; font-size: 0.74rem;">
+                    <i class="ri-booklet-line text-primary me-1"></i> Plain English Terminology Guide
+                  </span>
+                  <span class="badge bg-light text-secondary border" style="font-size: 0.68rem;">Quick Reference</span>
+                </div>
+                <div class="row g-2">
+                  <div class="col-6 col-md-3">
+                    <div class="legend-item"><span class="badge font-monospace" style="background: rgba(0, 168, 150, 0.15); color: #008779;">Last Year Demand</span> <span>Units sold same month last year</span></div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="legend-item"><span class="badge font-monospace" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">Shelf Stock</span> <span>Units physically in store right now</span></div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="legend-item"><span class="badge font-monospace" style="background: rgba(2, 128, 144, 0.15); color: #028090;">Projected Need</span> <span>Expected units needed this month</span></div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="legend-item"><span class="badge font-monospace" style="background: rgba(245, 158, 11, 0.15); color: #d97706;">Safety Buffer</span> <span>Backup cushion for supplier delivery</span></div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="legend-item"><span class="badge font-monospace" style="background: rgba(37, 99, 235, 0.15); color: #2563eb;">Suggested PO</span> <span>Units recommended to restock</span></div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="legend-item"><span class="badge font-monospace" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">Depletion Risk</span> <span>High if stock &lt; last year demand</span></div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="legend-item"><span class="badge font-monospace" style="background: rgba(168, 85, 247, 0.15); color: #a855f7;">Days Left</span> <span>Days before current shelf runs out</span></div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="legend-item"><span class="badge font-monospace" style="background: rgba(100, 116, 139, 0.18); color: #64748b;">Lead Time</span> <span>7 days for distributor delivery</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- KPI Summary Cards -->
+          <div class="inv-mini-kpi-grid" id="forecast-kpi-summary" style="margin-bottom: 1.25rem;">
+            <!-- Populated dynamically by forecast.controller.js -->
           </div>
 
           <div class="dashboard-grid" style="margin-bottom: 1.5rem;">
             <div class="glass-card" style="margin-bottom: 0;">
               <div class="card-header">
-                <h3><i class="ri-line-chart-fill"></i> 30-Day Demand Trend Prediction</h3>
+                <h3 id="forecast-trend-title"><i class="ri-bar-chart-grouped-line"></i> Current Shelf Stock vs. Last Year Demand</h3>
+                <span id="forecast-period-badge" class="badge bg-light text-secondary border">November 2026 vs. November 2025</span>
               </div>
               <div style="height: 260px; position: relative;">
                 <canvas id="demandForecastChart"></canvas>
@@ -828,7 +1139,7 @@
 
             <div class="glass-card" style="margin-bottom: 0;">
               <div class="card-header">
-                <h3><i class="ri-pie-chart-2-fill"></i> Category Demand Share</h3>
+                <h3 id="forecast-category-title"><i class="ri-pie-chart-2-fill"></i> Category Demand Share</h3>
               </div>
               <div style="height: 260px; position: relative;">
                 <canvas id="categoryForecastChart"></canvas>
@@ -838,19 +1149,21 @@
 
           <div class="glass-card">
             <div class="card-header">
-              <h3><i class="ri-calculator-line"></i> Automated Purchase Order Recommendations</h3>
+              <h3><i class="ri-calculator-line"></i> Seasonal Restocking &amp; Purchase Order Table</h3>
             </div>
             <div class="table-responsive">
               <table class="custom-table">
                 <thead>
                   <tr>
-                    <th>Medicine & Category</th>
+                    <th>Medicine &amp; Category</th>
                     <th>Current Stock</th>
-                    <th>Avg. Daily Sales</th>
-                    <th>30-Day Forecasted Demand</th>
-                    <th>Safety Stock Buffer</th>
+                    <th id="forecast-sold-col-header">Last Year Demand</th>
+                    <th>Recent 30-Day Sales</th>
+                    <th id="forecast-horizon-col-header">Projected 30-Day Need</th>
+                    <th>Safety Buffer</th>
                     <th>Stock Depletion Risk</th>
-                    <th>Purchase Order Action</th>
+                    <th>Suggested Reorder</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody id="forecast-table-body">
@@ -865,20 +1178,33 @@
         <!-- 5. SALES HISTORY VIEW -->
         <section id="view-sales" class="view-section">
           <div class="glass-card">
-            <div class="card-header">
-              <h3><i class="ri-history-line"></i> Complete Transaction History</h3>
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+              <div>
+                <h3 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;"><i class="ri-history-line" style="color: var(--primary);"></i> Complete Transaction History &amp; Sales Logs</h3>
+                <p style="margin: 0.25rem 0 0 0; font-size: 0.82rem; color: var(--text-muted, #64748b);">Browse official customer receipts, cashier audit trails, and payment logs</p>
+              </div>
+              <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+                <div class="search-input-wrap" style="position: relative;">
+                  <i class="ri-search-line" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.95rem;"></i>
+                  <input type="text" id="sales-search-input" placeholder="Search OR #, cashier, customer..." class="form-control form-control-sm" style="padding-left: 2rem; width: 230px; border-radius: 8px;">
+                </div>
+                <button type="button" class="btn btn-sm btn-outline" id="btn-refresh-sales" title="Refresh Sales Logs">
+                  <i class="ri-refresh-line"></i> Refresh
+                </button>
+              </div>
             </div>
             <div class="table-responsive">
               <table class="custom-table">
                 <thead>
                   <tr>
                     <th>Order OR #</th>
-                    <th>Date & Time</th>
+                    <th>Date &amp; Time</th>
                     <th>Cashier</th>
+                    <th>Customer</th>
                     <th>Item Count</th>
                     <th>Payment Method</th>
                     <th>Total Revenue</th>
-                    <th>Receipt</th>
+                    <th style="text-align: center;">Official Receipt</th>
                   </tr>
                 </thead>
                 <tbody id="sales-table-body">
@@ -892,38 +1218,40 @@
 
         <!-- 6. SUPPLIERS VIEW -->
         <section id="view-suppliers" class="view-section">
+          <!-- Suppliers KPI Summary Row -->
+          <div class="inv-mini-kpi-grid" id="suppliers-kpi-summary" style="margin-bottom: 1.15rem;">
+            <!-- Populated dynamically by SuppliersController -->
+          </div>
+
           <!-- Suppliers Header Banner & Action Bar -->
-          <div class="glass-card mb-4">
+          <div class="glass-card" style="margin-bottom: 1.25rem; padding: 1.15rem 1.4rem;">
             <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
               <div>
-                <h3 class="fs-5 fw-bold text-dark d-flex align-items-center gap-2 mb-1">
-                  <i class="ri-building-4-line text-success"></i> Distributor & Supplier Directory
+                <h3
+                  style="font-size: 1.08rem; font-weight: 800; color: var(--text-main, #0f172a); margin: 0 0 0.2rem 0; display: flex; align-items: center; gap: 0.45rem;">
+                  <i class="ri-building-4-line" style="color: var(--primary);"></i> Accredited Distributor &amp;
+                  Supplier Directory
                 </h3>
-                <p class="small text-muted mb-0">
-                  Manage accredited pharmaceutical distributors, manufacturing partners, contact points, and supply procurement channels.
+                <p style="font-size: 0.82rem; color: var(--text-muted, #64748b); margin: 0;">
+                  Manage pharmaceutical distributors, sales representatives, contact hotlines, and delivery history.
                 </p>
               </div>
 
-              <div class="d-flex align-items-center gap-3 flex-wrap">
-                <div class="quick-search" style="min-width: 250px;">
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <div class="quick-search" style="min-width: 260px;">
                   <i class="ri-search-line"></i>
-                  <input
-                    type="text"
-                    id="supplier-search-input"
-                    placeholder="Search distributor, contact, phone..."
-                  >
+                  <input type="text" id="supplier-search-input" placeholder="Search distributor, contact, phone...">
                 </div>
-                <button
-                  class="btn btn-primary d-flex align-items-center gap-2"
-                  id="btn-open-supplier-modal"
-                >
+                <button type="button" class="btn btn-primary d-flex align-items-center gap-2"
+                  id="btn-open-supplier-modal" style="white-space: nowrap;">
                   <i class="ri-add-line fw-bold"></i> Add New Supplier
                 </button>
               </div>
             </div>
           </div>
 
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;" id="suppliers-grid-container">
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.15rem;"
+            id="suppliers-grid-container">
             <!-- Dynamic Suppliers Cards -->
           </div>
         </section>
@@ -932,42 +1260,92 @@
         <section id="view-reports" class="view-section">
           <!-- Print-Only Official Pharmacy Header -->
           <div class="report-print-header">
-            <h2 style="font-family: var(--font-heading); margin: 0; color: #0f172a;">XYRA ANDREA PHARMACY</h2>
-            <p style="margin: 0.2rem 0; font-size: 0.85rem; color: #64748b;">FDA/DOH Regulated Community Drugstore | Sales & Inventory Audit</p>
-            <h3 id="report-print-title" style="margin-top: 0.5rem; color: var(--primary);">Sales & Revenue Summary Report</h3>
-            <span id="report-print-timestamp" style="font-size: 0.8rem; color: #94a3b8;">Generated on: -</span>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 10px; margin-bottom: 12px; border-bottom: 2px solid #0f172a;">
+              <div>
+                <h2 style="font-family: var(--font-heading, sans-serif); margin: 0; font-size: 1.4rem; font-weight: 800; color: #0f172a; letter-spacing: -0.3px;">XYRA ANDREA PHARMACY</h2>
+                <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: #475569; font-weight: 600;">FDA/DOH Regulated Community Drugstore | Audit &amp; Analytics Report</p>
+                <p style="margin: 2px 0 0 0; font-size: 0.75rem; color: #64748b;">Brgy. San Jose, Rodriguez, Rizal • License No. CDRR-NCR-DS-884920</p>
+              </div>
+              <div style="text-align: right;">
+                <h3 id="report-print-title" style="margin: 0; font-size: 1.15rem; color: #008170; font-weight: 800;">Sales &amp; Revenue Summary Report</h3>
+                <div id="report-print-period-badge" style="font-size: 0.82rem; font-weight: 700; color: #0f172a; margin-top: 4px; padding: 2px 8px; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; display: inline-block;">All Recorded Dates</div>
+                <div id="report-print-timestamp" style="font-size: 0.74rem; color: #64748b; margin-top: 3px;">Generated on: -</div>
+              </div>
+            </div>
           </div>
 
           <!-- Interactive Filter & Action Bar -->
           <div class="report-filter-bar">
             <div class="report-type-pills">
               <button class="report-pill-btn active" data-report-type="sales">
-                <i class="ri-receipt-line"></i> Sales & Revenue
+                <i class="ri-receipt-line"></i> Sales &amp; Revenue
               </button>
               <button class="report-pill-btn" data-report-type="inventory">
                 <i class="ri-store-2-line"></i> Inventory Valuation
               </button>
               <button class="report-pill-btn" data-report-type="losses">
-                <i class="ri-delete-bin-line"></i> Disposals & Losses
+                <i class="ri-delete-bin-line"></i> Disposals &amp; Losses
               </button>
               <button class="report-pill-btn" data-report-type="fast-moving">
                 <i class="ri-speed-up-line"></i> Fast/Slow Moving (FSN)
               </button>
             </div>
 
-            <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
-              <select id="report-date-range" class="form-control" style="width: auto; padding: 0.45rem 0.8rem; border-radius: 8px; font-size: 0.85rem; border: 1px solid var(--border-color);">
-                <option value="all">All Recorded Dates</option>
-                <option value="today">Today</option>
-                <option value="week">Past 7 Days</option>
-                <option value="month">This Month</option>
-              </select>
+            <!-- Dynamic Multi-Mode Filtering: Daily, Monthly, Date Range, Yearly -->
+            <div class="report-filters-group">
+              <!-- Filter Mode Selector -->
+              <div class="report-filter-select-wrap">
+                <select id="report-filter-mode" class="form-control"
+                  style="width: auto; min-width: 140px; padding: 0.42rem 0.75rem; border-radius: 8px; font-size: 0.84rem; font-weight: 700; border: 1px solid var(--border-color); background: #ffffff;">
+                  <option value="all">All Dates</option>
+                  <option value="daily">Daily</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="range">Date Range</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+              </div>
 
-              <div class="quick-search" style="max-width: 200px;">
+              <!-- 1. Daily Specific Date Picker -->
+              <div id="report-filter-daily-wrap" class="report-sub-filter" style="display: none;">
+                <input type="date" id="report-filter-daily-input" class="form-control"
+                  style="width: auto; padding: 0.38rem 0.65rem; border-radius: 8px; font-size: 0.82rem; font-weight: 600;"
+                  title="Filter by Specific Date">
+              </div>
+
+              <!-- 2. Monthly Specific Month Picker -->
+              <div id="report-filter-monthly-wrap" class="report-sub-filter" style="display: none;">
+                <input type="month" id="report-filter-monthly-input" class="form-control"
+                  style="width: auto; padding: 0.38rem 0.65rem; border-radius: 8px; font-size: 0.82rem; font-weight: 600;"
+                  title="Filter by Month &amp; Year">
+              </div>
+
+              <!-- 3. Date Range (Start & End) -->
+              <div id="report-filter-range-wrap" class="report-sub-filter" style="display: none; align-items: center; gap: 0.35rem;">
+                <input type="date" id="report-filter-start-date" class="form-control"
+                  style="width: auto; padding: 0.38rem 0.65rem; border-radius: 8px; font-size: 0.82rem; font-weight: 600;"
+                  title="From Date">
+                <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700;">to</span>
+                <input type="date" id="report-filter-end-date" class="form-control"
+                  style="width: auto; padding: 0.38rem 0.65rem; border-radius: 8px; font-size: 0.82rem; font-weight: 600;"
+                  title="To Date">
+              </div>
+
+              <!-- 4. Yearly Year Selector -->
+              <div id="report-filter-yearly-wrap" class="report-sub-filter" style="display: none;">
+                <select id="report-filter-yearly-select" class="form-control"
+                  style="width: auto; padding: 0.42rem 0.75rem; border-radius: 8px; font-size: 0.84rem; font-weight: 700; border: 1px solid var(--border-color); background: #ffffff;"
+                  title="Filter by Calendar Year">
+                  <!-- Dynamically populated -->
+                </select>
+              </div>
+
+              <!-- Quick Search Input -->
+              <div class="quick-search" style="max-width: 185px;">
                 <i class="ri-search-line"></i>
                 <input type="text" id="report-search-input" placeholder="Search report...">
               </div>
 
+              <!-- Action Buttons -->
               <button class="btn btn-outline btn-sm" id="btn-export-report-csv" title="Download CSV Spreadsheet">
                 <i class="ri-file-excel-2-line"></i> Export CSV
               </button>
@@ -986,8 +1364,10 @@
           <div class="glass-card">
             <div class="card-header">
               <div>
-                <h3 id="report-active-title"><i class="ri-file-chart-fill" style="color: var(--primary);"></i> Sales & Revenue Summary Report</h3>
-                <span id="report-active-desc" style="font-size: 0.8rem; color: var(--text-muted);">Detailed revenue receipts, payment distributions, and discount deductions</span>
+                <h3 id="report-active-title"><i class="ri-file-chart-fill" style="color: var(--primary);"></i> Sales &amp;
+                  Revenue Summary Report</h3>
+                <span id="report-active-desc" style="font-size: 0.8rem; color: var(--text-muted);">Detailed revenue
+                  receipts, payment distributions, and discount deductions</span>
               </div>
             </div>
 
@@ -1002,6 +1382,25 @@
               </table>
             </div>
           </div>
+
+          <!-- Print-Only Regulatory Signatures Block -->
+          <div class="report-print-signatures">
+            <div class="report-print-sig-col">
+              <div class="report-print-sig-line">Prepared &amp; Generated By:</div>
+              <div class="report-print-sig-name" id="report-sig-prepared">Pharmacist-on-Duty</div>
+              <div class="report-print-sig-role">Registered Pharmacist (RPh)</div>
+            </div>
+            <div class="report-print-sig-col">
+              <div class="report-print-sig-line">Reviewed &amp; Verified By:</div>
+              <div class="report-print-sig-name">Supervising Pharmacist</div>
+              <div class="report-print-sig-role">Pharmacy Operations Head</div>
+            </div>
+            <div class="report-print-sig-col">
+              <div class="report-print-sig-line">Official Pharmacy Seal:</div>
+              <div class="report-print-sig-name">[ OFFICIAL AUDIT SEAL ]</div>
+              <div class="report-print-sig-role">Xyra Andrea Pharmacy</div>
+            </div>
+          </div>
         </section>
 
       </main>
@@ -1010,29 +1409,37 @@
   </div>
 
   <!-- Bootstrap 5.3.3 Bundle JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
 
   <!-- JavaScript Scripts (Layered Modular Architecture) -->
   <!-- 1. Service & State Layer -->
-  <script src="js/services/api.service.js"></script>
+  <script src="js/services/api.service.js?v=20261102_v14"></script>
 
   <!-- 2. UI Dialogs & Alerts -->
-  <script src="js/ui/swal.helpers.js"></script>
+  <script src="js/ui/swal.helpers.js?v=20261102_v14"></script>
 
   <!-- 3. Feature Controllers -->
-  <script src="js/modules/dashboard.controller.js"></script>
-  <script src="js/modules/pos.controller.js"></script>
-  <script src="js/modules/inventory.controller.js"></script>
-  <script src="js/modules/stock-in.controller.js"></script>
-  <script src="js/modules/stock-out.controller.js"></script>
-  <script src="js/modules/conversion.controller.js"></script>
-  <script src="js/modules/movements.controller.js"></script>
-  <script src="js/modules/forecast.controller.js"></script>
-  <script src="js/modules/sales.controller.js"></script>
-  <script src="js/modules/suppliers.controller.js"></script>
-  <script src="js/modules/reports.controller.js"></script>
+  <script src="js/modules/dashboard.controller.js?v=20261101_v6"></script>
+  <script src="js/modules/pos.controller.js?v=20261102_v14"></script>
+  <script src="js/modules/inventory.controller.js?v=20261101_v6"></script>
+  <script src="js/modules/stock-in.controller.js?v=20261101_v6"></script>
+  <script src="js/modules/stock-out.controller.js?v=20261101_v6"></script>
+  <script src="js/modules/conversion.controller.js?v=20261101_v6"></script>
+  <script src="js/modules/movements.controller.js?v=20261101_v6"></script>
+  <script src="js/modules/forecast.controller.js?v=20261102_v14"></script>
+  <script src="js/modules/sales.controller.js?v=20261102_v14"></script>
+  <script src="js/modules/suppliers.controller.js?v=20261101_v6"></script>
+  <script src="js/modules/reports.controller.js?v=20261103_v1"></script>
 
   <!-- 4. Main App Controller & Navigation Router -->
-  <script src="js/app.js"></script>
+  <script src="js/app.js?v=20261102_v14"></script>
+
+  <!-- Cyber-Deck 2030 Suite: EKG Telemetry, Sound FX & Theme Switcher -->
+  <script src="js/ui/ekg-monitor.js?v=20261101_v6"></script>
+  <script src="js/ui/sound-fx.js?v=20261101_v6"></script>
+  <script src="js/ui/theme-switcher.js?v=20261101_v6"></script>
 </body>
+
 </html>

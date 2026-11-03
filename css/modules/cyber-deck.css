@@ -1,0 +1,1745 @@
+/* ==========================================================================
+   PharmaTrack - Cyber-Deck 2030 Master Theme System
+   Next-Generation Obsidian & Bioluminescent Healthcare Command Operating System
+   ========================================================================== */
+
+:root {
+  --cyber-bg: #060913;
+  --cyber-surface: #0c1322;
+  --cyber-card: rgba(13, 21, 38, 0.85);
+  --cyber-card-hover: rgba(18, 29, 52, 0.95);
+  --cyber-border: rgba(0, 242, 254, 0.22);
+  --cyber-border-glow: rgba(0, 242, 254, 0.45);
+  --cyber-neon-cyan: #00f2fe;
+  --cyber-neon-teal: #00e5cc;
+  --cyber-neon-emerald: #10b981;
+  --cyber-neon-purple: #a855f7;
+  --cyber-neon-amber: #f59e0b;
+  --cyber-neon-red: #ff3366;
+  --cyber-text-main: #f1f5f9;
+  --cyber-text-muted: #94a3b8;
+}
+
+:root[data-theme="cyber"],
+body.cyber-theme {
+  color-scheme: dark;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --text-dim: #cbd5e1;
+  --bs-body-color: #f1f5f9;
+  --bs-body-bg: #060913;
+  --bs-heading-color: #ffffff;
+  --bs-border-color: rgba(0, 242, 254, 0.2);
+  --bg-dark: #060913;
+  --bg-card: rgba(13, 21, 38, 0.85);
+  --bg-card-hover: rgba(18, 29, 52, 0.95);
+  --bg-input: rgba(15, 23, 42, 0.9);
+  --border-color: rgba(0, 242, 254, 0.22);
+}
+
+/* ==========================================================================
+   Applied When Cyber-Theme is Active (body.cyber-theme or :root[data-theme="cyber"])
+   ========================================================================== */
+body.cyber-theme,
+[data-theme="cyber"] body {
+  background-color: var(--cyber-bg) !important;
+  background-image: 
+    radial-gradient(at 15% 15%, rgba(0, 242, 254, 0.12) 0px, transparent 55%),
+    radial-gradient(at 85% 85%, rgba(0, 229, 204, 0.1) 0px, transparent 55%),
+    linear-gradient(to right, rgba(0, 242, 254, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 242, 254, 0.04) 1px, transparent 1px) !important;
+  background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px !important;
+  color: var(--cyber-text-main) !important;
+}
+
+/* 1. Cyber Sidebar */
+body.cyber-theme .sidebar {
+  background: rgba(9, 14, 26, 0.96) !important;
+  border-right: 1px solid rgba(0, 242, 254, 0.18) !important;
+  box-shadow: 10px 0 35px rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+body.cyber-theme .brand-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+body.cyber-theme .brand-icon {
+  background: linear-gradient(135deg, #00f2fe 0%, #00a896 100%) !important;
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.45) !important;
+}
+
+body.cyber-theme .brand-info h1 {
+  color: #ffffff !important;
+  text-shadow: 0 0 12px rgba(0, 242, 254, 0.35);
+}
+
+body.cyber-theme .brand-tag {
+  color: #00f2fe !important;
+}
+
+body.cyber-theme .nav-group-title {
+  color: #64748b !important;
+  letter-spacing: 0.12em !important;
+}
+
+body.cyber-theme .nav-item button {
+  color: #94a3b8 !important;
+  border-color: transparent !important;
+}
+
+body.cyber-theme .nav-item button i {
+  color: #64748b !important;
+}
+
+body.cyber-theme .nav-item button:hover {
+  background: rgba(0, 242, 254, 0.08) !important;
+  color: #ffffff !important;
+  border-color: rgba(0, 242, 254, 0.25) !important;
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.15) !important;
+}
+
+body.cyber-theme .nav-item button:hover i {
+  color: #00f2fe !important;
+}
+
+body.cyber-theme .nav-item button.active {
+  background: linear-gradient(90deg, rgba(0, 242, 254, 0.2) 0%, rgba(0, 168, 150, 0.05) 100%) !important;
+  border: 1px solid rgba(0, 242, 254, 0.45) !important;
+  color: #00f2fe !important;
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.25) !important;
+}
+
+body.cyber-theme .nav-item button.active i {
+  color: #00f2fe !important;
+  filter: drop-shadow(0 0 8px #00f2fe);
+}
+
+body.cyber-theme .nav-item button.active::before {
+  background: #00f2fe !important;
+  box-shadow: 0 0 10px #00f2fe !important;
+}
+
+body.cyber-theme .sidebar-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+body.cyber-theme .user-profile {
+  background: rgba(15, 23, 42, 0.8) !important;
+  border-color: rgba(0, 242, 254, 0.2) !important;
+}
+
+body.cyber-theme .user-details h4 {
+  color: #ffffff !important;
+}
+
+/* 2. Cyber Topbar */
+body.cyber-theme .top-header {
+  background: rgba(8, 13, 24, 0.92) !important;
+  border-bottom: 1px solid rgba(0, 242, 254, 0.18) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+body.cyber-theme .page-title h2 {
+  color: #ffffff !important;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+body.cyber-theme .page-title p {
+  color: #94a3b8 !important;
+}
+
+body.cyber-theme .header-btn {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border-color: rgba(0, 242, 254, 0.22) !important;
+  color: #cbd5e1 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.cyber-theme .header-btn:hover {
+  background: rgba(0, 242, 254, 0.15) !important;
+  border-color: #00f2fe !important;
+  color: #00f2fe !important;
+  box-shadow: 0 0 18px rgba(0, 242, 254, 0.4) !important;
+}
+
+body.cyber-theme .time-widget {
+  background: rgba(0, 242, 254, 0.1) !important;
+  border-color: rgba(0, 242, 254, 0.3) !important;
+  color: #00f2fe !important;
+  text-shadow: 0 0 8px rgba(0, 242, 254, 0.5);
+}
+
+body.cyber-theme .header-system-chip {
+  background: rgba(16, 185, 129, 0.12) !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  color: #34d399 !important;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+}
+
+.pharma-live-beacon {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: liveBeaconPulse 1.8s infinite;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+@keyframes liveBeaconPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.75); }
+}
+
+/* 3. Cyber Cards & Glass Surfaces */
+body.cyber-theme .glass-card,
+body.cyber-theme .card,
+body.cyber-theme .kpi-card,
+body.cyber-theme .inv-mini-kpi,
+body.cyber-theme .product-card,
+body.cyber-theme .stat-summary-card,
+body.cyber-theme .stock-list-card,
+body.cyber-theme .doc-slip {
+  background: var(--cyber-card) !important;
+  border: 1px solid var(--cyber-border) !important;
+  box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 242, 254, 0.05) !important;
+  color: var(--cyber-text-main) !important;
+  backdrop-filter: blur(14px) !important;
+}
+
+body.cyber-theme .kpi-card:hover,
+body.cyber-theme .inv-mini-kpi:hover,
+body.cyber-theme .product-card:hover,
+body.cyber-theme .glass-card:hover {
+  background: var(--cyber-card-hover) !important;
+  border-color: var(--cyber-border-glow) !important;
+  box-shadow: 0 16px 36px -5px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 242, 254, 0.25) !important;
+}
+
+body.cyber-theme .kpi-details h3,
+body.cyber-theme .inv-mini-details h4,
+body.cyber-theme .card-header h3,
+body.cyber-theme .product-info h4 {
+  color: #ffffff !important;
+}
+
+body.cyber-theme .kpi-details span,
+body.cyber-theme .inv-mini-details span {
+  color: #94a3b8 !important;
+}
+
+/* 4. Cyber Tables */
+body.cyber-theme .table-responsive {
+  background: rgba(10, 16, 30, 0.95) !important;
+  border: 1px solid var(--cyber-border) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
+}
+
+body.cyber-theme .custom-table th,
+body.cyber-theme .table th {
+  background: rgba(15, 23, 42, 0.95) !important;
+  color: #94a3b8 !important;
+  border-bottom: 1px solid rgba(0, 242, 254, 0.2) !important;
+}
+
+body.cyber-theme .custom-table td,
+body.cyber-theme .table td {
+  color: #e2e8f0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+body.cyber-theme .custom-table tbody tr:hover,
+body.cyber-theme .table tbody tr:hover {
+  background-color: rgba(0, 242, 254, 0.06) !important;
+}
+
+body.cyber-theme .btn-action-icon {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #cbd5e1 !important;
+}
+
+body.cyber-theme .btn-action-icon:hover {
+  background: rgba(0, 242, 254, 0.2) !important;
+  border-color: #00f2fe !important;
+  color: #00f2fe !important;
+  box-shadow: 0 0 12px rgba(0, 242, 254, 0.4) !important;
+}
+
+/* 5. Cyber Form Inputs & Controls */
+body.cyber-theme input,
+body.cyber-theme select,
+body.cyber-theme textarea,
+body.cyber-theme .form-control,
+body.cyber-theme .form-select {
+  background-color: rgba(15, 23, 42, 0.9) !important;
+  border-color: rgba(0, 242, 254, 0.25) !important;
+  color: #ffffff !important;
+}
+
+body.cyber-theme input:focus,
+body.cyber-theme select:focus,
+body.cyber-theme textarea:focus,
+body.cyber-theme .form-control:focus,
+body.cyber-theme .form-select:focus {
+  border-color: #00f2fe !important;
+  box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.25), 0 0 15px rgba(0, 242, 254, 0.2) !important;
+}
+
+body.cyber-theme .quick-search input,
+body.cyber-theme .pos-search input {
+  background-color: rgba(15, 23, 42, 0.85) !important;
+  border-color: rgba(0, 242, 254, 0.25) !important;
+  color: #ffffff !important;
+}
+
+/* 6. Cyber Subnav & Pill Buttons */
+body.cyber-theme .inv-subnav-btn {
+  background: rgba(15, 23, 42, 0.8) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #94a3b8 !important;
+}
+
+body.cyber-theme .inv-subnav-btn:hover {
+  background: rgba(0, 242, 254, 0.1) !important;
+  color: #ffffff !important;
+  border-color: rgba(0, 242, 254, 0.3) !important;
+}
+
+body.cyber-theme .inv-subnav-btn.active {
+  background: linear-gradient(135deg, rgba(0, 242, 254, 0.25) 0%, rgba(0, 168, 150, 0.15) 100%) !important;
+  border-color: #00f2fe !important;
+  color: #00f2fe !important;
+  box-shadow: 0 0 16px rgba(0, 242, 254, 0.3) !important;
+}
+
+/* 7. Cyber Modals */
+body.cyber-theme .modal-content {
+  background: rgba(10, 16, 30, 0.98) !important;
+  border: 1px solid rgba(0, 242, 254, 0.35) !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(0, 242, 254, 0.25) !important;
+  color: #f1f5f9 !important;
+}
+
+body.cyber-theme .modal-header {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border-bottom: 1px solid rgba(0, 242, 254, 0.2) !important;
+}
+
+body.cyber-theme .modal-header .modal-title {
+  color: #ffffff !important;
+}
+
+body.cyber-theme .modal-footer {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border-top: 1px solid rgba(0, 242, 254, 0.2) !important;
+}
+
+/* 8. Theme Switcher Button */
+.btn-theme-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  color: #00f2fe;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-theme-switcher:hover {
+  background: rgba(0, 242, 254, 0.2);
+  border-color: #00f2fe;
+  transform: translateY(-1px);
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.35);
+}
+
+
+/* 9. EKG Bio-Waveform Telemetry Display */
+.ekg-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(0, 242, 254, 0.25);
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 242, 254, 0.08);
+}
+
+#ekg-canvas {
+  width: 130px;
+  height: 32px;
+  display: block;
+}
+
+.ekg-telemetry-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  font-family: 'Outfit', sans-serif;
+}
+
+.ekg-bpm {
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.ekg-status {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #10b981;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+
+/* ==========================================================================
+   10. Comprehensive Color Contrast & Foreground/Background Validation Suite
+   Strict WCAG AA/AAA Accessibility Compliance Across All Modules
+   ========================================================================== */
+
+/* Universal Heading & Label Contrast */
+body.cyber-theme h1,
+body.cyber-theme h2,
+body.cyber-theme h3,
+body.cyber-theme h4,
+body.cyber-theme h5,
+body.cyber-theme h6,
+body.cyber-theme strong,
+body.cyber-theme .text-dark {
+  color: #ffffff !important;
+}
+
+body.cyber-theme p,
+body.cyber-theme span,
+body.cyber-theme li,
+body.cyber-theme td {
+  color: #e2e8f0;
+}
+
+body.cyber-theme .text-muted,
+body.cyber-theme .text-secondary,
+body.cyber-theme small {
+  color: #94a3b8 !important;
+}
+
+body.cyber-theme label,
+body.cyber-theme .form-label {
+  color: #cbd5e1 !important;
+  font-weight: 600;
+}
+
+/* Native Select Options (Guarantees White Text on Dark Background in Chrome/Edge/Firefox) */
+body.cyber-theme select option {
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+}
+
+/* POS Module Contrast Validation */
+/* POS Module Contrast Validation & Dark Cyber Aesthetic */
+body.cyber-theme .pos-container {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+body.cyber-theme .pos-cart-panel {
+  background: rgba(10, 16, 30, 0.95) !important;
+  border-color: rgba(0, 242, 254, 0.22) !important;
+  border: 1px solid rgba(0, 242, 254, 0.22) !important;
+  box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(14px) !important;
+  border-radius: 14px !important;
+}
+
+body.cyber-theme .cart-header {
+  border-bottom: 1px solid rgba(0, 242, 254, 0.18) !important;
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+body.cyber-theme #cart-count-badge {
+  background: rgba(0, 242, 254, 0.15) !important;
+  border: 1px solid rgba(0, 242, 254, 0.35) !important;
+  color: #00f2fe !important;
+}
+
+body.cyber-theme .cart-items-list {
+  background: transparent !important;
+}
+
+body.cyber-theme .cart-item {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(0, 242, 254, 0.18) !important;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 242, 254, 0.2) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+  border-radius: 10px !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.cyber-theme .cart-item:hover {
+  background: rgba(18, 28, 50, 0.95) !important;
+  border-color: rgba(0, 242, 254, 0.35) !important;
+  background: rgba(18, 28, 52, 0.95) !important;
+  border-color: rgba(0, 242, 254, 0.45) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 242, 254, 0.15) !important;
+}
+
+body.cyber-theme .cart-item-name {
+  color: #ffffff !important;
+}
+
+body.cyber-theme .cart-item-unit-price {
+  color: #38bdf8 !important;
+  font-weight: 700;
+  font-weight: 700 !important;
+}
+
+body.cyber-theme .cart-item-meta,
+body.cyber-theme .cart-item-uom,
+body.cyber-theme .cart-item-category-tag {
+body.cyber-theme .cart-item-uom {
+  color: #94a3b8 !important;
+}
+
+body.cyber-theme .cart-item-category-tag {
+  background: rgba(0, 242, 254, 0.12) !important;
+  border: 1px solid rgba(0, 242, 254, 0.25) !important;
+  color: #38bdf8 !important;
+  border-radius: 4px !important;
+  font-weight: 600 !important;
+}
+
+body.cyber-theme .cart-item-line-total {
+  color: #ffffff !important;
+  font-weight: 800;
+  color: #00f2fe !important;
+  font-weight: 800 !important;
+  text-shadow: 0 0 10px rgba(0, 242, 254, 0.35) !important;
+}
+
+body.cyber-theme .cart-item-sub-calc {
+  color: #64748b !important;
+}
+
+body.cyber-theme .cart-batch-select-wrap {
+  background: rgba(10, 16, 30, 0.9) !important;
+  border: 1px solid rgba(0, 242, 254, 0.25) !important;
+  border-radius: 6px !important;
+}
+
+body.cyber-theme .cart-batch-select-wrap:focus-within {
+  border-color: #00f2fe !important;
+  background: rgba(15, 23, 42, 0.95) !important;
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.35) !important;
+}
+
+body.cyber-theme .cart-batch-icon {
+  color: #00f2fe !important;
+}
+
+body.cyber-theme .pos-cart-batch-select {
+  background: transparent !important;
+  color: #f1f5f9 !important;
+  border: none !important;
+}
+
+body.cyber-theme .pos-cart-batch-select option {
+  background: #0f172a !important;
+  color: #ffffff !important;
+}
+
+body.cyber-theme .cart-qty-btn {
+  background: rgba(15, 23, 42, 0.95) !important;
+  border: 1px solid rgba(0, 242, 254, 0.25) !important;
+  color: #cbd5e1 !important;
+  border-radius: 6px !important;
+}
+
+body.cyber-theme .cart-qty-btn:hover {
+  background: rgba(0, 242, 254, 0.2) !important;
+  border-color: #00f2fe !important;
+  color: #00f2fe !important;
+}
+
+body.cyber-theme .cart-qty-btn.cart-remove-btn {
+  background: rgba(239, 68, 68, 0.18) !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+  color: #f87171 !important;
+}
+
+body.cyber-theme .cart-qty-btn.cart-remove-btn:hover {
+  background: #ef4444 !important;
+  border-color: #ef4444 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.5) !important;
+}
+
+body.cyber-theme .cart-qty-input {
+  background: rgba(10, 16, 30, 0.95) !important;
+  border: 1px solid rgba(0, 242, 254, 0.25) !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+}
+
+body.cyber-theme .cart-qty-input:focus {
+  border-color: #00f2fe !important;
+  box-shadow: 0 0 8px rgba(0, 242, 254, 0.35) !important;
+  background: rgba(15, 23, 42, 0.95) !important;
+}
+
+/* POS Badges */
+body.cyber-theme .cart-badge-fefo {
+  background: rgba(16, 185, 129, 0.18) !important;
+  color: #34d399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+}
+
+body.cyber-theme .cart-badge-exp-soon {
+  background: rgba(245, 158, 11, 0.18) !important;
+  color: #fbbf24 !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+}
+
+body.cyber-theme .cart-badge-expired {
+  background: rgba(239, 68, 68, 0.22) !important;
+  color: #f87171 !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+}
+
+body.cyber-theme .cart-badge-stock {
+  background: rgba(15, 23, 42, 0.8) !important;
+  color: #94a3b8 !important;
+  border: 1px solid rgba(0, 242, 254, 0.18) !important;
+}
+
+body.cyber-theme .cart-badge-danger {
+  background: rgba(239, 68, 68, 0.22) !important;
+  color: #f87171 !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+}
+
+/* Cart Summary */
+body.cyber-theme .cart-summary,
+body.cyber-theme .pos-cart-summary {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border-top: 1px solid rgba(0, 242, 254, 0.2) !important;
+  background: rgba(10, 16, 30, 0.95) !important;
+  border-top: 1px solid rgba(0, 242, 254, 0.22) !important;
+}
+
+body.cyber-theme .summary-row {
+  color: #cbd5e1 !important;
+}
+
+body.cyber-theme .summary-row.total {
+  border-top: 1px dashed rgba(0, 242, 254, 0.3) !important;
+  color: #ffffff !important;
+}
+
+body.cyber-theme .summary-row.total span:last-child,
+body.cyber-theme #cart-total,
+body.cyber-theme .summary-row.total .total-amount {
+  color: #00f2fe !important;
+  text-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+  text-shadow: 0 0 12px rgba(0, 242, 254, 0.5) !important;
+  font-weight: 800 !important;
+}
+
+body.cyber-theme #pos-discount-select {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border: 1px solid rgba(0, 242, 254, 0.25) !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+}
+
+body.cyber-theme #pos-discount-select option {
+  background: #0f172a !important;
+  color: #ffffff !important;
+}
+
+body.cyber-theme #clear-cart-btn {
+  background: rgba(239, 68, 68, 0.15) !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+  color: #f87171 !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease;
+}
+
+body.cyber-theme #clear-cart-btn:hover {
+  background: #ef4444 !important;
+  border-color: #ef4444 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.5) !important;
+}
+
+body.cyber-theme #checkout-btn:not(:disabled) {
+  background: linear-gradient(135deg, #00a896, #028090) !important;
+  border: 1px solid #00f2fe !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.4) !important;
+  font-weight: 800 !important;
+}
+
+body.cyber-theme #checkout-btn:disabled {
+  background: rgba(30, 41, 59, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #64748b !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+}
+
+/* POS Left Panel Filters & Switcher */
+body.cyber-theme .pos-search input,
+body.cyber-theme .quick-search input,
+body.cyber-theme #pos-search-input,
+body.cyber-theme #barcode-scan-input {
+  background: rgba(10, 16, 30, 0.95) !important;
+  border: 1px solid rgba(0, 242, 254, 0.22) !important;
+  color: #ffffff !important;
+  border-radius: 10px !important;
+}
+
+body.cyber-theme .pos-search input:focus,
+body.cyber-theme .quick-search input:focus,
+body.cyber-theme #pos-search-input:focus,
+body.cyber-theme #barcode-scan-input:focus {
+  border-color: #00f2fe !important;
+  box-shadow: 0 0 12px rgba(0, 242, 254, 0.3) !important;
+}
+
+body.cyber-theme .pos-search i,
+body.cyber-theme .quick-search i {
+  color: #00f2fe !important;
+}
+
+body.cyber-theme .pos-view-switcher {
+  background: rgba(10, 16, 30, 0.95) !important;
+  border: 1px solid rgba(0, 242, 254, 0.22) !important;
+  border-radius: 10px !important;
+}
+
+body.cyber-theme .pos-view-btn {
+  background: transparent !important;
+  color: #94a3b8 !important;
+  border: none !important;
+}
+
+body.cyber-theme .pos-view-btn:hover {
+  color: #00f2fe !important;
+  background: rgba(0, 242, 254, 0.1) !important;
+}
+
+body.cyber-theme .pos-view-btn.active {
+  background: rgba(0, 168, 150, 0.28) !important;
+  border: 1px solid #00f2fe !important;
+  color: #00f2fe !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 12px rgba(0, 242, 254, 0.35) !important;
+}
+
+/* POS Category Navigation Bar & Buttons */
+body.cyber-theme .category-pills,
+body.cyber-theme .category-pills-bar {
+  background: rgba(10, 16, 30, 0.95) !important;
+  border: 1px solid rgba(0, 242, 254, 0.22) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(14px) !important;
+  border-radius: 12px !important;
+}
+
+body.cyber-theme .cat-btn {
+  background: rgba(15, 23, 42, 0.92) !important;
+  border: 1px solid rgba(0, 242, 254, 0.22) !important;
+  color: #f1f5f9 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.cyber-theme .cat-btn i {
+  color: #00f2fe !important;
+  text-shadow: 0 0 8px rgba(0, 242, 254, 0.4);
+}
+
+body.cyber-theme .cat-btn .cat-count {
+  background: rgba(0, 242, 254, 0.14) !important;
+  color: #00f2fe !important;
+  border: 1px solid rgba(0, 242, 254, 0.35) !important;
+  font-weight: 800 !important;
+}
+
+body.cyber-theme .cat-btn:hover {
+  background: rgba(0, 242, 254, 0.18) !important;
+  color: #ffffff !important;
+  border-color: #00f2fe !important;
+  box-shadow: 0 0 14px rgba(0, 242, 254, 0.35) !important;
+}
+
+body.cyber-theme .cat-btn:hover i {
+  color: #ffffff !important;
+  text-shadow: 0 0 10px rgba(0, 242, 254, 0.8);
+}
+
+body.cyber-theme .cat-btn:hover .cat-count {
+  background: rgba(0, 242, 254, 0.35) !important;
+  color: #ffffff !important;
+  border-color: #00f2fe !important;
+}
+
+body.cyber-theme .cat-btn.active {
+  background: linear-gradient(135deg, #00a896 0%, #028090 100%) !important;
+  color: #ffffff !important;
+  border-color: #00f2fe !important;
+  box-shadow: 0 0 18px rgba(0, 242, 254, 0.45) !important;
+}
+
+body.cyber-theme .cat-btn.active i {
+  color: #ffffff !important;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+
+body.cyber-theme .cat-btn.active .cat-count {
+  background: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* POS Product Cards & Views */
+body.cyber-theme .product-card {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(0, 242, 254, 0.2) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+}
+
+body.cyber-theme .product-card:hover {
+  border-color: #00f2fe !important;
+  box-shadow: 0 0 18px rgba(0, 242, 254, 0.25) !important;
+  background: rgba(18, 28, 52, 0.95) !important;
+}
+
+body.cyber-theme .product-avatar {
+  background: rgba(0, 242, 254, 0.12) !important;
+  color: #00f2fe !important;
+  border: 1px solid rgba(0, 242, 254, 0.25) !important;
+}
+
+body.cyber-theme .product-info h4,
+body.cyber-theme .pos-tile-body h4,
+body.cyber-theme .pos-list-info h4 {
+  color: #ffffff !important;
+}
+
+body.cyber-theme .product-info p,
+body.cyber-theme .pos-tile-body small,
+body.cyber-theme .pos-list-info p {
+  color: #94a3b8 !important;
+}
+
+body.cyber-theme .product-price-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+body.cyber-theme .pos-tile-bottom {
+  border-top: 1px dashed rgba(0, 242, 254, 0.2) !important;
+}
+
+body.cyber-theme .pos-tile-icon {
+  background: rgba(0, 242, 254, 0.12) !important;
+  color: #00f2fe !important;
+  border: 1px solid rgba(0, 242, 254, 0.25) !important;
+}
+
+body.cyber-theme .pos-tile-plus {
+  background: rgba(0, 242, 254, 0.18) !important;
+  color: #00f2fe !important;
+  border: 1px solid rgba(0, 242, 254, 0.35) !important;
+}
+
+body.cyber-theme .product-card.pos-compact-tile:hover .pos-tile-plus {
+  background: #00f2fe !important;
+  color: #060913 !important;
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.6) !important;
+}
+
+body.cyber-theme .pos-tile-price,
+body.cyber-theme .pos-list-price,
+body.cyber-theme .product-price {
+  color: #00f2fe !important;
+  font-weight: 800;
+  font-weight: 800 !important;
+}
+
+body.cyber-theme .product-add-btn {
+  background: rgba(0, 242, 254, 0.18) !important;
+  color: #00f2fe !important;
+  border: 1px solid rgba(0, 242, 254, 0.35) !important;
+}
+
+body.cyber-theme .product-add-btn:hover {
+  background: #00f2fe !important;
+  color: #060913 !important;
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.6) !important;
+}
+
+/* POS Dense Table View */
+body.cyber-theme .pos-table-wrapper {
+  background: rgba(10, 16, 30, 0.95) !important;
+  border: 1px solid rgba(0, 242, 254, 0.22) !important;
+}
+
+body.cyber-theme .pos-items-table th {
+  background: rgba(15, 23, 42, 0.95) !important;
+  color: #94a3b8 !important;
+  border-bottom: 1px solid rgba(0, 242, 254, 0.22) !important;
+}
+
+body.cyber-theme .pos-items-table td {
+  color: #e2e8f0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+body.cyber-theme .pos-items-table tbody tr:hover {
+  background: rgba(0, 242, 254, 0.08) !important;
+}
+
+body.cyber-theme .mobile-cart-trigger {
+  background: rgba(10, 16, 30, 0.95) !important;
+  border-top: 1px solid rgba(0, 242, 254, 0.22) !important;
+  color: #ffffff !important;
+}
+
+/* POS & Inventory Pagination Controls in Cyber Theme */
+body.cyber-theme .pos-pagination-bar {
+  background: rgba(10, 16, 30, 0.95) !important;
+  border: 1px solid rgba(0, 242, 254, 0.22) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(14px) !important;
+  border-radius: 12px !important;
+}
+
+body.cyber-theme .pos-page-info {
+  color: #94a3b8 !important;
+}
+
+body.cyber-theme .pos-page-info strong {
+  color: #00f2fe !important;
+  text-shadow: 0 0 8px rgba(0, 242, 254, 0.35);
+}
+
+body.cyber-theme .pos-page-size-wrap {
+  color: #94a3b8 !important;
+}
+
+body.cyber-theme .pos-page-size-select {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border: 1px solid rgba(0, 242, 254, 0.25) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+}
+
+body.cyber-theme .pos-page-size-select:focus {
+  border-color: #00f2fe !important;
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.35) !important;
+}
+
+body.cyber-theme .pos-page-size-select option {
+  background: #0f172a !important;
+  color: #ffffff !important;
+}
+
+body.cyber-theme .pos-page-btn {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(0, 242, 254, 0.2) !important;
+  color: #cbd5e1 !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+body.cyber-theme .pos-page-btn:hover:not(:disabled) {
+  background: rgba(0, 242, 254, 0.15) !important;
+  border-color: #00f2fe !important;
+  color: #00f2fe !important;
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.3) !important;
+}
+
+body.cyber-theme .pos-page-btn.active {
+  background: rgba(0, 168, 150, 0.3) !important;
+  border-color: #00f2fe !important;
+  color: #00f2fe !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 14px rgba(0, 242, 254, 0.4) !important;
+}
+
+body.cyber-theme .pos-page-btn:disabled {
+  background: rgba(15, 23, 42, 0.5) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #64748b !important;
+  opacity: 0.5 !important;
+}
+
+/* Inventory Sub-Navigation Bar */
+body.cyber-theme .inv-subnav-bar {
+  background: rgba(10, 16, 30, 0.95) !important;
+  border: 1px solid rgba(0, 242, 254, 0.22) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(14px) !important;
+  border-radius: 12px !important;
+}
+
+body.cyber-theme .inv-subnav-btn {
+  background: rgba(15, 23, 42, 0.8) !important;
+  border: 1px solid rgba(0, 242, 254, 0.18) !important;
+  color: #94a3b8 !important;
+  transition: all 0.2s ease !important;
+}
+
+body.cyber-theme .inv-subnav-btn i {
+  color: #38bdf8 !important;
+}
+
+body.cyber-theme .inv-subnav-btn:hover {
+  background: rgba(0, 242, 254, 0.12) !important;
+  border-color: rgba(0, 242, 254, 0.45) !important;
+  color: #00f2fe !important;
+  box-shadow: 0 0 12px rgba(0, 242, 254, 0.25) !important;
+}
+
+body.cyber-theme .inv-subnav-btn:hover i {
+  color: #00f2fe !important;
+}
+
+body.cyber-theme .inv-subnav-btn.active {
+  background: rgba(0, 168, 150, 0.28) !important;
+  border-color: #00f2fe !important;
+  color: #00f2fe !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 16px rgba(0, 242, 254, 0.35) !important;
+}
+
+body.cyber-theme .inv-subnav-btn.active i {
+  color: #00f2fe !important;
+  text-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+}
+
+/* Master-Detail Document Sheets & Split Cards (Stock In, Stock Out, Inventory) */
+body.cyber-theme .stock-list-card,
+body.cyber-theme .doc-slip,
+body.cyber-theme .doc-sheet-panel {
+  background: rgba(13, 21, 38, 0.88) !important;
+  border: 1px solid rgba(0, 242, 254, 0.22) !important;
+  box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  color: #f1f5f9 !important;
+  backdrop-filter: blur(14px) !important;
+  border-radius: 12px !important;
+}
+
+body.cyber-theme .stock-list-header {
+  border-bottom: 1px solid rgba(0, 242, 254, 0.18) !important;
+}
+
+body.cyber-theme .stock-list-header h3 {
+  color: #ffffff !important;
+}
+
+body.cyber-theme .stock-records-table thead th {
+  background: rgba(15, 23, 42, 0.95) !important;
+  color: #94a3b8 !important;
+  border-bottom: 1px solid rgba(0, 242, 254, 0.22) !important;
+}
+
+body.cyber-theme .stock-records-table tbody td {
+  color: #e2e8f0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+body.cyber-theme .stock-selectable-row:hover {
+  background-color: rgba(0, 242, 254, 0.08) !important;
+}
+
+body.cyber-theme .stock-selectable-row.active-stock-row {
+  background-color: rgba(0, 168, 150, 0.22) !important;
+}
+
+body.cyber-theme .stock-selectable-row.active-stock-row td:first-child {
+  box-shadow: inset 3px 0 0 #00f2fe !important;
+}
+
+body.cyber-theme .stock-selectable-row.active-stockout-row {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+}
+
+body.cyber-theme .stock-selectable-row.active-stockout-row td:first-child {
+  box-shadow: inset 3px 0 0 #f87171 !important;
+}
+
+body.cyber-theme .doc-header {
+  border-bottom: 1px solid rgba(0, 242, 254, 0.2) !important;
+}
+
+body.cyber-theme .doc-header h4 {
+  color: #ffffff !important;
+}
+
+body.cyber-theme .doc-header-sub {
+  color: #94a3b8 !important;
+}
+
+body.cyber-theme .doc-icon-btn {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border: 1px solid rgba(0, 242, 254, 0.25) !important;
+  color: #cbd5e1 !important;
+}
+
+body.cyber-theme .doc-icon-btn:hover {
+  background: rgba(0, 242, 254, 0.2) !important;
+  border-color: #00f2fe !important;
+  color: #00f2fe !important;
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.35) !important;
+}
+
+body.cyber-theme .doc-icon-btn.danger:hover {
+  background: rgba(239, 68, 68, 0.25) !important;
+  border-color: #ef4444 !important;
+  color: #f87171 !important;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.35) !important;
+}
+
+body.cyber-theme .doc-meta-box {
+  border-bottom: 1px solid rgba(0, 242, 254, 0.15) !important;
+}
+
+body.cyber-theme .doc-meta-item label,
+body.cyber-theme .doc-meta-item .doc-meta-lbl {
+  color: #94a3b8 !important;
+}
+
+body.cyber-theme .doc-meta-item .doc-meta-val {
+  color: #ffffff !important;
+}
+
+body.cyber-theme .doc-items-table thead th {
+  background: rgba(15, 23, 42, 0.95) !important;
+  color: #94a3b8 !important;
+  border-bottom: 1px solid rgba(0, 242, 254, 0.22) !important;
+}
+
+body.cyber-theme .doc-items-table tbody td {
+  color: #e2e8f0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+body.cyber-theme .doc-bottom-sheet-footer {
+  border-top: 1px solid rgba(0, 242, 254, 0.25) !important;
+}
+
+body.cyber-theme .doc-bottom-meta {
+  color: #94a3b8 !important;
+}
+
+body.cyber-theme .doc-bottom-total {
+  color: #00f2fe !important;
+  text-shadow: 0 0 12px rgba(0, 242, 254, 0.45);
+}
+
+body.cyber-theme .doc-empty-state {
+  background: rgba(15, 23, 42, 0.7) !important;
+  border: 1px dashed rgba(0, 242, 254, 0.25) !important;
+  color: #94a3b8 !important;
+}
+
+body.cyber-theme .doc-empty-state h4 {
+  color: #ffffff !important;
+}
+
+body.cyber-theme .doc-empty-state p {
+  color: #94a3b8 !important;
+}
+
+/* Conversion Split Panels */
+body.cyber-theme .conv-flow-indicator {
+  background: rgba(15, 23, 42, 0.8) !important;
+  border-color: rgba(0, 242, 254, 0.2) !important;
+  color: #e2e8f0 !important;
+}
+
+body.cyber-theme .conv-ratio-badge {
+  background: rgba(0, 242, 254, 0.18) !important;
+  color: #38bdf8 !important;
+  border: 1px solid rgba(0, 242, 254, 0.3) !important;
+}
+
+/* High-Contrast Accessible Status Badges */
+body.cyber-theme .badge-success,
+body.cyber-theme .badge-pill.badge-success {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #34d399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.45) !important;
+}
+
+body.cyber-theme .badge-warning,
+body.cyber-theme .badge-pill.badge-warning {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #fbbf24 !important;
+  border: 1px solid rgba(245, 158, 11, 0.45) !important;
+}
+
+body.cyber-theme .badge-danger,
+body.cyber-theme .badge-pill.badge-danger {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #f87171 !important;
+  border: 1px solid rgba(239, 68, 68, 0.45) !important;
+}
+
+body.cyber-theme .badge-info,
+body.cyber-theme .badge-pill.badge-info {
+  background: rgba(56, 189, 248, 0.2) !important;
+  color: #7dd3fc !important;
+  border: 1px solid rgba(56, 189, 248, 0.45) !important;
+}
+
+body.cyber-theme .badge-teal,
+body.cyber-theme .badge-pill.badge-teal {
+  background: rgba(0, 168, 150, 0.2) !important;
+  color: #2dd4bf !important;
+  border: 1px solid rgba(0, 168, 150, 0.45) !important;
+}
+
+body.cyber-theme .badge-secondary,
+body.cyber-theme .badge-pill.badge-secondary {
+  background: rgba(30, 41, 59, 0.8) !important;
+  color: #cbd5e1 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+/* SweetAlert2 Popup Contrast in Cyber Theme */
+body.cyber-theme div.swal2-popup {
+  background: rgba(10, 16, 30, 0.98) !important;
+  color: #f1f5f9 !important;
+  border: 1px solid rgba(0, 242, 254, 0.35) !important;
+  box-shadow: 0 0 40px rgba(0, 242, 254, 0.2) !important;
+}
+
+body.cyber-theme div.swal2-title {
+  color: #ffffff !important;
+}
+
+body.cyber-theme div.swal2-html-container {
+  color: #cbd5e1 !important;
+}
+
+body.cyber-theme .swal2-input,
+body.cyber-theme .swal2-select,
+body.cyber-theme .swal2-textarea {
+  background: #0f172a !important;
+  border-color: rgba(0, 242, 254, 0.3) !important;
+  color: #ffffff !important;
+}
+
+
+/* Status Text Overrides for Maximum Contrast in Cyber Theme */
+body.cyber-theme .text-success { color: #34d399 !important; }
+body.cyber-theme .text-danger { color: #f87171 !important; }
+body.cyber-theme .text-warning { color: #fbbf24 !important; }
+body.cyber-theme .text-info { color: #38bdf8 !important; }
+
+
+/* Mini KPI Icon Contrast in Cyber Theme */
+body.cyber-theme .inv-mini-icon.teal { color: #2dd4bf !important; }
+body.cyber-theme .inv-mini-icon.amber { color: #fbbf24 !important; }
+body.cyber-theme .inv-mini-icon.red { color: #f87171 !important; }
+body.cyber-theme .inv-mini-icon.blue { color: #60a5fa !important; }
+body.cyber-theme .inv-mini-icon.purple { color: #c084fc !important; }
+
+/* ==========================================================================
+   Comprehensive Dark Mode Text Contrast Enforcement
+   Eliminates black/dark text on dark backgrounds across all views & dialogs
+   ========================================================================== */
+
+/* 1. POS Cart & Detail Typography Overrides */
+body.cyber-theme .cart-item-name {
+  color: #f1f5f9 !important;
+}
+
+body.cyber-theme .cart-qty-input {
+  color: #ffffff !important;
+  background-color: rgba(10, 16, 30, 0.95) !important;
+}
+
+body.cyber-theme .cart-item-unit-price {
+  color: #94a3b8 !important;
+}
+
+/* 2. Global Dark Text Class & Inline Style Neutralizers */
+body.cyber-theme .text-dark,
+body.cyber-theme .text-black,
+body.cyber-theme .text-body {
+  color: #f1f5f9 !important;
+}
+
+body.cyber-theme .text-secondary,
+body.cyber-theme .text-muted {
+  color: #94a3b8 !important;
+}
+
+body.cyber-theme [style*="color: #0f172a"],
+body.cyber-theme [style*="color:#0f172a"],
+body.cyber-theme [style*="color: #1e293b"],
+body.cyber-theme [style*="color:#1e293b"],
+body.cyber-theme [style*="color: #000"],
+body.cyber-theme [style*="color:#000"],
+body.cyber-theme [style*="color: #000000"],
+body.cyber-theme [style*="color:#000000"],
+body.cyber-theme [style*="color: black"],
+body.cyber-theme [style*="color:black"] {
+  color: #f1f5f9 !important;
+}
+
+body.cyber-theme [style*="color: #334155"],
+body.cyber-theme [style*="color:#334155"],
+body.cyber-theme [style*="color: #475569"],
+body.cyber-theme [style*="color:#475569"] {
+  color: #cbd5e1 !important;
+}
+
+body.cyber-theme [style*="color: #64748b"],
+body.cyber-theme [style*="color:#64748b"] {
+  color: #94a3b8 !important;
+}
+
+/* 3. Containers & Boxes with Light Inline Backgrounds in Dark Mode */
+body.cyber-theme [style*="background: #ffffff"],
+body.cyber-theme [style*="background:#ffffff"],
+body.cyber-theme [style*="background: #f8fafc"],
+body.cyber-theme [style*="background:#f8fafc"],
+body.cyber-theme [style*="background: #f1f5f9"],
+body.cyber-theme [style*="background:#f1f5f9"],
+body.cyber-theme [style*="background: #f0fdfa"],
+body.cyber-theme [style*="background:#f0fdfa"],
+body.cyber-theme [style*="background: #f0fdf4"],
+body.cyber-theme [style*="background:#f0fdf4"],
+body.cyber-theme [style*="background: #fef2f2"],
+body.cyber-theme [style*="background:#fef2f2"],
+body.cyber-theme [style*="background: #fff5f5"],
+body.cyber-theme [style*="background:#fff5f5"],
+body.cyber-theme [style*="background: #e6fffa"],
+body.cyber-theme [style*="background:#e6fffa"] {
+  background: rgba(15, 23, 42, 0.88) !important;
+  color: #f1f5f9 !important;
+  border-color: rgba(0, 242, 254, 0.22) !important;
+}
+
+body.cyber-theme .bg-light {
+  background: rgba(15, 23, 42, 0.85) !important;
+  color: #cbd5e1 !important;
+  border-color: rgba(0, 242, 254, 0.2) !important;
+}
+
+body.cyber-theme .table-light,
+body.cyber-theme .table-light th,
+body.cyber-theme .table-light td {
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  color: #f1f5f9 !important;
+  border-color: rgba(0, 242, 254, 0.18) !important;
+}
+
+/* 4. Badges & Legend Items in Dark Mode */
+body.cyber-theme .legend-item {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border-color: rgba(0, 242, 254, 0.2) !important;
+  color: #e2e8f0 !important;
+}
+
+body.cyber-theme .legend-item span {
+  color: #e2e8f0 !important;
+}
+
+body.cyber-theme .legend-item .badge {
+  filter: brightness(1.25);
+  font-weight: 700 !important;
+}
+
+body.cyber-theme .explainer-legend-box {
+  background: rgba(10, 16, 30, 0.92) !important;
+  border-color: rgba(0, 242, 254, 0.22) !important;
+}
+
+body.cyber-theme .explainer-legend-box .badge.bg-light {
+  background: rgba(0, 242, 254, 0.15) !important;
+  color: #00f2fe !important;
+  border-color: rgba(0, 242, 254, 0.35) !important;
+}
+
+/* 5. Code & Pre Elements */
+body.cyber-theme code {
+  color: #00f2fe !important;
+  background: rgba(0, 242, 254, 0.1) !important;
+  border: 1px solid rgba(0, 242, 254, 0.25) !important;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* 6. Form Controls & Dropdown Menus */
+body.cyber-theme select option {
+  background-color: #0f172a !important;
+  color: #f1f5f9 !important;
+}
+
+body.cyber-theme .dropdown-menu {
+  background-color: rgba(10, 16, 30, 0.98) !important;
+  border: 1px solid rgba(0, 242, 254, 0.3) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7) !important;
+}
+
+body.cyber-theme .dropdown-item {
+  color: #cbd5e1 !important;
+}
+
+body.cyber-theme .dropdown-item:hover,
+body.cyber-theme .dropdown-item:focus {
+  background-color: rgba(0, 242, 254, 0.15) !important;
+  color: #00f2fe !important;
+}
+
+/* 7. SweetAlert2 Dialog Text & Table Fixes */
+body.cyber-theme .swal2-html-container {
+  color: #e2e8f0 !important;
+}
+
+body.cyber-theme .swal2-html-container h1,
+body.cyber-theme .swal2-html-container h2,
+body.cyber-theme .swal2-html-container h3,
+body.cyber-theme .swal2-html-container h4,
+body.cyber-theme .swal2-html-container h5,
+body.cyber-theme .swal2-html-container h6,
+body.cyber-theme .swal2-html-container strong,
+body.cyber-theme .swal2-html-container b {
+  color: #ffffff !important;
+}
+
+body.cyber-theme .swal2-html-container table {
+  color: #e2e8f0 !important;
+}
+
+body.cyber-theme .swal2-html-container table thead,
+body.cyber-theme .swal2-html-container table thead th {
+  background: rgba(15, 23, 42, 0.95) !important;
+  color: #00f2fe !important;
+  border-color: rgba(0, 242, 254, 0.22) !important;
+}
+
+body.cyber-theme .swal2-html-container table tbody td {
+  color: #e2e8f0 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+body.cyber-theme .swal2-html-container p,
+body.cyber-theme .swal2-html-container span,
+body.cyber-theme .swal2-html-container label {
+  color: #cbd5e1 !important;
+}
+
+body.cyber-theme .swal2-html-container .ols-sub-box {
+  background: rgba(10, 16, 30, 0.85) !important;
+  border-color: rgba(0, 242, 254, 0.2) !important;
+  color: #e2e8f0 !important;
+}
+
+body.cyber-theme .swal2-html-container .ols-sub-box small,
+body.cyber-theme .swal2-html-container .ols-sub-box div {
+  color: #94a3b8 !important;
+}
+
+body.cyber-theme .swal2-html-container .ols-sub-box strong {
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   Cyber-Theme Dark Mode Button System: .btn, .btn-sm, .btn-outline
+   ========================================================================== */
+
+/* 1. Base Outline Button in Dark Mode */
+body.cyber-theme .btn-outline,
+body.cyber-theme .btn.btn-outline,
+[data-theme="cyber"] .btn-outline,
+[data-theme="cyber"] .btn.btn-outline {
+  background-color: rgba(13, 21, 38, 0.75) !important;
+  background-image: none !important;
+  border: 1px solid rgba(0, 242, 254, 0.22) !important;
+  color: #e2e8f0 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35) !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+body.cyber-theme .btn-outline:hover,
+body.cyber-theme .btn.btn-outline:hover,
+[data-theme="cyber"] .btn-outline:hover,
+[data-theme="cyber"] .btn.btn-outline:hover {
+  background-color: rgba(0, 242, 254, 0.14) !important;
+  border-color: #00f2fe !important;
+  color: #00f2fe !important;
+  box-shadow: 0 0 14px rgba(0, 242, 254, 0.35) !important;
+  transform: translateY(-1px) !important;
+}
+
+body.cyber-theme .btn-outline:active,
+body.cyber-theme .btn.btn-outline:active,
+[data-theme="cyber"] .btn-outline:active,
+[data-theme="cyber"] .btn.btn-outline:active {
+  background-color: rgba(0, 242, 254, 0.24) !important;
+  border-color: #00f2fe !important;
+  color: #ffffff !important;
+  transform: translateY(0) !important;
+}
+
+body.cyber-theme .btn-outline:disabled,
+body.cyber-theme .btn.btn-outline:disabled,
+[data-theme="cyber"] .btn-outline:disabled,
+[data-theme="cyber"] .btn.btn-outline:disabled {
+  opacity: 0.45 !important;
+  background-color: rgba(13, 21, 38, 0.4) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #64748b !important;
+  box-shadow: none !important;
+  transform: none !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+/* 2. Compact Small Button (.btn-sm) in Dark Mode */
+body.cyber-theme .btn-sm,
+body.cyber-theme .btn.btn-sm,
+[data-theme="cyber"] .btn-sm,
+[data-theme="cyber"] .btn.btn-sm {
+  padding: 0.35rem 0.75rem !important;
+  font-size: 0.8125rem !important;
+  min-height: 32px !important;
+  line-height: 1.4 !important;
+  border-radius: 8px !important;
+  gap: 0.35rem !important;
+  font-weight: 600 !important;
+}
+
+body.cyber-theme .btn-sm i,
+body.cyber-theme .btn.btn-sm i,
+[data-theme="cyber"] .btn-sm i,
+[data-theme="cyber"] .btn.btn-sm i {
+  font-size: 0.95rem !important;
+  line-height: 1 !important;
+  vertical-align: middle !important;
+}
+
+body.cyber-theme .btn-sm.btn-outline,
+body.cyber-theme .btn.btn-sm.btn-outline,
+body.cyber-theme .btn-outline.btn-sm,
+body.cyber-theme .btn.btn-outline.btn-sm,
+[data-theme="cyber"] .btn-sm.btn-outline,
+[data-theme="cyber"] .btn.btn-sm.btn-outline,
+[data-theme="cyber"] .btn-outline.btn-sm,
+[data-theme="cyber"] .btn.btn-outline.btn-sm {
+  min-height: 32px !important;
+  padding: 0.35rem 0.75rem !important;
+  font-size: 0.8125rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.35rem !important;
+}
+
+/* 3. Specific Outline Variants in Dark Mode */
+body.cyber-theme .btn-outline-primary,
+body.cyber-theme .btn.btn-outline-primary,
+[data-theme="cyber"] .btn-outline-primary,
+[data-theme="cyber"] .btn.btn-outline-primary {
+  background-color: rgba(0, 242, 254, 0.08) !important;
+  border: 1px solid #00f2fe !important;
+  color: #00f2fe !important;
+  box-shadow: 0 0 8px rgba(0, 242, 254, 0.15) !important;
+}
+
+body.cyber-theme .btn-outline-primary:hover,
+body.cyber-theme .btn.btn-outline-primary:hover,
+[data-theme="cyber"] .btn-outline-primary:hover,
+[data-theme="cyber"] .btn.btn-outline-primary:hover {
+  background-color: #00f2fe !important;
+  border-color: #00f2fe !important;
+  color: #060913 !important;
+  box-shadow: 0 0 16px rgba(0, 242, 254, 0.5) !important;
+  transform: translateY(-1px) !important;
+}
+
+body.cyber-theme .btn-outline-secondary,
+body.cyber-theme .btn.btn-outline-secondary,
+[data-theme="cyber"] .btn-outline-secondary,
+[data-theme="cyber"] .btn.btn-outline-secondary {
+  background-color: rgba(148, 163, 184, 0.08) !important;
+  border: 1px solid rgba(148, 163, 184, 0.35) !important;
+  color: #cbd5e1 !important;
+}
+
+body.cyber-theme .btn-outline-secondary:hover,
+body.cyber-theme .btn.btn-outline-secondary:hover,
+[data-theme="cyber"] .btn-outline-secondary:hover,
+[data-theme="cyber"] .btn.btn-outline-secondary:hover {
+  background-color: rgba(148, 163, 184, 0.22) !important;
+  border-color: #e2e8f0 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+}
+
+body.cyber-theme .btn-outline-danger,
+body.cyber-theme .btn.btn-outline-danger,
+[data-theme="cyber"] .btn-outline-danger,
+[data-theme="cyber"] .btn.btn-outline-danger {
+  background-color: rgba(255, 51, 102, 0.08) !important;
+  border: 1px solid rgba(255, 51, 102, 0.45) !important;
+  color: #ff4d6d !important;
+}
+
+body.cyber-theme .btn-outline-danger:hover,
+body.cyber-theme .btn.btn-outline-danger:hover,
+[data-theme="cyber"] .btn-outline-danger:hover,
+[data-theme="cyber"] .btn.btn-outline-danger:hover {
+  background-color: #ff3366 !important;
+  border-color: #ff3366 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 14px rgba(255, 51, 102, 0.45) !important;
+  transform: translateY(-1px) !important;
+}
+
+body.cyber-theme .btn-outline-success,
+body.cyber-theme .btn.btn-outline-success,
+[data-theme="cyber"] .btn-outline-success,
+[data-theme="cyber"] .btn.btn-outline-success {
+  background-color: rgba(16, 185, 129, 0.08) !important;
+  border: 1px solid rgba(16, 185, 129, 0.45) !important;
+  color: #10b981 !important;
+}
+
+body.cyber-theme .btn-outline-success:hover,
+body.cyber-theme .btn.btn-outline-success:hover,
+[data-theme="cyber"] .btn-outline-success:hover,
+[data-theme="cyber"] .btn.btn-outline-success:hover {
+  background-color: #10b981 !important;
+  border-color: #10b981 !important;
+  color: #060913 !important;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.45) !important;
+  transform: translateY(-1px) !important;
+}
+
+body.cyber-theme .btn-outline-info,
+body.cyber-theme .btn.btn-outline-info,
+[data-theme="cyber"] .btn-outline-info,
+[data-theme="cyber"] .btn.btn-outline-info {
+  background-color: rgba(56, 189, 248, 0.08) !important;
+  border: 1px solid rgba(56, 189, 248, 0.45) !important;
+  color: #38bdf8 !important;
+}
+
+body.cyber-theme .btn-outline-info:hover,
+body.cyber-theme .btn.btn-outline-info:hover,
+[data-theme="cyber"] .btn-outline-info:hover,
+[data-theme="cyber"] .btn.btn-outline-info:hover {
+  background-color: #38bdf8 !important;
+  border-color: #38bdf8 !important;
+  color: #060913 !important;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.45) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* 4. Action buttons inside tables, modals and SweetAlert with inline styles */
+body.cyber-theme .btn-outline[style*="color: #ef4444"],
+body.cyber-theme .btn-outline[style*="color:#ef4444"],
+body.cyber-theme .btn-outline.delete-cat-btn,
+body.cyber-theme .btn-outline.delete-uom-btn,
+body.cyber-theme .btn-outline.row-btn-delete,
+body.cyber-theme .btn-outline.edit-child-del,
+[data-theme="cyber"] .btn-outline[style*="color: #ef4444"],
+[data-theme="cyber"] .btn-outline[style*="color:#ef4444"],
+[data-theme="cyber"] .btn-outline.delete-cat-btn,
+[data-theme="cyber"] .btn-outline.delete-uom-btn,
+[data-theme="cyber"] .btn-outline.row-btn-delete,
+[data-theme="cyber"] .btn-outline.edit-child-del {
+  border-color: rgba(255, 51, 102, 0.45) !important;
+  color: #ff4d6d !important;
+  background-color: rgba(255, 51, 102, 0.08) !important;
+}
+
+body.cyber-theme .btn-outline[style*="color: #ef4444"]:hover,
+body.cyber-theme .btn-outline[style*="color:#ef4444"]:hover,
+body.cyber-theme .btn-outline.delete-cat-btn:hover,
+body.cyber-theme .btn-outline.delete-uom-btn:hover,
+body.cyber-theme .btn-outline.row-btn-delete:hover,
+body.cyber-theme .btn-outline.edit-child-del:hover,
+[data-theme="cyber"] .btn-outline[style*="color: #ef4444"]:hover,
+[data-theme="cyber"] .btn-outline[style*="color:#ef4444"]:hover,
+[data-theme="cyber"] .btn-outline.delete-cat-btn:hover,
+[data-theme="cyber"] .btn-outline.delete-uom-btn:hover,
+[data-theme="cyber"] .btn-outline.row-btn-delete:hover,
+[data-theme="cyber"] .btn-outline.edit-child-del:hover {
+  background-color: #ff3366 !important;
+  color: #ffffff !important;
+  border-color: #ff3366 !important;
+  box-shadow: 0 0 12px rgba(255, 51, 102, 0.45) !important;
+}
+
+body.cyber-theme .btn-outline[style*="color: #0284c7"],
+body.cyber-theme .btn-outline[style*="color:#0284c7"],
+body.cyber-theme .btn-outline.edit-cat-btn,
+body.cyber-theme .btn-outline.edit-uom-btn,
+[data-theme="cyber"] .btn-outline[style*="color: #0284c7"],
+[data-theme="cyber"] .btn-outline[style*="color:#0284c7"],
+[data-theme="cyber"] .btn-outline.edit-cat-btn,
+[data-theme="cyber"] .btn-outline.edit-uom-btn {
+  border-color: rgba(56, 189, 248, 0.45) !important;
+  color: #38bdf8 !important;
+  background-color: rgba(56, 189, 248, 0.08) !important;
+}
+
+body.cyber-theme .btn-outline[style*="color: #0284c7"]:hover,
+body.cyber-theme .btn-outline[style*="color:#0284c7"]:hover,
+body.cyber-theme .btn-outline.edit-cat-btn:hover,
+body.cyber-theme .btn-outline.edit-uom-btn:hover,
+[data-theme="cyber"] .btn-outline[style*="color: #0284c7"]:hover,
+[data-theme="cyber"] .btn-outline[style*="color:#0284c7"]:hover,
+[data-theme="cyber"] .btn-outline.edit-cat-btn:hover,
+[data-theme="cyber"] .btn-outline.edit-uom-btn:hover {
+  background-color: #0284c7 !important;
+  color: #ffffff !important;
+  border-color: #0284c7 !important;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.45) !important;
+}
+
+body.cyber-theme .btn-outline[style*="color: #64748b"],
+body.cyber-theme .btn-outline[style*="color:#64748b"],
+[data-theme="cyber"] .btn-outline[style*="color: #64748b"],
+[data-theme="cyber"] .btn-outline[style*="color:#64748b"] {
+  border-color: rgba(148, 163, 184, 0.35) !important;
+  color: #cbd5e1 !important;
+  background-color: rgba(148, 163, 184, 0.08) !important;
+}
+
+body.cyber-theme .btn-outline[style*="color: #64748b"]:hover,
+body.cyber-theme .btn-outline[style*="color:#64748b"]:hover,
+[data-theme="cyber"] .btn-outline[style*="color: #64748b"]:hover,
+[data-theme="cyber"] .btn-outline[style*="color:#64748b"]:hover {
+  background-color: rgba(148, 163, 184, 0.22) !important;
+  color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+

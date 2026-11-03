@@ -22,6 +22,11 @@ class AppController {
     this.bindInventorySubnav();
     this.bindGlobalShortcuts();
 
+    // Default landing view for cashier / staff is POS Terminal
+    if (this.isRestrictedStaff && (this.currentView === 'dashboard' || this.currentView === 'inventory' || this.currentView === 'suppliers')) {
+      this.currentView = 'pos';
+    }
+
     // Initial render for active view
     await this.navigateTo(this.currentView);
   }
@@ -64,7 +69,9 @@ class AppController {
       if (window.api && typeof window.api.getAuthUser === 'function') {
         const res = await window.api.getAuthUser();
         if (res && res.authenticated && res.user) {
+          this.currentUser = res.user;
           this.updateUserUI(res.user);
+          this.applyRolePermissions(res.user);
           sessionStorage.removeItem('auth_redirect_attempt');
           return;
         }
@@ -77,12 +84,18 @@ class AppController {
         window.location.replace('login.php');
       } else {
         // Fallback default admin profile in UI if redirect was already triggered
-        this.updateUserUI({ name: 'Admin Pharmacist', role: 'admin' });
+        const fallback = { name: 'Admin Pharmacist', role: 'admin' };
+        this.currentUser = fallback;
+        this.updateUserUI(fallback);
+        this.applyRolePermissions(fallback);
       }
     } catch (e) {
       console.warn('Session check error:', e);
       // Fallback default profile instead of looping
-      this.updateUserUI({ name: 'Admin Pharmacist', role: 'admin' });
+      const fallback = { name: 'Admin Pharmacist', role: 'admin' };
+      this.currentUser = fallback;
+      this.updateUserUI(fallback);
+      this.applyRolePermissions(fallback);
     }
   }
 
@@ -96,15 +109,58 @@ class AppController {
     }
 
     if (badgeEl && user.role) {
-      const isAdmin = user.role.toLowerCase() === 'admin';
+      const role = String(user.role).toLowerCase().trim();
+      const isAdmin = role === 'admin' || role === 'manager';
       badgeEl.className = `user-role-badge ${isAdmin ? 'role-admin' : 'role-cashier'}`;
-      badgeEl.innerHTML = `<i class="${isAdmin ? 'ri-shield-check-fill' : 'ri-user-star-line'}"></i> ${isAdmin ? 'Manager' : 'Cashier'}`;
+      let label = 'Staff';
+      if (role === 'admin' || role === 'manager') label = 'Manager';
+      else if (role === 'cashier') label = 'Cashier';
+      badgeEl.innerHTML = `<i class="${isAdmin ? 'ri-shield-check-fill' : 'ri-user-star-line'}"></i> ${label}`;
     }
 
     if (avatarEl && user.name) {
       const parts = user.name.trim().split(' ');
       const initials = (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
       avatarEl.textContent = initials || 'XA';
+    }
+  }
+
+  applyRolePermissions(user) {
+    const role = (user && user.role ? String(user.role).toLowerCase().trim() : 'admin');
+    const isCashierOrStaff = (role === 'cashier' || role === 'staff');
+    this.isRestrictedStaff = isCashierOrStaff;
+
+    // Toggle body classes for CSS RBAC
+    document.body.classList.toggle('role-cashier', role === 'cashier');
+    document.body.classList.toggle('role-staff', role === 'staff');
+    document.body.classList.toggle('role-cashier-staff', isCashierOrStaff);
+    document.body.setAttribute('data-user-role', role);
+
+    // Direct DOM manipulation fallback (in case browser lacks :has support)
+    const stockCatalogNav = document.getElementById('nav-item-inventory') ||
+      document.querySelector('.nav-item button[data-view="inventory"]')?.closest('.nav-item');
+    const suppliersNav = document.getElementById('nav-item-suppliers') ||
+      document.querySelector('.nav-item button[data-view="suppliers"]')?.closest('.nav-item');
+    const dashViewInvBtn = document.getElementById('dash-view-inventory-btn');
+
+    if (stockCatalogNav) {
+      stockCatalogNav.style.display = isCashierOrStaff ? 'none' : '';
+    }
+    if (suppliersNav) {
+      suppliersNav.style.display = isCashierOrStaff ? 'none' : '';
+    }
+    if (dashViewInvBtn) {
+      dashViewInvBtn.style.display = isCashierOrStaff ? 'none' : '';
+    }
+
+    // Hide subnav catalog buttons in inventory tabs if present
+    document.querySelectorAll('.inv-subnav-btn[data-view="inventory"], .inv-subnav-btn[data-inv-tab="catalog"]').forEach(btn => {
+      btn.style.display = isCashierOrStaff ? 'none' : '';
+    });
+
+    // If currently on a restricted view, redirect to POS terminal
+    if (isCashierOrStaff && (this.currentView === 'inventory' || this.currentView === 'suppliers')) {
+      this.navigateTo('pos');
     }
   }
 
@@ -192,6 +248,13 @@ class AppController {
 
   async navigateTo(targetView) {
     if (!targetView) return;
+
+    // RBAC: Cashier & Staff accounts cannot access Stock Catalog or Suppliers
+    if (this.isRestrictedStaff && (targetView === 'inventory' || targetView === 'suppliers')) {
+      console.warn(`[RBAC] Access denied to '${targetView}' for cashier/staff.`);
+      targetView = 'pos';
+    }
+
     this.currentView = targetView;
 
     // 1. Toggle navigation buttons active state (sidebar & subnav)
@@ -311,17 +374,39 @@ class AppController {
   async refreshAllModules() {
     try {
       await Promise.allSettled([
-        window.dashboardController ? window.dashboardController.render() : Promise.resolve(),
-        window.posController ? window.posController.refreshProducts() : Promise.resolve(),
-        window.inventoryController ? window.inventoryController.render() : Promise.resolve(),
-        window.stockInController ? window.stockInController.render() : Promise.resolve(),
-        window.stockOutController ? window.stockOutController.render() : Promise.resolve(),
-        window.conversionController ? window.conversionController.render() : Promise.resolve(),
-        window.movementsController ? window.movementsController.render() : Promise.resolve(),
-        window.forecastController ? window.forecastController.render() : Promise.resolve(),
-        window.salesController ? window.salesController.render() : Promise.resolve(),
-        window.suppliersController ? window.suppliersController.render() : Promise.resolve(),
-        window.reportsController ? window.reportsController.render() : Promise.resolve()
+        window.dashboardController && typeof window.dashboardController.render === 'function' 
+          ? window.dashboardController.render() 
+          : (this.loadDashboardStats ? this.loadDashboardStats() : Promise.resolve()),
+        window.posController && typeof window.posController.refreshProducts === 'function' 
+          ? window.posController.refreshProducts() 
+          : Promise.resolve(),
+        window.inventoryController && typeof window.inventoryController.render === 'function' 
+          ? window.inventoryController.render() 
+          : Promise.resolve(),
+        window.stockInController && typeof window.stockInController.render === 'function' 
+          ? window.stockInController.render() 
+          : Promise.resolve(),
+        window.stockOutController && typeof window.stockOutController.render === 'function' 
+          ? window.stockOutController.render() 
+          : Promise.resolve(),
+        window.conversionController && typeof window.conversionController.render === 'function' 
+          ? window.conversionController.render() 
+          : Promise.resolve(),
+        window.movementsController && typeof window.movementsController.render === 'function' 
+          ? window.movementsController.render() 
+          : Promise.resolve(),
+        window.forecastController 
+          ? (typeof window.forecastController.render === 'function' ? window.forecastController.render() : (typeof window.forecastController.renderForecastView === 'function' ? window.forecastController.renderForecastView() : Promise.resolve())) 
+          : Promise.resolve(),
+        window.salesController && typeof window.salesController.render === 'function' 
+          ? window.salesController.render() 
+          : Promise.resolve(),
+        window.suppliersController && typeof window.suppliersController.render === 'function' 
+          ? window.suppliersController.render() 
+          : Promise.resolve(),
+        window.reportsController && typeof window.reportsController.render === 'function' 
+          ? window.reportsController.render() 
+          : Promise.resolve()
       ]);
     } catch (err) {
       console.error('[AppController] Error refreshing all modules:', err);
@@ -334,7 +419,7 @@ class AppController {
     const titles = {
       dashboard: {
         title: 'Pharmacy Analytics Overview',
-        subtitle: 'Real-time sales, inventory status, and AI demand predictions for Xyra Andrea Pharmacy'
+        subtitle: 'Real-time sales, inventory status, and seasonal demand forecasting for Xyra Andrea Pharmacy'
       },
       pos: {
         title: 'Point of Sale (POS) Terminal',
@@ -361,8 +446,8 @@ class AppController {
         subtitle: 'Complete chronological history of all inventory balance changes'
       },
       forecast: {
-        title: 'AI Demand Forecasting',
-        subtitle: 'Intelligent inventory prediction, safety stock calculation, and purchase orders'
+        title: 'Demand Forecasting & Restocking',
+        subtitle: 'Seasonal demand analysis, safety stock calculations, and suggested purchase orders'
       },
       sales: {
         title: 'Sales Logs & Transactions',
@@ -388,12 +473,29 @@ class AppController {
     const products = await window.mockApi.getProducts();
     const txns = await window.mockApi.getTransactions();
 
+    const now = new Date();
+    const todayYear = now.getFullYear();
+    const todayMonth = now.getMonth();
+    const todayDate = now.getDate();
+
+    const getTxnDate = (t) => {
+      if (!t || !t.timestamp) return null;
+      const iso = t.timestamp.includes('T') ? t.timestamp : t.timestamp.replace(' ', 'T');
+      const d = new Date(iso);
+      return isNaN(d.getTime()) ? null : d;
+    };
+
+    const todayTxns = txns.filter(t => {
+      const d = getTxnDate(t);
+      return d && d.getFullYear() === todayYear && d.getMonth() === todayMonth && d.getDate() === todayDate;
+    });
+
     let todaySalesTotal = 0;
-    txns.forEach(t => todaySalesTotal += t.total);
+    todayTxns.forEach(t => todaySalesTotal += Number(t.total || 0));
 
     const lowStockCount = products.filter(p => p.stock <= p.reorderPoint).length;
     const nearExpiryCount = products.filter(p => p.status === 'Expiring Soon').length;
-    const totalItemsCount = products.reduce((acc, p) => acc + p.stock, 0);
+    const totalItemsCount = products.reduce((acc, p) => acc + (Number(p.stock) || 0), 0);
 
     const salesKpi = document.getElementById('kpi-today-sales');
     const lowStockKpi = document.getElementById('kpi-low-stock');
@@ -408,7 +510,7 @@ class AppController {
     if (alertBadge) alertBadge.innerText = lowStockCount + nearExpiryCount;
 
     this.renderDashboardLowStockTable(products.filter(p => p.stock <= p.reorderPoint || p.status === 'Expiring Soon'));
-    this.renderSalesTrendChart(txns);
+    this.renderSalesTrendChart(todayTxns);
   }
 
   renderDashboardLowStockTable(alertProducts) {
@@ -440,19 +542,51 @@ class AppController {
     }).join('');
   }
 
-  renderSalesTrendChart(txns) {
+  renderSalesTrendChart(todayTxns = []) {
     const ctx = document.getElementById('salesTrendChart');
     if (!ctx) return;
 
     if (this.salesTrendChart) this.salesTrendChart.destroy();
 
+    const labels = ['8 AM', '10 AM', '12 PM', '2 PM', '4 PM', '6 PM', '8 PM'];
+    const hourlyData = [0, 0, 0, 0, 0, 0, 0];
+
+    const getTxnDate = (t) => {
+      if (!t || !t.timestamp) return null;
+      const iso = t.timestamp.includes('T') ? t.timestamp : t.timestamp.replace(' ', 'T');
+      const d = new Date(iso);
+      return isNaN(d.getTime()) ? null : d;
+    };
+
+    todayTxns.forEach(t => {
+      const d = getTxnDate(t);
+      if (!d) return;
+      const hr = d.getHours();
+      const amt = Number(t.total || 0);
+
+      if (hr < 10) hourlyData[0] += amt;
+      else if (hr < 12) hourlyData[1] += amt;
+      else if (hr < 14) hourlyData[2] += amt;
+      else if (hr < 16) hourlyData[3] += amt;
+      else if (hr < 18) hourlyData[4] += amt;
+      else if (hr < 20) hourlyData[5] += amt;
+      else hourlyData[6] += amt;
+    });
+
+    const data = hourlyData.map(v => Math.round(v * 100) / 100);
+
+    const isDark = document.body.classList.contains('cyber-theme') || document.documentElement.getAttribute('data-theme') === 'cyber';
+    const chartTextColor = isDark ? '#f1f5f9' : '#0f172a';
+    const chartTickColor = isDark ? '#94a3b8' : '#64748b';
+    const chartGridColor = isDark ? 'rgba(0, 242, 254, 0.09)' : 'rgba(15, 23, 42, 0.05)';
+
     this.salesTrendChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['8 AM', '10 AM', '12 PM', '2 PM', '4 PM', '6 PM', '8 PM'],
+        labels: labels,
         datasets: [{
           label: "Today's Hourly Revenue (₱)",
-          data: [1200, 3400, 5600, 4200, 6800, 7500, 3100],
+          data: data,
           backgroundColor: '#00a896',
           borderRadius: 8
         }]
@@ -461,11 +595,23 @@ class AppController {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { labels: { color: '#0f172a', font: { weight: 'bold' } } }
+          legend: { labels: { color: chartTextColor, font: { weight: 'bold' } } },
+          tooltip: {
+            callbacks: {
+              label: (context) => `₱${Number(context.raw || 0).toFixed(2)}`
+            }
+          }
         },
         scales: {
-          x: { grid: { color: 'rgba(15, 23, 42, 0.05)' }, ticks: { color: '#64748b' } },
-          y: { grid: { color: 'rgba(15, 23, 42, 0.05)' }, ticks: { color: '#64748b' } }
+          x: { grid: { color: chartGridColor }, ticks: { color: chartTickColor } },
+          y: { 
+            beginAtZero: true,
+            grid: { color: chartGridColor }, 
+            ticks: { 
+              color: chartTickColor,
+              callback: (value) => '₱' + Number(value).toLocaleString()
+            } 
+          }
         }
       }
     });
@@ -545,20 +691,6 @@ class AppController {
     }
   }
 
-  async refreshAllModules() {
-    // Keep all controllers synchronized
-    if (window.dashboardController) await window.dashboardController.loadStats();
-    if (window.inventoryController) await window.inventoryController.render();
-    if (window.stockInController) await window.stockInController.render();
-    if (window.stockOutController) await window.stockOutController.render();
-    if (window.conversionController) await window.conversionController.render();
-    if (window.movementsController) await window.movementsController.render();
-    if (window.forecastController) await window.forecastController.render();
-    if (window.salesController) await window.salesController.render();
-    if (window.reportsController) await window.reportsController.render();
-    if (window.posController) await window.posController.refreshProducts();
-  }
-
   viewStockInDetails(stockInRecord) {
     SwalHelpers.showStockInDetailModal(stockInRecord);
   }
@@ -577,142 +709,16 @@ class AppController {
   // 4. ITEM CONVERSION (BULK BREAKDOWN) PANE
   // =========================================================================
   async renderConversionView(searchQuery = '') {
-    const products = await window.mockApi.getProducts();
-    const logs = await window.mockApi.getConversionLogs();
-    
-    // 1. Render Quick Conversion Action Cards
-    const cardsContainer = document.getElementById('conversion-quick-cards');
-    if (cardsContainer) {
-      const bulkProducts = products.filter(p => p.isBulk && p.childProductId);
-      
-      cardsContainer.innerHTML = bulkProducts.map(bulk => {
-        const retail = products.find(p => p.id === bulk.childProductId) || { name: 'Retail Tablet', stock: 0, uom: 'Tablet' };
-        const rate = bulk.conversionRate || 100;
-
-        return `
-          <div class="conversion-card">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-              <div>
-                <span class="badge-pill badge-info" style="font-size: 0.7rem; margin-bottom: 0.4rem;">Bulk Pack Link</span>
-                <h4 style="font-size: 0.95rem; font-weight: 700; color: #0f172a; margin: 0;">${bulk.name}</h4>
-              </div>
-              <span class="badge-pill badge-success" style="font-size: 0.75rem;">1 : ${rate}</span>
-            </div>
-
-            <div class="conversion-card-flow">
-              <div class="conversion-flow-node">
-                <strong>${bulk.stock} ${bulk.uom}</strong>
-                <small>Wholesale Bulk</small>
-              </div>
-              <div class="conversion-arrow">➔</div>
-              <div class="conversion-flow-node" style="text-align: right;">
-                <strong style="color: #10b981;">${retail.stock} ${retail.uom}</strong>
-                <small>${retail.name.split(' ')[0]} Retail</small>
-              </div>
-            </div>
-
-            <div style="display: flex; gap: 0.5rem;">
-              <button class="btn btn-sm btn-outline" style="flex: 1;" onclick="window.appController.handleItemConversionModal(${bulk.id})">
-                <i class="ri-settings-4-line"></i> Custom
-              </button>
-              <button class="btn btn-sm btn-primary" style="flex: 1;" onclick="window.appController.quickUnboxOne(${bulk.id})">
-                <i class="ri-inbox-unarchive-line"></i> Unbox 1 Box
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
+    if (window.conversionController) {
+      window.conversionController.searchHistory = searchQuery.toLowerCase().trim();
+      return window.conversionController.renderHistoryTable();
     }
-
-    // 2. Render Conversion History Table
-    const tableContainer = document.getElementById('conversion-table-body');
-    if (!tableContainer) return;
-
-    const filtered = logs.filter(l => {
-      const q = searchQuery.toLowerCase();
-      return l.id.toLowerCase().includes(q) ||
-             l.sourceProductName.toLowerCase().includes(q) ||
-             l.targetProductName.toLowerCase().includes(q) ||
-             l.operator.toLowerCase().includes(q);
-    });
-
-    if (filtered.length === 0) {
-      tableContainer.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #64748b; padding: 2rem;">No conversion operations logged.</td></tr>`;
-      return;
-    }
-
-    tableContainer.innerHTML = filtered.map(log => `
-      <tr>
-        <td><strong style="color: var(--primary);">${log.id}</strong></td>
-        <td>${log.date}</td>
-        <td>
-          <span class="badge-pill badge-warning" style="font-weight: 700;">-${log.sourceQty} ${log.sourceUom || 'Box'}</span><br>
-          <small style="color: var(--text-main); font-weight: 600;">${log.sourceProductName}</small>
-        </td>
-        <td>
-          <span class="badge-pill badge-success" style="font-weight: 700;">+${log.targetQty} ${log.targetUom || 'Tablet'}</span><br>
-          <small style="color: var(--text-main); font-weight: 600;">${log.targetProductName}</small>
-        </td>
-        <td><span class="badge-pill badge-info">1 : ${log.multiplier}</span></td>
-        <td>
-          <code>${log.batchNo || 'N/A'}</code><br>
-          <small style="color: var(--text-muted);">${log.expiryDate || 'N/A'}</small>
-        </td>
-        <td>${log.operator}</td>
-        <td><small style="color: var(--text-muted);">${log.notes || 'N/A'}</small></td>
-      </tr>
-    `).join('');
   }
 
   // Quick 1-click conversion helper
   async quickUnboxOne(bulkId) {
-    const products = await window.mockApi.getProducts();
-    const bulk = products.find(p => p.id === bulkId);
-    if (!bulk) return;
-
-    if (bulk.stock < 1) {
-      SwalHelpers.toast(`${bulk.name} is out of stock!`, 'error');
-      return;
-    }
-
-    const retail = products.find(p => p.id === bulk.childProductId);
-    if (!retail) {
-      SwalHelpers.toast('No linked retail product found', 'error');
-      return;
-    }
-
-    const rate = bulk.conversionRate || 100;
-
-    const confirm = await Swal.fire({
-      title: '📦 Unbox 1 Bulk Container?',
-      html: `
-        <div style="text-align: left;">
-          <p>You are about to unbox:</p>
-          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem; margin-bottom: 0.8rem;">
-            <strong>-1 ${bulk.uom}</strong> of ${bulk.name}<br>
-            <span style="color: #10b981; font-weight: bold;">+${rate} ${retail.uom}</span> to ${retail.name}
-          </div>
-          <small style="color: #64748b;">Batch ${bulk.batchNo} and Expiry ${bulk.expiryDate} will be preserved.</small>
-        </div>
-      `,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Confirm Unbox',
-      confirmButtonColor: '#00a896',
-      cancelButtonText: 'Cancel'
-    });
-
-    if (confirm.isConfirmed) {
-      await window.mockApi.processItemConversion({
-        sourceProductId: bulk.id,
-        targetProductId: retail.id,
-        sourceQty: 1,
-        operator: 'Xyra Andrea (Pharmacist)',
-        notes: `Quick 1-box conversion (+${rate} ${retail.uom})`
-      });
-
-      SwalHelpers.toast(`Unboxed 1 Box into +${rate} ${retail.uom}!`, 'success');
-      await this.refreshAllInventory();
+    if (window.conversionController) {
+      return window.conversionController.quickUnboxOne(bulkId);
     }
   }
 
@@ -734,7 +740,7 @@ class AppController {
     });
 
     if (filtered.length === 0) {
-      container.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #64748b; padding: 2rem;">No stock movements recorded.</td></tr>`;
+      container.innerHTML = `<tr><td colspan="10" style="text-align: center; color: #64748b; padding: 2rem;">No stock movements recorded.</td></tr>`;
       return;
     }
 
@@ -745,7 +751,7 @@ class AppController {
       if (m.type === 'STOCK_OUT') {
         badgeClass = 'badge-stockout';
         typeLabel = 'STOCK OUT';
-      } else if (m.type === 'POS_SALE') {
+      } else if (m.type === 'POS_SALE' || m.type === 'POS') {
         badgeClass = 'badge-sale';
         typeLabel = 'POS SALE';
       } else if (m.type === 'CONVERT_IN') {
@@ -759,12 +765,19 @@ class AppController {
       const isPositive = m.qtyChange > 0;
       const changeColor = isPositive ? '#10b981' : '#ef4444';
       const changePrefix = isPositive ? '+' : '';
+      const batchDisplay = (m.batchNo || m.batch_no) ? `
+        <span class="badge-pill" style="background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; font-weight: 700; font-size: 0.72rem; display: inline-flex; align-items: center; gap: 4px;">
+          <i class="ri-barcode-box-line"></i> ${m.batchNo || m.batch_no}
+        </span>
+        ${(m.expiryDate || m.expiry_date) ? `<div style="font-size: 0.68rem; color: #64748b; margin-top: 2px;"><i class="ri-calendar-line"></i> Exp: ${m.expiryDate || m.expiry_date}</div>` : ''}
+      ` : `<span style="color: #94a3b8; font-size: 0.75rem;">—</span>`;
 
       return `
         <tr>
           <td><code style="font-weight: bold; color: var(--text-muted);">${m.id}</code></td>
           <td>${m.timestamp}</td>
           <td><strong>${m.productName}</strong></td>
+          <td>${batchDisplay}</td>
           <td><span class="badge-pill ${badgeClass}">${typeLabel}</span></td>
           <td>${m.previousStock}</td>
           <td><strong style="color: ${changeColor}; font-size: 0.95rem;">${changePrefix}${m.qtyChange}</strong></td>
@@ -780,12 +793,15 @@ class AppController {
   // TRANSACTIONS & SUPPLIERS VIEWS
   // =========================================================================
   async renderTransactionsTable() {
+    if (window.salesController && typeof window.salesController.render === 'function') {
+      return await window.salesController.render();
+    }
     const txns = await window.mockApi.getTransactions();
     const container = document.getElementById('sales-table-body');
     if (!container) return;
 
     if (txns.length === 0) {
-      container.innerHTML = `<tr><td colspan="7" style="text-align: center;">No transactions logged yet.</td></tr>`;
+      container.innerHTML = `<tr><td colspan="8" style="text-align: center;">No transactions logged yet.</td></tr>`;
       return;
     }
 
@@ -794,11 +810,12 @@ class AppController {
         <td><strong style="color: var(--primary);">${t.id}</strong></td>
         <td>${t.timestamp}</td>
         <td>${t.cashier}</td>
-        <td>${t.items.length} items</td>
+        <td>${t.customerName || 'Walk-in'}</td>
+        <td>${t.items ? t.items.length : 0} items</td>
         <td><span class="badge-pill badge-info">${t.paymentMethod}</span></td>
-        <td style="font-weight: 800; color: #10b981;">₱${t.total.toFixed(2)}</td>
+        <td style="font-weight: 800; color: #10b981;">₱${parseFloat(t.total || 0).toFixed(2)}</td>
         <td>
-          <button class="btn btn-sm btn-outline" onclick='window.appController.viewReceipt(${JSON.stringify(t)})'>
+          <button type="button" class="btn btn-sm btn-outline btn-view-receipt" onclick="window.appController.viewReceipt('${t.id}')">
             <i class="ri-file-paper-line"></i> View Receipt
           </button>
         </td>
@@ -837,78 +854,10 @@ class AppController {
   // GLOBAL MODAL ACTIONS & LISTENERS
   // =========================================================================
   bindGlobalActions() {
-    // 1. Add Medicine Button
-    const addProductBtn = document.getElementById('add-medicine-btn');
-    if (addProductBtn) {
-      addProductBtn.addEventListener('click', async () => {
-        const result = await SwalHelpers.showAddProductModal();
-        if (result.isConfirmed && result.value) {
-          await window.mockApi.addProduct(result.value);
-          SwalHelpers.toast('New product registered!', 'success');
-          await this.refreshAllInventory();
-        }
-      });
-    }
-
-    // 2. Open Stock In Modal Button
-    const openStockInBtn = document.getElementById('btn-open-stockin-modal');
-    if (openStockInBtn) {
-      openStockInBtn.addEventListener('click', () => this.handleStockInModal());
-    }
-
-    // 3. Open Stock Out Modal Button
-    const openStockOutBtn = document.getElementById('btn-open-stockout-modal');
-    if (openStockOutBtn) {
-      openStockOutBtn.addEventListener('click', () => this.handleStockOutModal());
-    }
-
-    // 4. Open Item Conversion Modal Button
-    const openConvBtn = document.getElementById('btn-open-conversion-modal');
-    if (openConvBtn) {
-      openConvBtn.addEventListener('click', () => this.handleItemConversionModal());
-    }
-
-    // 5. Quick Shortcut Button from Catalog
-    const quickConvertShortcut = document.getElementById('btn-quick-convert-shortcut');
-    if (quickConvertShortcut) {
-      quickConvertShortcut.addEventListener('click', () => {
-        const convTabBtn = document.querySelector('[data-inv-tab="conversion"]');
-        if (convTabBtn) convTabBtn.click();
-      });
-    }
-
-    // 6. Search Inputs
-    const invSearch = document.getElementById('inventory-search-input');
-    if (invSearch) {
-      invSearch.addEventListener('input', (e) => this.renderInventoryCatalog(e.target.value));
-    }
-
-    const stkinSearch = document.getElementById('stockin-search-input');
-    if (stkinSearch) {
-      stkinSearch.addEventListener('input', (e) => this.renderStockInView(e.target.value));
-    }
-
-    const stkoutSearch = document.getElementById('stockout-search-input');
-    if (stkoutSearch) {
-      stkoutSearch.addEventListener('input', (e) => this.renderStockOutView(e.target.value));
-    }
-
-    const convSearch = document.getElementById('conversion-search-input');
-    if (convSearch) {
-      convSearch.addEventListener('input', (e) => this.renderConversionView(e.target.value));
-    }
-
-    const movSearch = document.getElementById('movement-search-input');
-    const movFilter = document.getElementById('movement-type-filter');
-
-    const updateMovementTable = () => {
-      const type = movFilter ? movFilter.value : 'ALL';
-      const q = movSearch ? movSearch.value : '';
-      this.renderStockMovementsView(type, q);
-    };
-
-    if (movSearch) movSearch.addEventListener('input', updateMovementTable);
-    if (movFilter) movFilter.addEventListener('change', updateMovementTable);
+    // All modular views (inventory, stock-in, stock-out, conversion, movements,
+    // suppliers, forecast, pos) bind their own view-specific buttons and search inputs
+    // within their respective controller init() lifecycle.
+    // Keeping this hook clean prevents duplicate event registration and double-modal triggers.
   }
 
   // 7. Header POS Shortcut
@@ -972,20 +921,15 @@ class AppController {
     }
   }
 
-  // Refresh all state, dashboard cards, POS grid, and inventory tables
+  // Refresh all state, dashboard cards, POS grid, and inventory tables dynamically in real-time
   async refreshAllInventory() {
-    await this.loadDashboardStats();
-    await this.refreshActiveInventoryTab();
-    if (window.posController) {
-      window.posController.products = await window.mockApi.getProducts();
-      window.posController.renderProductsGrid();
-    }
-    if (window.forecastController) {
-      window.forecastController.renderForecastView();
-    }
+    await this.refreshAllModules();
   }
 
-  viewReceipt(txn) {
+  async viewReceipt(txn) {
+    if (window.salesController && typeof window.salesController.viewReceipt === 'function') {
+      return await window.salesController.viewReceipt(txn);
+    }
     SwalHelpers.showReceiptModal(txn);
   }
 }

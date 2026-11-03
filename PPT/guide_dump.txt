@@ -1,0 +1,405 @@
+=== SLIDE 1 ===
+PART I  •  HOW TO PREPARE
+Background of the Study
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+5
+•  State the current practice or situation.
+•  Identify the concrete problem or inefficiency.
+•  Introduce the proposed system as the response.
+PRESENTER NOTE  Speak about context and evidence; avoid a full paragraph.
+=== SLIDE 2 ===
+PART I  •  HOW TO PREPARE
+Objectives of the Study
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+6
+•  Show the general objective exactly as approved.
+•  Show all specific objectives exactly as approved.
+•  Do not paraphrase, merge, add, or remove objectives.
+PRESENTER NOTE  If too long, use two slides rather than shrinking the text.
+=== SLIDE 3 ===
+PART I  •  HOW TO PREPARE
+Conceptual Framework
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+7
+•  Show the IPO diagram as used in the manuscript.
+•  Keep Input, Process, and Output labels readable.
+•  Use a short oral explanation to connect the three parts.
+PRESENTER NOTE  The slide should be primarily visual.
+=== SLIDE 4 ===
+PART I  •  HOW TO PREPARE
+Definition of Terms
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+10
+•  List ALL terms defined in your manuscript, in alphabetical order.
+•  Include this statement: “The terms are defined conceptually and operationally.”
+•  Do NOT place the complete definitions on the slide.
+PRESENTER NOTE  Split the alphabetical list across slides if necessary.
+=== SLIDE 5 ===
+PART I  •  HOW TO PREPARE
+Significance of the Study
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+8
+•  List the major beneficiaries.
+•  Use a short phrase to show the benefit to each.
+•  Leave detailed justification to the oral presentation.
+PRESENTER NOTE  Avoid long paragraphs for every beneficiary.
+=== SLIDE 6 ===
+PART I  •  HOW TO PREPARE
+Scope and Limitations of the Study
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+9
+•  Identify intended users and major functions.
+•  State where or for whom the project applies.
+•  Mention the most consequential exclusions or limitations.
+PRESENTER NOTE  Clearly distinguish planned functionality from unsupported claims.
+=== SLIDE 7 ===
+PART I  •  HOW TO PREPARE
+Review of Related Literature
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+11
+•  Write each selected source’s ACTUAL literature title.
+•  Below the title, provide ONE sentence conveying the main thought.
+•  Include author and year in small but readable text.
+PRESENTER NOTE  Explain relevance verbally; never invent titles.
+=== SLIDE 8 ===
+PART I  •  HOW TO PREPARE
+Review of Related Studies
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+12
+•  Write each selected study’s ACTUAL title.
+•  Provide ONE sentence describing its contribution or finding.
+•  Include author and year.
+PRESENTER NOTE  Explain comparisons verbally.
+=== SLIDE 9 ===
+PART I  •  HOW TO PREPARE
+Synthesis of Related Literature and Studies
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+13
+•  Summarize shared insights in 2–3 short statements.
+•  Identify the gap that the proposed project addresses.
+•  Do not repeat the individual study summaries.
+PRESENTER NOTE  Follow this with the feature-comparison matrix.
+=== SLIDE 10 ===
+PART I  •  HOW TO PREPARE
+Comparison of Related Studies’ Features
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+14
+•  Rows: major functions; columns: each reviewed study and the proposed project.
+•  Use ✓ for confirmed features, — for confirmed absence, and ? when not established.
+•  Never treat “not mentioned” as proof that a feature is absent.
+PRESENTER NOTE  Only compare claims supported by the full sources.
+=== SLIDE 11 ===
+PART I  •  HOW TO PREPARE
+Project Description
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+15
+•  Explain what the system is and who will use it.
+•  Present the main features as short phrases.
+PRESENTER NOTE  This is a proposal, not a results presentation.
+=== SLIDE 12 ===
+PART I  •  HOW TO PREPARE
+Project Development
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+16
+•  Name the chosen SDLC model.
+•  Show its phases and one project-specific activity per phase.
+PRESENTER NOTE  Do not imply every project must use the same SDLC.
+=== SLIDE 13 ===
+PART I  •  HOW TO PREPARE
+Use Case Diagram
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+17
+•  Show actors and their main functions.
+•  Keep actor–use case relationships legible.
+•  Split by actor if a single diagram is crowded.
+PRESENTER NOTE  Briefly explain actor responsibilities.
+=== SLIDE 14 ===
+PART I  •  HOW TO PREPARE
+Activity Diagram
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+18
+•  Show the principal workflow and decisions.
+•  Use standard activity symbols and clearly labeled branches.
+•  Keep arrows readable and logically connected.
+PRESENTER NOTE  Do not narrate every symbol.
+=== SLIDE 15 ===
+PART I  •  HOW TO PREPARE
+Sequence Diagram
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+19
+•  Show lifelines and chronological messages.
+•  Ensure each arrow points to the actual sender/receiver.
+•  Explain only key interactions and alternate paths.
+PRESENTER NOTE  Use more than one slide for separate actors if necessary.
+=== SLIDE 16 ===
+PART I  •  HOW TO PREPARE
+System Architecture
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+20
+•  Show clients, application server, database, and external devices as applicable.
+•  Label the direction of data flow and interfaces.
+•  Avoid including hardware the project will not use.
+PRESENTER NOTE  Only include this section if it appears in the manuscript.
+=== SLIDE 17 ===
+PART I  •  HOW TO PREPARE
+Project Evaluation
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+21
+•  Name the ISO/IEC 25010 quality evaluation used in the manuscript.
+•  Identify evaluators and evaluation procedure.
+•  Add objective technical tests (e.g., accuracy, latency) when relevant.
+PRESENTER NOTE  Technical accuracy cannot be established by a questionnaire alone.
+=== SLIDE 18 ===
+PART I  •  HOW TO PREPARE
+Data Gathering Instrument and Statistical Tool
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+22
+•  Identify the approved instrument and its criteria.
+•  Name the statistical treatment for questionnaire responses.
+•  Name the computation method for technical performance tests.
+PRESENTER NOTE  Only include measures actually planned in the manuscript.
+=== SLIDE 19 ===
+PART II  •  WORKED EXAMPLE
+Sample Pre-Oral Presentation
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+23
+SMARTATTEND
+A QR Code-Based Attendance Monitoring System with Automated Reports
+=== SLIDE 20 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+Title Page
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+24
+•  SmartAttend: A QR Code-Based Attendance Monitoring System with Automated Reports
+•  Proponents: Student A • Student B • Student C
+•  Capstone Adviser: [Adviser Name]  |  BS Information Technology
+•  ISAT U – Dumangas Campus  |  Pre-Oral Defense
+=== SLIDE 21 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+Background of the Study
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+25
+•  Current practice: Attendance is recorded using paper sheets or manually maintained files.
+•  Problem: Manual consolidation may delay reporting and introduce transcription errors.
+•  Proposed solution: SmartAttend records QR-based attendance and produces class reports.
+PRESENTER NOTE  Explain the local evidence that supports the identified problem.
+=== SLIDE 22 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+Objectives of the Study
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+26
+•  General: To design and develop SmartAttend, a QR code-based attendance monitoring system with automated reports.
+•  Specific 1: To develop user and class-session management functions.
+•  Specific 2: To implement QR-based attendance recording with duplicate-entry validation.
+•  Specific 3: To generate attendance summaries and downloadable reports.
+•  Specific 4: To evaluate software quality and QR attendance-recording correctness.
+PRESENTER NOTE  Sample objectives only; students must reproduce THEIR approved objectives exactly.
+=== SLIDE 23 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+Conceptual Framework — IPO
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+27
+INPUT
+PROCESS
+OUTPUT
+User / class records
+Register and validate users
+Managed user records
+Session QR token
+Generate and scan code
+Recorded attendance
+Attendance entries
+Validate / summarize / report
+Attendance reports
+Evaluation
+=== SLIDE 24 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+Significance of the Study
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+28
+•  Students — faster attendance submission and access to attendance history.
+•  Faculty — simplified session monitoring and report preparation.
+•  Department administrators — consolidated attendance summaries.
+•  Future developers — a reference for QR-based record validation.
+=== SLIDE 25 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+Scope and Limitations of the Study
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+29
+•  Scope: Class attendance for registered students, faculty, and administrators.
+•  Functions: Session QR generation, scan validation, attendance history, downloadable reports.
+•  Limitation: Requires a functioning camera and network access at check-in.
+•  Limitation: QR scanning alone does not establish a student’s physical identity.
+=== SLIDE 26 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+Definition of Terms
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+30
+•  Attendance Record   •   Authentication   •   Duplicate Entry
+•  QR Code   •   Session Token   •   System Administrator
+•  “The terms are defined conceptually and operationally.”
+PRESENTER NOTE  All terms are alphabetical; complete definitions belong in the manuscript.
+=== SLIDE 27 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+Review of Related Literature
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+31
+•  “QRcode® invented by DENSO” — QR codes support rapid omnidirectional scanning and encode information in two dimensions. (DENSO)
+•  “Error correction feature” — QR codes use error correction to recover data from some damaged or obscured code patterns. (DENSO WAVE)
+PRESENTER NOTE  Explain how these concepts support the chosen technology verbally.
+=== SLIDE 28 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+Review of Related Studies
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+32
+•  “A Students Attendance System Using QR Code” — The study proposed lecture attendance through student scanning of a displayed QR code. (Masalha & Hirzallah, 2014)
+•  “Design and development of student attendance system using QR-Code for UiTM Cawangan Terengganu” — The project addressed manual attendance and attendance-percentage calculations. (Hamzah et al., 2021)
+•  “Beyond the roll call: Quick Response (QR) Code-Based classroom attendance monitoring system for DMMMSU-MLUC College of Engineering” — The project integrated QR attendance with a web platform and evaluated usability. (Peralta et al., 2025)
+PRESENTER NOTE  These are real study titles; explain relevance verbally.
+=== SLIDE 29 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+Synthesis of Related Literature and Studies
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+33
+•  QR-based attendance can reduce dependence on handwritten attendance records.
+•  Reviewed systems demonstrate QR scanning and digital attendance management.
+•  SmartAttend proposes session-token validation, duplicate prevention, and automated reports in one scoped workflow.
+PRESENTER NOTE  This is a sample proposed contribution, not proof of novelty.
+=== SLIDE 30 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+Comparison of Related Studies’ Features
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+34
+FEATURE
+Masalha 2014
+Hamzah 2021
+Peralta 2025
+SmartAttend
+QR attendance
+✓
+✓
+✓
+✓
+Web interface
+?
+?
+✓
+✓
+Attendance %
+?
+✓
+?
+✓
+Session token
+?
+?
+?
+✓
+Duplicate validation
+?
+?
+?
+✓
+=== SLIDE 31 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+Project Description
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+35
+•  SmartAttend is a proposed web-based class attendance system.
+•  Faculty create class sessions and display a session-specific QR code.
+•  Students authenticate and scan the code to submit attendance.
+•  The server validates the session and prevents duplicate records.
+•  Faculty and administrators review summaries and download reports.
+=== SLIDE 32 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+Project Development — Sample SDLC
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+36
+PHASE
+APPLICATION TO SMARTATTEND
+Requirements
+Identify user roles and attendance rules
+Design
+Create database and UML diagrams
+Development
+Build QR, validation, and report modules
+Testing
+Test valid, invalid, expired, and duplicate scans
+Evaluation
+Conduct quality and correctness assessments
+=== SLIDE 33 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+Use Case Diagram — Actor Functions
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+37
+STUDENT
+FACULTY
+ADMIN
+Log in
+Log in
+Log in
+Scan session QR
+Create class session
+Manage users
+View own history
+View attendance
+Manage classes
+—
+Download report
+Review reports
+=== SLIDE 34 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+Activity Diagram — Main Attendance Workflow
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+38
+•  START → Student logs in → Faculty opens class session.
+•  Faculty displays QR → Student scans QR → System checks token, session, and user.
+•  Decision: valid and not previously recorded?
+•  YES → Save attendance → Show confirmation → END.
+•  NO → Display rejection reason → END.
+PRESENTER NOTE  In an actual defense, replace these text steps with the full UML activity diagram.
+=== SLIDE 35 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+Sequence Diagram — Main Interactions
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+39
+•  Student → Web Interface: Submit QR scan.
+•  Web Interface → Application Server: Send user ID + session token.
+•  Application Server → Database: Verify session and check duplicate.
+•  Database → Application Server: Return validation result.
+•  ALT valid → Save record → Return confirmation; invalid → Return rejection.
+PRESENTER NOTE  In an actual defense, replace with a UML sequence diagram with lifelines and arrows.
+=== SLIDE 36 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+System Architecture — Sample
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+40
+COMPONENT
+FUNCTION
+Student / Faculty browser
+Authentication, scanning, dashboard
+Web application server
+Session rules and validation
+Database
+Users, sessions, attendance, audit records
+QR generator / scanner
+Create and decode session token
+Report module
+Summaries and downloads
+=== SLIDE 37 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+Project Evaluation
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+41
+•  Software quality: ISO/IEC 25010 criteria and approved evaluator questionnaire.
+•  Functional tests: successful check-in, invalid token, expired token, and duplicate scan.
+•  Accuracy: correct attendance outcomes ÷ total test cases × 100.
+•  Reporting correctness: generated totals compared with verified test records.
+PRESENTER NOTE  Use actual test outcomes only after development; no invented results.
+=== SLIDE 38 ===
+PART II  •  SAMPLE PROJECT: SMARTATTEND
+Data Gathering Instrument and Statistical Tool
+CAPSTONE PRE-ORAL DEFENSE  •  CHAPTERS I–III
+42
+•  Instrument: Approved ISO/IEC 25010-based evaluation questionnaire.
+•  Questionnaire analysis: Weighted mean, if prescribed in the manuscript.

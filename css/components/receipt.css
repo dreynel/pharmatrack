@@ -3,73 +3,138 @@
    ========================================================================== */
 
 .receipt-box {
-  background: #fff;
-  color: #000;
-  padding: 1.25rem 1rem;
+  background: #ffffff;
+  color: #111827;
+  padding: 1.5rem 1.25rem;
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.82rem;
-  border-radius: 6px;
-  line-height: 1.4;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  line-height: 1.45;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+  margin: 0 auto;
+  max-width: 480px;
+  text-align: left;
 }
 
 .receipt-header {
   text-align: center;
-  border-bottom: 1px dashed #666;
+  border-bottom: 1px dashed #64748b;
   padding-bottom: 0.75rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.85rem;
 }
 
 .receipt-header h2 {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 800;
   margin-bottom: 0.2rem;
-  color: #000;
+  color: #0f172a;
 }
 
 .receipt-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.85rem;
   font-size: 0.8rem;
 }
 
 .receipt-table th {
-  border-bottom: 1px dashed #888;
-  padding: 4px 0;
+  border-bottom: 1px dashed #94a3b8;
+  padding: 5px 0;
   text-align: left;
   font-size: 0.75rem;
+  color: #475569;
 }
 
 .receipt-table td {
-  padding: 4px 0;
+  padding: 5px 0;
   vertical-align: top;
 }
 
 .receipt-footer {
   text-align: center;
-  border-top: 1px dashed #666;
+  border-top: 1px dashed #64748b;
   padding-top: 0.75rem;
-  margin-top: 0.75rem;
-  font-size: 0.75rem;
-  color: #444;
+  margin-top: 0.85rem;
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+/* SweetAlert2 Modal integration for Receipt */
+.receipt-swal-modal {
+  padding: 1.25rem 1rem !important;
+  background: var(--card-bg, #ffffff) !important;
+  border-radius: 16px !important;
+}
+
+.receipt-swal-modal .swal2-html-container {
+  margin: 0.75rem 0 0 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
 }
 
 @media print {
-  body * {
-    visibility: hidden;
+  @page {
+    margin: 5mm;
   }
-  .receipt-box, .receipt-box * {
-    visibility: visible;
+
+  body, html {
+    background: #ffffff !important;
+    color: #000000 !important;
+    height: auto !important;
+    overflow: visible !important;
   }
+
+  /* Hide other elements only when printing a thermal receipt modal */
+  body.swal2-shown *,
+  body.printing-receipt * {
+    visibility: hidden !important;
+  }
+
+  body.swal2-shown .swal2-container,
+  body.swal2-shown .swal2-popup,
+  body.swal2-shown .swal2-html-container,
+  body.swal2-shown .receipt-box,
+  body.swal2-shown .receipt-box *,
+  body.printing-receipt .receipt-box,
+  body.printing-receipt .receipt-box * {
+    visibility: visible !important;
+  }
+
+  .swal2-container {
+    position: static !important;
+    display: block !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .swal2-popup {
+    position: static !important;
+    display: block !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 420px !important;
+  }
+
+  .swal2-header,
+  .swal2-title,
+  .swal2-actions,
+  .swal2-close,
+  .swal2-backdrop {
+    display: none !important;
+  }
+
   .receipt-box {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    box-shadow: none;
+    position: static !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 10px !important;
+    box-shadow: none !important;
+    border: none !important;
   }
 }
-

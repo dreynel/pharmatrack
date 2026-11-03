@@ -79,128 +79,74 @@ class StockOutController {
     this.currentLogs = filtered;
 
     if (filtered.length === 0) {
-      container.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-5"><i class="ri-delete-bin-line fs-1 d-block mb-2 text-danger opacity-50"></i>No Stock Out records found matching your query.</td></tr>`;
+      container.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-5">No documents found.</td></tr>`;
       if (docContainer) {
         docContainer.innerHTML = `
           <div class="doc-empty-state">
-            <i class="ri-delete-bin-line text-danger opacity-50"></i>
-            <h4>No Disposal Voucher Selected</h4>
-            <p>Click on any disposal voucher on the right to inspect its itemized batch write-offs, or record a new stock deduction.</p>
-            <button class="btn btn-sm btn-danger" onclick="window.stockOutController.handleStockOutModal()">
-              <i class="ri-indeterminate-circle-line"></i> Record New Stock Out
-            </button>
+            <i class="ri-file-text-line"></i>
+            <h4>No Document Selected</h4>
+            <p>Select a document from the list on the left.</p>
           </div>
         `;
       }
       return;
     }
 
-    // Auto-select first item if current selection is invalid or null
     const hasSelection = filtered.some(l => String(l.id || l.ref_no || l.refNo) === String(this.selectedLogId));
     if (!hasSelection) {
       this.selectedLogId = filtered[0].id || filtered[0].ref_no || filtered[0].refNo;
     }
 
-    // Render Right Panel: Table of Disposal Vouchers (Main Parent Records List)
+    // Left Panel: Clean 4-column Parent Documents List
     container.innerHTML = filtered.map(log => {
       const logKey = log.id || log.ref_no || log.refNo;
       const isSelected = String(logKey) === String(this.selectedLogId);
       const items = log.items || [];
       const refNo = log.ref_no || log.refNo || 'N/A';
       const reason = log.reason || 'Disposal';
-      const authBy = log.authorized_by || log.authorizedBy || 'Pharmacist';
       const totalLossValuation = log.total_loss_cost != null ? Number(log.total_loss_cost) : (log.total_amount != null ? Number(log.total_amount) : items.reduce((acc, i) => acc + (Number(i.quantity ?? i.qty ?? 0) * Number(i.cost_price ?? i.costPrice ?? i.cost ?? 0)), 0));
-
-      let badgeClasses = 'bg-danger-subtle text-danger border border-danger-subtle';
-      const reasonLower = reason.toLowerCase();
-      if (reasonLower.includes('damaged')) badgeClasses = 'bg-warning-subtle text-warning-emphasis border border-warning-subtle';
-      else if (reasonLower.includes('internal') || reasonLower.includes('clinic')) badgeClasses = 'bg-success-subtle text-success border border-success-subtle';
-      else if (reasonLower.includes('supplier') || reasonLower.includes('rtv')) badgeClasses = 'bg-primary-subtle text-primary border border-primary-subtle';
 
       return `
         <tr class="stock-selectable-row ${isSelected ? 'active-stockout-row' : ''}" 
             data-log-id="${logKey}"
-            onclick="window.stockOutController.selectRecord('${logKey}')"
-            title="Click to view children batches and voucher details in left panel">
-          <td class="py-2 px-3">
-            <div class="d-flex align-items-center gap-2 flex-wrap">
-              <span class="font-monospace fw-bold text-danger">${this.escapeHtml(refNo)}</span>
-              <span class="stockout-active-badge-slot">
-                ${isSelected ? '<span class="stock-active-badge stock-active-badge-out">← Viewing</span>' : ''}
-              </span>
-            </div>
+            onclick="window.stockOutController.selectRecord('${logKey}')">
+          <td>
+            <div class="font-monospace fw-bold text-dark">${this.escapeHtml(refNo)}</div>
+            <small class="text-muted">${this.escapeHtml(log.date)}</small>
           </td>
-          <td class="small text-muted py-2 px-3 text-nowrap">${log.date}</td>
-          <td class="py-2 px-3">
-            <span class="badge ${badgeClasses} text-nowrap">
+          <td>
+            <div class="text-truncate" style="max-width: 150px;" title="${this.escapeHtml(reason)}">
               ${this.escapeHtml(reason)}
-            </span>
-          </td>
-          <td class="py-2 px-3 fw-bold small text-danger text-nowrap">
-            ₱${totalLossValuation.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </td>
-          <td class="py-2 px-3 small text-dark font-medium text-nowrap text-truncate" style="max-width: 140px;" title="${this.escapeHtml(authBy)}">
-            ${this.escapeHtml(authBy)}
-          </td>
-          <td class="py-2 px-2 text-end text-nowrap" onclick="event.stopPropagation()">
-            <div class="btn-group btn-group-sm">
-              <button type="button" class="btn btn-outline-secondary btn-sm py-1 px-2" title="Edit Parent Voucher" onclick="window.stockOutController.editSelectedRecord('${logKey}')">
-                <i class="ri-edit-line"></i>
-              </button>
-              <button type="button" class="btn btn-outline-danger btn-sm py-1 px-2" title="Delete Voucher (Restore Inventory)" onclick="window.stockOutController.deleteSelectedRecord('${logKey}')">
-                <i class="ri-delete-bin-line"></i>
-              </button>
             </div>
+          </td>
+          <td class="text-center text-muted">${items.length}</td>
+          <td class="text-end fw-semibold text-nowrap">
+            ₱${totalLossValuation.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </td>
         </tr>
       `;
     }).join('');
 
-    // Render Left Panel: Active Parent Disposal Voucher & Children Details
+    // Right Panel: Minimal Short Bond Paper Document Sheet
     const activeLog = filtered.find(l => String(l.id || l.ref_no || l.refNo) === String(this.selectedLogId)) || filtered[0];
     this.renderDocumentSlip(activeLog);
   }
 
-  /**
-   * Fast, in-memory record selector:
-   * Instantly highlights the clicked parent in the right table and updates the children on the left without API refetch!
-   */
   selectRecord(id) {
     if (String(this.selectedLogId) === String(id)) return;
     this.selectedLogId = id;
 
-    // 1. Instantly update active highlight in the right panel table
     const tableBody = document.getElementById('stockout-table-body');
     if (tableBody) {
       tableBody.querySelectorAll('tr.stock-selectable-row').forEach(row => {
         const rowId = row.getAttribute('data-log-id');
-        const isActive = String(rowId) === String(id);
-        if (isActive) {
-          row.classList.add('active-stockout-row');
-          const badgeSlot = row.querySelector('.stockout-active-badge-slot');
-          if (badgeSlot) {
-            badgeSlot.innerHTML = `<span class="stock-active-badge stock-active-badge-out">← Viewing</span>`;
-          }
-        } else {
-          row.classList.remove('active-stockout-row');
-          const badgeSlot = row.querySelector('.stockout-active-badge-slot');
-          if (badgeSlot) {
-            badgeSlot.innerHTML = '';
-          }
-        }
+        row.classList.toggle('active-stockout-row', String(rowId) === String(id));
       });
     }
 
-    // 2. Instantly render the left panel details per selected parent
     const selectedLog = this.currentLogs.find(l => String(l.id || l.ref_no || l.refNo) === String(id));
     if (selectedLog) {
       this.renderDocumentSlip(selectedLog);
-    }
-
-    // 3. Smooth scroll to left panel if on mobile/small stacked screens
-    const docContainer = document.getElementById('stockout-document-container');
-    if (docContainer && window.innerWidth < 1200) {
-      docContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }
 
@@ -211,12 +157,9 @@ class StockOutController {
     if (!log) {
       container.innerHTML = `
         <div class="doc-empty-state">
-          <i class="ri-delete-bin-line text-danger opacity-50"></i>
-          <h4>No Voucher Selected</h4>
-          <p>Click on any disposal voucher on the right to inspect its batch and authorization breakdown.</p>
-          <button class="btn btn-sm btn-danger" onclick="window.stockOutController.handleStockOutModal()">
-            <i class="ri-indeterminate-circle-line"></i> Record Stock Out
-          </button>
+          <i class="ri-file-text-line"></i>
+          <h4>No Document Selected</h4>
+          <p>Select a document from the list on the left.</p>
         </div>
       `;
       return;
@@ -234,13 +177,7 @@ class StockOutController {
 
     let totalLossValuation = 0;
 
-    let badgeClasses = 'bg-danger-subtle text-danger border border-danger-subtle';
-    const reasonLower = reason.toLowerCase();
-    if (reasonLower.includes('damaged')) badgeClasses = 'bg-warning-subtle text-warning-emphasis border border-warning-subtle';
-    else if (reasonLower.includes('internal') || reasonLower.includes('clinic')) badgeClasses = 'bg-success-subtle text-success border border-success-subtle';
-    else if (reasonLower.includes('supplier') || reasonLower.includes('rtv')) badgeClasses = 'bg-primary-subtle text-primary border border-primary-subtle';
-
-    const itemsRows = items.map((item, idx) => {
+    const itemsRows = items.map(item => {
       const name = item.product_name || item.name || 'Unnamed Product';
       const qty = Number(item.quantity ?? item.qty ?? 0);
       const cost = Number(item.cost_price ?? item.costPrice ?? item.cost ?? 0);
@@ -250,163 +187,75 @@ class StockOutController {
 
       return `
         <tr>
-          <td class="text-center text-muted fw-bold">${idx + 1}</td>
           <td>
-            <strong class="text-dark d-block text-truncate" style="max-width: 180px;">${this.escapeHtml(name)}</strong>
-            <small class="text-muted d-flex align-items-center gap-1 mt-0.5">
-              <i class="ri-qr-code-line text-danger opacity-75"></i> Batch: <code class="font-monospace text-danger bg-light px-1 py-0.5 rounded border border-light-subtle">${this.escapeHtml(batchNo)}</code>
-            </small>
+            <div class="fw-semibold text-dark">${this.escapeHtml(name)}</div>
+            <small class="text-muted">Batch: ${this.escapeHtml(batchNo)}</small>
           </td>
-          <td class="text-center text-nowrap">
-            <span class="badge bg-danger-subtle text-danger border border-danger-subtle fw-bold">
-              -${qty} units
-            </span>
-          </td>
-          <td class="text-end text-muted text-nowrap">₱${cost.toFixed(2)}</td>
-          <td class="text-end fw-bold text-danger text-nowrap">₱${lineTotal.toFixed(2)}</td>
+          <td class="text-center fw-semibold text-danger">-${qty}</td>
+          <td class="text-end text-muted">₱${cost.toFixed(2)}</td>
+          <td class="text-end fw-semibold">₱${lineTotal.toFixed(2)}</td>
         </tr>
       `;
     }).join('');
 
     container.innerHTML = `
-      <div class="doc-slip doc-slip-danger">
-        <!-- Document Parent Header & Action Toolbar -->
+      <div class="doc-slip">
         <div class="doc-header">
-          <div class="doc-header-title">
-            <div class="doc-header-badges">
-              <span class="badge bg-danger-subtle text-danger border border-danger-subtle text-uppercase fw-bold">
-                Parent Voucher #${this.escapeHtml(refNo)}
-              </span>
-              <span class="badge ${badgeClasses}">
-                <i class="ri-close-circle-line"></i> ${this.escapeHtml(reason)}
-              </span>
-            </div>
-            <h4>
-              <i class="ri-file-reduce-line text-danger"></i> Inventory Disposal Voucher
-            </h4>
+          <div>
+            <h4>${this.escapeHtml(refNo)}</h4>
+            <div class="doc-header-sub">${this.escapeHtml(date)}</div>
           </div>
-
-          <!-- Parent Action Buttons: Add, Edit, Delete -->
           <div class="doc-actions-toolbar">
-            <button 
-              type="button"
-              class="btn btn-sm btn-outline-danger"
-              title="Record New Stock Out Voucher"
-              onclick="window.stockOutController.handleStockOutModal()"
-            >
-              <i class="ri-add-line"></i> Record New
+            <button type="button" class="doc-icon-btn" title="Print" onclick="window.stockOutController.printSlip('${logKey}')">
+              <i class="ri-printer-line"></i>
             </button>
-            <button 
-              type="button"
-              class="btn btn-sm btn-outline-secondary"
-              title="Edit Parent Voucher Details"
-              onclick="window.stockOutController.editSelectedRecord('${logKey}')"
-            >
-              <i class="ri-edit-line"></i> Edit
+            <button type="button" class="doc-icon-btn" title="Edit" onclick="window.stockOutController.editSelectedRecord('${logKey}')">
+              <i class="ri-edit-line"></i>
             </button>
-            <button 
-              type="button"
-              class="btn btn-sm btn-outline-danger"
-              title="Delete Voucher (Restore Inventory)"
-              onclick="window.stockOutController.deleteSelectedRecord('${logKey}')"
-            >
-              <i class="ri-delete-bin-line"></i> Delete
+            <button type="button" class="doc-icon-btn danger" title="Delete" onclick="window.stockOutController.deleteSelectedRecord('${logKey}')">
+              <i class="ri-delete-bin-line"></i>
             </button>
           </div>
         </div>
 
-        <!-- Document Parent Metadata Grid (Bootstrap Grid) -->
-        <div class="row g-2 p-3 bg-light-subtle rounded-3 border border-danger-subtle mb-3">
-          <div class="col-6">
-            <div class="doc-meta-item">
-              <label>Voucher Ref #</label>
-              <div class="doc-meta-code text-danger">${this.escapeHtml(refNo)}</div>
-            </div>
+        <div class="doc-meta-box">
+          <div class="doc-meta-item">
+            <label>Reason</label>
+            <div class="doc-meta-val">${this.escapeHtml(reason)}</div>
           </div>
-          <div class="col-6">
-            <div class="doc-meta-item">
-              <label>Date Authorized</label>
-              <div class="doc-meta-val">${this.escapeHtml(date)}</div>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="doc-meta-item">
-              <label>Deduction Reason</label>
-              <div class="doc-meta-val fw-bold text-danger">${this.escapeHtml(reason)}</div>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="doc-meta-item">
-              <label>Authorized Pharmacist</label>
-              <div class="doc-meta-val">${this.escapeHtml(authorizedBy)}</div>
-            </div>
+          <div class="doc-meta-item">
+            <label>Authorized By</label>
+            <div class="doc-meta-val">${this.escapeHtml(authorizedBy)}</div>
           </div>
           ${notes ? `
-          <div class="col-12 pt-2 border-top border-danger-subtle">
+          <div class="doc-meta-notes">
             <div class="doc-meta-item">
-              <label>Audit & Disposal Notes</label>
+              <label>Remarks</label>
               <div class="small text-muted">${this.escapeHtml(notes)}</div>
             </div>
           </div>
           ` : ''}
         </div>
 
-        <!-- Children Line Items Section (Highlighting Parent-Child Hierarchy) -->
-        <div class="mb-3">
-          <div class="doc-section-title">
-            <strong>
-              <i class="ri-git-commit-line text-danger"></i> Children Line Items (${totalItems})
-            </strong>
-            <span class="badge bg-danger-subtle text-danger border border-danger-subtle">
-              -${totalUnits} units total
-            </span>
-          </div>
-
-          <div class="doc-items-table-wrapper">
-            <table class="doc-items-table">
-              <thead>
-                <tr>
-                  <th class="text-center" style="width: 35px;">#</th>
-                  <th>Medicine & Batch</th>
-                  <th class="text-center">Pulled Qty</th>
-                  <th class="text-end">Unit Cost</th>
-                  <th class="text-end">Loss Valuation</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${itemsRows || '<tr><td colspan="5" class="text-center py-4 text-muted">No write-off items attached</td></tr>'}
-              </tbody>
-            </table>
-          </div>
+        <div class="doc-items-table-wrapper">
+          <table class="doc-items-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th class="text-center">Qty</th>
+                <th class="text-end">Cost</th>
+                <th class="text-end">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsRows || '<tr><td colspan="4" class="text-center py-4 text-muted">No items</td></tr>'}
+            </tbody>
+          </table>
         </div>
 
-        <!-- Grand Total Summary Bar -->
-        <div class="doc-valuation-card doc-valuation-card-danger">
-          <div>
-            <div class="doc-val-label">Total Write-Off Valuation</div>
-            <div class="doc-val-subtitle">${totalItems} line items · ${totalUnits} units removed from stock</div>
-          </div>
-          <div class="doc-val-amount">
-            ₱${totalLossValuation.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </div>
-        </div>
-
-        <!-- Document Footer Actions -->
-        <div class="doc-footer-actions">
-          <button 
-            type="button"
-            class="btn btn-sm btn-outline-secondary" 
-            onclick="window.stockOutController.printSlip('${logKey}')"
-          >
-            <i class="ri-printer-line"></i> Print Disposal Slip
-          </button>
-          <button 
-            type="button"
-            class="btn btn-sm btn-danger" 
-            onclick="window.stockOutController.viewModalDetails('${logKey}')"
-          >
-            <i class="ri-zoom-in-line"></i> Full Voucher Dialog
-          </button>
+        <div class="doc-bottom-sheet-footer">
+          <div class="doc-bottom-meta">${totalItems} ${totalItems === 1 ? 'item' : 'items'} (${totalUnits} units)</div>
+          <div class="doc-bottom-total">Total: ₱${totalLossValuation.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
         </div>
       </div>
     `;
@@ -416,11 +265,11 @@ class StockOutController {
     const products = await window.mockApi.getProducts();
     const result = await SwalHelpers.showStockOutModal(products);
 
-    if (result.isConfirmed && result.value) {
+    if (result && result.isConfirmed && result.value) {
       try {
-        await window.mockApi.processStockOut(result.value);
-        this.selectedLogId = result.value.refNo || result.value.ref_no;
-        SwalHelpers.toast(`Stock Out recorded: ${this.selectedLogId}`, 'info');
+        const saved = await window.mockApi.processStockOut(result.value);
+        this.selectedLogId = saved?.id || saved?.stock_out_id || result.value.refNo || result.value.ref_no;
+        SwalHelpers.toast(`Stock Out Document recorded: ${result.value.refNo || result.value.ref_no}`, 'info');
         if (window.appController) {
           await window.appController.refreshAllModules();
         } else {
@@ -437,12 +286,13 @@ class StockOutController {
     const log = this.currentLogs.find(l => String(l.id || l.ref_no || l.refNo) === String(logId));
     if (!log) return;
 
-    const result = await SwalHelpers.showEditStockOutParentModal(log);
+    const products = await window.mockApi.getProducts();
+    const result = await SwalHelpers.showEditStockOutParentModal(log, products);
     if (result.isConfirmed && result.value) {
       try {
-        await window.mockApi.updateStockOut(log.id || log.ref_no || log.refNo, result.value);
-        this.selectedLogId = result.value.refNo || result.value.ref_no || log.id;
-        SwalHelpers.toast(`Voucher #${this.selectedLogId} updated successfully!`, 'success');
+        await window.mockApi.updateStockOut(log.id, result.value);
+        this.selectedLogId = log.id;
+        SwalHelpers.toast(`Voucher #${result.value.refNo || log.refNo} & children updated!`, 'success');
         if (window.appController) {
           await window.appController.refreshAllModules();
         } else {
@@ -502,7 +352,7 @@ class StockOutController {
         <tr style="border-bottom: 1px solid #fee2e2;">
           <td style="padding: 0.6rem 0.75rem; text-align: center; color: #94a3b8;">${i + 1}</td>
           <td style="padding: 0.6rem 0.75rem;">
-            <strong style="color: #0f172a;">${this.escapeHtml(item.product_name || item.name || 'Unnamed')}</strong><br>
+            <strong style="color: var(--text-main, #0f172a);">${this.escapeHtml(item.product_name || item.name || 'Unnamed')}</strong><br>
             <small style="color: #64748b;">Batch: <code style="font-family: monospace; color: #ef4444;">${this.escapeHtml(item.batch_no || item.batchNo || 'N/A')}</code></small>
           </td>
           <td style="padding: 0.6rem 0.75rem; text-align: center; font-weight: 700; color: #ef4444;">-${qty}</td>
@@ -517,20 +367,20 @@ class StockOutController {
 
     Swal.fire({
       title: `📄 Disposal Voucher: ${ref}`,
-      width: '700px',
+      width: '980px',
       html: `
         <div style="text-align: left; font-size: 0.88rem;">
-          <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 1rem; margin-bottom: 1.25rem;">
+          <div style="background: var(--bg-card-hover, #fef2f2); border: 1px solid var(--border-color, #fecaca); border-radius: 12px; padding: 1rem; margin-bottom: 1.25rem;">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
               <div><strong>Reason:</strong> ${this.escapeHtml(log.reason)}</div>
               <div><strong>Date:</strong> ${log.date}</div>
               <div><strong>Authorized By:</strong> ${this.escapeHtml(auth)}</div>
               <div><strong>Voucher Ref #:</strong> <span style="font-family: monospace; color: #ef4444; font-weight: 700;">${this.escapeHtml(ref)}</span></div>
             </div>
-            ${log.notes || log.remarks ? `<div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed #fca5a5; font-size: 0.8rem; color: #7f1d1d;"><strong>Notes:</strong> ${this.escapeHtml(log.notes || log.remarks)}</div>` : ''}
+            ${log.notes || log.remarks ? `<div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed #fca5a5; font-size: 0.8rem; color: #ef4444;"><strong>Notes:</strong> ${this.escapeHtml(log.notes || log.remarks)}</div>` : ''}
           </div>
 
-          <h4 style="font-size: 0.95rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main, #0f172a); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
             <i class="ri-delete-bin-line" style="color: #ef4444;"></i> Itemized Deductions & Write-Offs (${items.length}):
           </h4>
 

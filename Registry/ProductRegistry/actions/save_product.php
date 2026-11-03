@@ -38,10 +38,11 @@ try {
     $uom = $input['uom'] ?? 'Box';
     $unitPrice = (float)($input['unit_price'] ?? ($input['unitPrice'] ?? 0));
     $costPrice = (float)($input['cost_price'] ?? ($input['costPrice'] ?? 0));
-    $stock = (int)($input['stock'] ?? 0);
+    // New products always start at 0 stock. Stock In is the 1st process for inventory receiving.
+    $stock = 0;
     $reorderPoint = (int)($input['reorder_point'] ?? ($input['reorderPoint'] ?? 10));
-    $batchNo = $input['batch_no'] ?? ($input['batchNo'] ?? null);
-    $expiryDate = !empty($input['expiry_date']) ? $input['expiry_date'] : (!empty($input['expiryDate']) ? $input['expiryDate'] : null);
+    $batchNo = null;
+    $expiryDate = null;
     $isBulk = !empty($input['is_bulk']) || !empty($input['isBulk']) ? 1 : 0;
     $conversionRate = (int)($input['conversion_rate'] ?? ($input['conversionRate'] ?? 100));
 
@@ -54,7 +55,7 @@ try {
         $uom,
         $unitPrice,
         $costPrice,
-        $stock,
+        0, // stock is strictly 0 on creation
         $reorderPoint,
         $batchNo,
         $expiryDate,

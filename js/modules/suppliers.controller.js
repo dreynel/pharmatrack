@@ -39,25 +39,26 @@ class SuppliersController {
     const container = document.getElementById('suppliers-grid-container');
     if (container && this.suppliers.length === 0) {
       container.innerHTML = `
-        <div class="col-span-full py-12 text-center text-slate-400">
-          <div class="inline-block animate-spin text-2xl mb-2"><i class="ri-loader-4-line text-teal-600"></i></div>
-          <p class="text-sm font-medium">Loading registered distributors & suppliers...</p>
+        <div class="glass-card" style="grid-column: 1 / -1; text-align: center; padding: 3rem 1.5rem; color: #64748b;">
+          <i class="ri-loader-4-line" style="font-size: 2rem; color: var(--primary); display: inline-block; margin-bottom: 0.5rem;"></i>
+          <p style="margin: 0; font-size: 0.9rem; font-weight: 600;">Loading accredited distributors &amp; suppliers...</p>
         </div>
       `;
     }
 
     try {
       const response = await window.api.getSuppliers();
-      this.suppliers = Array.isArray(response) ? response : (response.suppliers || []);
+      this.suppliers = Array.isArray(response) ? response : (response.suppliers || response.data || []);
+      this.renderKpiSummary();
       this.renderGrid();
     } catch (err) {
       console.error('Failed to load suppliers:', err);
       if (container) {
         container.innerHTML = `
-          <div class="col-span-full py-10 text-center text-rose-500 bg-rose-50/50 rounded-xl border border-rose-200">
-            <i class="ri-error-warning-line text-3xl mb-2"></i>
-            <p class="text-sm font-semibold">Unable to fetch suppliers list.</p>
-            <button class="btn btn-outline btn-sm mt-3" onclick="window.suppliersController.loadSuppliers()">
+          <div class="glass-card" style="grid-column: 1 / -1; text-align: center; padding: 2.5rem; border: 1px solid #fecaca; background: #fff5f5;">
+            <i class="ri-error-warning-line" style="font-size: 2.2rem; color: #ef4444; display: block; margin-bottom: 0.4rem;"></i>
+            <p style="font-size: 0.92rem; font-weight: 700; color: #be123c; margin-bottom: 0.75rem;">Unable to fetch suppliers directory.</p>
+            <button type="button" class="btn btn-outline-danger btn-sm" onclick="window.suppliersController.loadSuppliers()">
               <i class="ri-refresh-line"></i> Retry
             </button>
           </div>
@@ -68,6 +69,47 @@ class SuppliersController {
 
   async render() {
     await this.loadSuppliers();
+  }
+
+  renderKpiSummary() {
+    const kpiContainer = document.getElementById('suppliers-kpi-summary');
+    if (!kpiContainer) return;
+
+    const totalSuppliers = this.suppliers.length;
+    const totalDeliveries = this.suppliers.reduce((sum, s) => sum + Number(s.deliveries_count ?? 0), 0);
+    const totalSuppliedCost = this.suppliers.reduce((sum, s) => sum + Number(s.total_supplied_cost ?? 0), 0);
+
+    kpiContainer.innerHTML = `
+      <div class="inv-mini-kpi">
+        <div class="inv-mini-kpi-icon" style="background: rgba(2, 128, 144, 0.12); color: var(--primary);">
+          <i class="ri-building-4-line"></i>
+        </div>
+        <div>
+          <span class="inv-mini-kpi-label">Accredited Distributors</span>
+          <h4 class="inv-mini-kpi-value">${totalSuppliers} <small style="font-size: 0.75rem; font-weight: 500; color: #64748b;">vendors</small></h4>
+        </div>
+      </div>
+
+      <div class="inv-mini-kpi">
+        <div class="inv-mini-kpi-icon" style="background: rgba(16, 185, 129, 0.12); color: #059669;">
+          <i class="ri-truck-line"></i>
+        </div>
+        <div>
+          <span class="inv-mini-kpi-label">Recorded Deliveries</span>
+          <h4 class="inv-mini-kpi-value" style="color: #059669;">${totalDeliveries} <small style="font-size: 0.75rem; font-weight: 500; color: #64748b;">shipments</small></h4>
+        </div>
+      </div>
+
+      <div class="inv-mini-kpi">
+        <div class="inv-mini-kpi-icon" style="background: rgba(245, 158, 11, 0.12); color: #d97706;">
+          <i class="ri-funds-box-line"></i>
+        </div>
+        <div>
+          <span class="inv-mini-kpi-label">Total Supplied Value</span>
+          <h4 class="inv-mini-kpi-value">₱${totalSuppliedCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h4>
+        </div>
+      </div>
+    `;
   }
 
   renderGrid() {
@@ -93,30 +135,30 @@ class SuppliersController {
     if (filtered.length === 0) {
       if (this.searchTerm) {
         container.innerHTML = `
-          <div class="col-span-full py-12 text-center bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
-            <div class="w-14 h-14 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+          <div class="glass-card" style="grid-column: 1 / -1; text-align: center; padding: 3rem 1.5rem;">
+            <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--bg-card-hover, #f1f5f9); color: var(--text-muted, #64748b); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; font-size: 1.4rem;">
               <i class="ri-search-line"></i>
             </div>
-            <h4 class="text-base font-bold text-slate-700">No matching suppliers found</h4>
-            <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-              No registered suppliers match "<strong>${this.escapeHtml(this.searchTerm)}</strong>". Try checking spelling or search by another keyword.
+            <h4 style="font-size: 1rem; font-weight: 700; color: var(--text-main, #1e293b); margin-bottom: 0.3rem;">No matching suppliers found</h4>
+            <p style="font-size: 0.84rem; color: var(--text-muted, #64748b); max-width: 380px; margin: 0 auto 1rem;">
+              No registered distributors match "<strong>${this.escapeHtml(this.searchTerm)}</strong>".
             </p>
-            <button class="btn btn-outline btn-sm mt-4" onclick="document.getElementById('supplier-search-input').value=''; window.suppliersController.searchTerm=''; window.suppliersController.renderGrid();">
+            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="document.getElementById('supplier-search-input').value=''; window.suppliersController.searchTerm=''; window.suppliersController.renderGrid();">
               Clear Search Filter
             </button>
           </div>
         `;
       } else {
         container.innerHTML = `
-          <div class="col-span-full py-12 text-center bg-white rounded-2xl border border-dashed border-slate-300 shadow-sm p-8">
-            <div class="w-16 h-16 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mx-auto mb-3 text-3xl">
+          <div class="glass-card" style="grid-column: 1 / -1; text-align: center; padding: 3rem 1.5rem; border: 1px dashed var(--border-color, #cbd5e1);">
+            <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(2, 128, 144, 0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; font-size: 1.6rem;">
               <i class="ri-building-4-line"></i>
             </div>
-            <h4 class="text-lg font-bold text-slate-800">No Pharmaceutical Suppliers Registered</h4>
-            <p class="text-xs text-slate-500 mt-1 max-w-md mx-auto">
-              Maintain an accredited directory of drug manufacturers, wholesale distributors, and medical reps to streamline procurement and purchase orders.
+            <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main, #1e293b); margin-bottom: 0.3rem;">No Pharmaceutical Suppliers Registered</h4>
+            <p style="font-size: 0.84rem; color: #64748b; max-width: 420px; margin: 0 auto 1rem;">
+              Register accredited pharmaceutical manufacturers and wholesale distributors to track deliveries and purchase orders.
             </p>
-            <button class="btn btn-primary mt-4" onclick="window.suppliersController.handleAddSupplier()">
+            <button type="button" class="btn btn-primary btn-sm" onclick="window.suppliersController.handleAddSupplier()">
               <i class="ri-add-line"></i> Register First Supplier
             </button>
           </div>
@@ -126,100 +168,180 @@ class SuppliersController {
     }
 
     container.innerHTML = filtered.map(s => {
-      const activePOs = s.purchase_orders_count ?? s.active_pos ?? s.activePOs ?? 0;
-      const contactPerson = s.contact_person || s.contact || 'No contact person';
-      const phone = s.phone || 'No phone provided';
-      const email = s.email || 'No email provided';
+      const id = Number(s.id);
+      const activePOs = Number(s.purchase_orders_count ?? s.active_pos ?? s.activePOs ?? 0);
+      const deliveriesCount = Number(s.deliveries_count ?? 0);
+      const totalSupplied = Number(s.total_supplied_cost ?? 0);
+      const lastDelivery = s.last_delivery_date || 'No deliveries yet';
+      const contactPerson = s.contact_person || s.contact || 'Not specified';
+      const phone = s.phone || 'Not provided';
+      const email = s.email || 'Not provided';
       const address = s.address || 'Address not registered';
 
       return `
-        <div class="glass-card hover:shadow-md transition-all duration-200 border border-slate-200/80 bg-white/95 rounded-2xl p-5 flex flex-col justify-between" style="margin-bottom: 0;">
-          <!-- Top Section: Header & Actions -->
+        <div class="glass-card" style="margin-bottom: 0; padding: 1.15rem 1.25rem; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #e2e8f0; border-radius: 12px;">
           <div>
-            <div class="flex items-start justify-between gap-3 mb-3">
-              <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-50 to-teal-100 text-teal-700 border border-teal-200 flex items-center justify-center text-xl flex-shrink-0 shadow-sm">
+            <!-- Header: Icon, Supplier Name & Quick Edit/Delete Actions -->
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.9rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem; min-width: 0;">
+                <div style="width: 42px; height: 42px; border-radius: 10px; background: rgba(2, 128, 144, 0.1); color: var(--primary); border: 1px solid rgba(2, 128, 144, 0.2); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
                   <i class="ri-building-4-line"></i>
                 </div>
-                <div>
-                  <h4 class="font-bold text-slate-800 text-base leading-snug line-clamp-1" title="${this.escapeHtml(s.name)}">
+                <div style="min-width: 0;">
+                  <h4 style="font-size: 0.98rem; font-weight: 800; color: var(--text-main, #0f172a); margin: 0 0 0.2rem 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${this.escapeHtml(s.name)}">
                     ${this.escapeHtml(s.name)}
                   </h4>
-                  <span class="inline-flex items-center gap-1 text-[11px] text-teal-700 bg-teal-50 font-semibold px-2 py-0.5 rounded-md mt-0.5 border border-teal-200/50">
-                    <i class="ri-checkbox-circle-fill text-[10px]"></i> Accredited Vendor
+                  <span style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.7rem; font-weight: 700; color: #0f766e; background: rgba(0, 168, 150, 0.12); border: 1px solid rgba(0, 168, 150, 0.3); padding: 0.1rem 0.45rem; border-radius: 6px;">
+                    <i class="ri-checkbox-circle-fill"></i> Accredited Distributor
                   </span>
                 </div>
               </div>
 
-              <!-- Action Menu: Edit & Delete buttons -->
-              <div class="flex items-center gap-1">
+              <div style="display: flex; align-items: center; gap: 0.35rem; flex-shrink: 0;">
                 <button
                   type="button"
-                  class="w-8 h-8 rounded-lg text-slate-500 hover:text-teal-600 hover:bg-teal-50 flex items-center justify-center transition-colors"
+                  class="btn btn-sm btn-outline-secondary"
+                  style="padding: 0.25rem 0.5rem; border-radius: 7px;"
                   title="Edit Supplier"
-                  onclick="window.suppliersController.handleEditSupplier(${s.id})"
+                  onclick="window.suppliersController.handleEditSupplier(${id})"
                 >
-                  <i class="ri-edit-line text-base"></i>
+                  <i class="ri-edit-line"></i>
                 </button>
                 <button
                   type="button"
-                  class="w-8 h-8 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 flex items-center justify-center transition-colors"
+                  class="btn btn-sm btn-outline-danger"
+                  style="padding: 0.25rem 0.5rem; border-radius: 7px;"
                   title="Delete Supplier"
-                  onclick="window.suppliersController.handleDeleteSupplier(${s.id})"
+                  onclick="window.suppliersController.handleDeleteSupplier(${id})"
                 >
-                  <i class="ri-delete-bin-line text-base"></i>
+                  <i class="ri-delete-bin-line"></i>
                 </button>
               </div>
             </div>
 
-            <!-- Details Section -->
-            <div class="space-y-2 py-2 border-y border-slate-100 text-xs text-slate-600">
-              <div class="flex items-center gap-2">
-                <i class="ri-user-star-line text-slate-400 text-sm flex-shrink-0"></i>
-                <span class="truncate font-medium text-slate-700">${this.escapeHtml(contactPerson)}</span>
+            <!-- Contact Details List -->
+            <div style="border-top: 1px solid rgba(100, 116, 139, 0.15); border-bottom: 1px solid rgba(100, 116, 139, 0.15); padding: 0.75rem 0; display: flex; flex-direction: column; gap: 0.45rem; font-size: 0.82rem; color: var(--text-muted, #475569);">
+              <div style="display: flex; align-items: center; gap: 0.55rem;">
+                <i class="ri-user-star-line" style="color: #64748b; font-size: 0.95rem; width: 16px; text-align: center;"></i>
+                <span style="color: #64748b;">Rep:</span>
+                <strong style="color: var(--text-main, #1e293b); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${this.escapeHtml(contactPerson)}</strong>
               </div>
-              <div class="flex items-center gap-2">
-                <i class="ri-phone-line text-slate-400 text-sm flex-shrink-0"></i>
-                <span class="truncate">${this.escapeHtml(phone)}</span>
+              <div style="display: flex; align-items: center; gap: 0.55rem;">
+                <i class="ri-phone-line" style="color: #64748b; font-size: 0.95rem; width: 16px; text-align: center;"></i>
+                <span style="color: #64748b;">Phone:</span>
+                <span style="font-weight: 600; color: var(--text-main, #334155);">${this.escapeHtml(phone)}</span>
               </div>
-              <div class="flex items-center gap-2">
-                <i class="ri-mail-line text-slate-400 text-sm flex-shrink-0"></i>
-                <a href="${email !== 'No email provided' ? 'mailto:' + this.escapeHtml(email) : '#'}" class="truncate text-teal-600 hover:underline">
-                  ${this.escapeHtml(email)}
-                </a>
+              <div style="display: flex; align-items: center; gap: 0.55rem;">
+                <i class="ri-mail-line" style="color: #64748b; font-size: 0.95rem; width: 16px; text-align: center;"></i>
+                <span style="color: #64748b;">Email:</span>
+                ${s.email
+                  ? `<a href="mailto:${this.escapeHtml(s.email)}" style="color: var(--primary); font-weight: 600; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${this.escapeHtml(email)}</a>`
+                  : `<span style="color: #94a3b8;">Not provided</span>`
+                }
               </div>
-              <div class="flex items-start gap-2">
-                <i class="ri-map-pin-line text-slate-400 text-sm flex-shrink-0 mt-0.5"></i>
-                <span class="line-clamp-2 leading-relaxed text-slate-500">${this.escapeHtml(address)}</span>
+              <div style="display: flex; align-items: flex-start; gap: 0.55rem;">
+                <i class="ri-map-pin-line" style="color: #64748b; font-size: 0.95rem; width: 16px; text-align: center; margin-top: 1px;"></i>
+                <span style="color: var(--text-muted, #64748b); line-height: 1.35;">${this.escapeHtml(address)}</span>
+              </div>
+            </div>
+
+            <!-- Procurement Metrics Strip -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-top: 0.75rem; background: var(--bg-card-hover, rgba(15, 23, 42, 0.85)); border: 1px solid var(--border-color, #e2e8f0); border-radius: 8px; padding: 0.5rem 0.65rem; text-align: center;">
+              <div>
+                <div style="font-size: 0.68rem; color: #64748b; text-transform: uppercase; font-weight: 700;">Deliveries</div>
+                <div style="font-size: 0.88rem; font-weight: 800; color: #059669;">${deliveriesCount}</div>
+              </div>
+              <div style="border-left: 1px solid var(--border-color, #e2e8f0);">
+                <div style="font-size: 0.68rem; color: #64748b; text-transform: uppercase; font-weight: 700;">Supplied</div>
+                <div style="font-size: 0.85rem; font-weight: 800; color: var(--text-main, #0f172a);">₱${totalSupplied.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</div>
               </div>
             </div>
           </div>
 
-          <!-- Bottom Footer: PO Count & Quick Order -->
-          <div class="mt-4 pt-3 flex items-center justify-between gap-2 border-t border-slate-100">
-            <div class="text-[11px] text-slate-500">
-              <span class="font-bold text-slate-700">${activePOs}</span> Active PO(s)
-            </div>
-            <div class="flex items-center gap-2">
+          <!-- Footer Actions -->
+          <div style="margin-top: 0.85rem; padding-top: 0.65rem; border-top: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
+            <small style="font-size: 0.74rem; color: #64748b;">
+              <i class="ri-calendar-check-line"></i> Last Delivery: <strong>${this.escapeHtml(lastDelivery)}</strong>
+            </small>
+            <div style="display: flex; align-items: center; gap: 0.4rem;">
               <button
                 type="button"
-                class="px-2.5 py-1 text-xs font-semibold text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors flex items-center gap-1"
-                onclick="window.suppliersController.handleEditSupplier(${s.id})"
+                class="btn btn-sm btn-outline-primary"
+                style="font-size: 0.76rem; padding: 0.25rem 0.6rem;"
+                onclick="window.suppliersController.handleViewDeliveries(${id})"
               >
-                <i class="ri-settings-3-line"></i> Manage
+                <i class="ri-truck-line"></i> Deliveries
               </button>
               <button
                 type="button"
-                class="px-2.5 py-1 text-xs font-semibold text-teal-700 hover:text-teal-800 bg-teal-50 hover:bg-teal-100 rounded-lg transition-colors flex items-center gap-1"
-                onclick="SwalHelpers.toast('Connecting to ${this.escapeHtml(s.name)} portal...', 'info')"
+                class="btn btn-sm btn-primary"
+                style="font-size: 0.76rem; padding: 0.25rem 0.65rem;"
+                onclick="window.suppliersController.handleEditSupplier(${id})"
               >
-                <i class="ri-send-plane-line"></i> Contact
+                <i class="ri-settings-3-line"></i> Edit
               </button>
             </div>
           </div>
         </div>
       `;
     }).join('');
+  }
+
+  async handleViewDeliveries(id) {
+    const supplier = this.suppliers.find(s => Number(s.id) === Number(id));
+    if (!supplier) return;
+
+    try {
+      const logs = await window.api.getStockInLogs();
+      const matched = (logs || []).filter(l =>
+        (l.supplierName || l.supplier_name || '').toLowerCase() === (supplier.name || '').toLowerCase()
+      );
+
+      const rowsHtml = matched.length > 0
+        ? matched.map(l => `
+            <tr>
+              <td><code style="font-weight: 700; color: var(--primary);">${this.escapeHtml(l.refNo || l.ref_no)}</code></td>
+              <td>${this.escapeHtml(l.date)}</td>
+              <td>${this.escapeHtml(l.receivedBy || l.received_by)}</td>
+              <td style="text-align: center;"><strong>${(l.items || []).length}</strong></td>
+              <td style="text-align: right; font-weight: 700; color: #059669;">₱${Number(l.totalCost ?? l.total_cost ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+            </tr>
+          `).join('')
+        : `<tr><td colspan="5" style="text-align: center; padding: 1.5rem; color: #64748b;">No Stock-In deliveries recorded for this supplier yet.</td></tr>`;
+
+      Swal.fire({
+        title: `🚚 Delivery History — ${supplier.name}`,
+        width: '720px',
+        html: `
+          <div style="text-align: left;">
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.65rem 0.9rem; margin-bottom: 0.85rem; font-size: 0.82rem; color: #475569; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+              <span><strong>Contact:</strong> ${this.escapeHtml(supplier.contact_person || 'N/A')} (${this.escapeHtml(supplier.phone || 'N/A')})</span>
+              <span><strong>Total Shipments:</strong> ${matched.length}</span>
+            </div>
+            <div style="max-height: 280px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px;">
+              <table class="custom-table" style="margin: 0; font-size: 0.82rem;">
+                <thead>
+                  <tr>
+                    <th>Document #</th>
+                    <th>Date</th>
+                    <th>Received By</th>
+                    <th style="text-align: center;">Items</th>
+                    <th style="text-align: right;">Total Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rowsHtml}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `,
+        confirmButtonText: 'Close',
+        confirmButtonColor: '#028090'
+      });
+    } catch (err) {
+      SwalHelpers.toast('Unable to load delivery history.', 'error');
+    }
   }
 
   async handleAddSupplier() {
@@ -238,6 +360,9 @@ class SuppliersController {
       Swal.close();
       SwalHelpers.toast('Supplier registered successfully!', 'success');
       await this.loadSuppliers();
+      if (window.appController) {
+        await window.appController.refreshAllModules();
+      }
     } catch (err) {
       Swal.close();
       console.error('Failed to add supplier:', err);
@@ -250,7 +375,7 @@ class SuppliersController {
   }
 
   async handleEditSupplier(id) {
-    const supplier = this.suppliers.find(s => s.id === id);
+    const supplier = this.suppliers.find(s => Number(s.id) === Number(id));
     if (!supplier) {
       SwalHelpers.toast('Supplier record not found.', 'error');
       return;
@@ -271,6 +396,9 @@ class SuppliersController {
       Swal.close();
       SwalHelpers.toast('Supplier updated successfully!', 'success');
       await this.loadSuppliers();
+      if (window.appController) {
+        await window.appController.refreshAllModules();
+      }
     } catch (err) {
       Swal.close();
       console.error('Failed to update supplier:', err);
@@ -283,7 +411,7 @@ class SuppliersController {
   }
 
   async handleDeleteSupplier(id) {
-    const supplier = this.suppliers.find(s => s.id === id);
+    const supplier = this.suppliers.find(s => Number(s.id) === Number(id));
     const supplierName = supplier ? supplier.name : 'this supplier';
 
     const confirm = await Swal.fire({
@@ -312,6 +440,9 @@ class SuppliersController {
       Swal.close();
       SwalHelpers.toast(`Supplier "${supplierName}" has been deleted.`, 'info');
       await this.loadSuppliers();
+      if (window.appController) {
+        await window.appController.refreshAllModules();
+      }
     } catch (err) {
       Swal.close();
       console.error('Failed to delete supplier:', err);
@@ -324,7 +455,7 @@ class SuppliersController {
   }
 
   escapeHtml(str) {
-    if (!str) return '';
+    if (str === null || str === undefined) return '';
     return String(str)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')

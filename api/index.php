@@ -14,16 +14,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-$requestUri = $_SERVER['REQUEST_URI'] ?? '/';
-$parsedPath = parse_url($requestUri, PHP_URL_PATH);
-
-// Strip prefix e.g. /PharmaTrack/api or /api
-$prefix = '/api';
-$pos = strpos($parsedPath, $prefix);
-if ($pos !== false) {
-    $subPath = substr($parsedPath, $pos + strlen($prefix));
+if (!empty($_GET['endpoint'])) {
+    $subPath = $_GET['endpoint'];
+} elseif (!empty($_SERVER['PATH_INFO'])) {
+    $subPath = $_SERVER['PATH_INFO'];
 } else {
-    $subPath = $parsedPath;
+    $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
+    $parsedPath = parse_url($requestUri, PHP_URL_PATH);
+
+    // Strip script filename if present (e.g. /api/index.php/products -> /products)
+    $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+    if (!empty($scriptName) && strpos($parsedPath, $scriptName) === 0) {
+        $subPath = substr($parsedPath, strlen($scriptName));
+    } else {
+        // Strip prefix e.g. /PharmaTrack/api or /pharmatrack/api or /api
+        if (preg_match('#/api(?:/index\.php)?(/.*)?$#i', $parsedPath, $matches)) {
+            $subPath = $matches[1] ?? '';
+        } else {
+            $subPath = $parsedPath;
+        }
+    }
 }
 
 $subPath = trim($subPath, '/');
@@ -42,6 +52,9 @@ if ($idParam && is_numeric($idParam)) {
     $_GET['id'] = (int)$idParam;
 }
 
+require_once $rootDir . '/config/helpers.php';
+
+try {
 switch ($resource) {
     // 0. AUTHENTICATION (Login, Logout, Me)
     case 'auth':
@@ -117,6 +130,9 @@ switch ($resource) {
 
     // 2. SUPPLIERS (Registry/SupplierRegistry)
     case 'suppliers':
+        if ($idParam && is_numeric($idParam)) {
+            $_GET['id'] = (int)$idParam;
+        }
         if ($method === 'GET') {
             require $rootDir . '/Registry/SupplierRegistry/actions/get_suppliers.php';
         } elseif ($method === 'POST' || $method === 'PUT') {
@@ -134,6 +150,17 @@ switch ($resource) {
             require $rootDir . '/Registry/CategoryRegistry/actions/save_category.php';
         } elseif ($method === 'DELETE') {
             require $rootDir . '/Registry/CategoryRegistry/actions/delete_category.php';
+        }
+        break;
+
+    // 3b. UNITS OF MEASURE (Registry/UomRegistry)
+    case 'uoms':
+        if ($method === 'GET') {
+            require $rootDir . '/Registry/UomRegistry/actions/get_uoms.php';
+        } elseif ($method === 'POST' || $method === 'PUT') {
+            require $rootDir . '/Registry/UomRegistry/actions/save_uom.php';
+        } elseif ($method === 'DELETE') {
+            require $rootDir . '/Registry/UomRegistry/actions/delete_uom.php';
         }
         break;
 
@@ -157,7 +184,7 @@ switch ($resource) {
             } else {
                 require $rootDir . '/Modules/StockIn/actions/get_stock_in.php';
             }
-        } elseif ($method === 'POST') {
+        } elseif ($method === 'POST' || $method === 'PUT') {
             require $rootDir . '/Modules/StockIn/actions/save_stock_in.php';
         } elseif ($method === 'DELETE') {
             require $rootDir . '/Modules/StockIn/actions/delete_stock_in.php';
@@ -173,28 +200,42 @@ switch ($resource) {
             } else {
                 require $rootDir . '/Modules/StockOut/actions/get_stock_out.php';
             }
-        } elseif ($method === 'POST') {
+        } elseif ($method === 'POST' || $method === 'PUT') {
             require $rootDir . '/Modules/StockOut/actions/save_stock_out.php';
         } elseif ($method === 'DELETE') {
             require $rootDir . '/Modules/StockOut/actions/delete_stock_out.php';
         }
         break;
 
-    // 7. POS & TRANSACTIONS (Modules/POS)
+    // 7. POS, TRANSACTIONS & RETURNS (Modules/POS)
     case 'pos':
-        if ($actionParam === 'checkout' || $idParam === 'checkout') {
+        if ($actionParam === 'return' || $idParam === 'return') {
+            require $rootDir . '/Modules/POS/actions/process_return.php';
+        } elseif ($method === 'POST' || $actionParam === 'checkout' || $idParam === 'checkout') {
             require $rootDir . '/Modules/POS/actions/checkout.php';
         }
         break;
 
     case 'transactions':
-        if ($method === 'GET') {
-            if ($idParam && is_numeric($idParam)) {
-                $_GET['id'] = (int)$idParam;
+        if ($method === 'POST' && ($actionParam === 'return' || $idParam === 'return')) {
+            require $rootDir . '/Modules/POS/actions/process_return.php';
+        } elseif ($method === 'GET') {
+            if ($idParam === 'returns' || $actionParam === 'returns') {
+                require $rootDir . '/Modules/POS/actions/get_returns.php';
+            } elseif ($idParam !== null && $idParam !== '') {
+                $_GET['id'] = $idParam;
                 require $rootDir . '/Modules/POS/actions/get_sale_details.php';
             } else {
                 require $rootDir . '/Modules/POS/actions/get_sales.php';
             }
+        }
+        break;
+
+    case 'returns':
+        if ($method === 'POST') {
+            require $rootDir . '/Modules/POS/actions/process_return.php';
+        } else {
+            require $rootDir . '/Modules/POS/actions/get_returns.php';
         }
         break;
 
@@ -207,12 +248,43 @@ switch ($resource) {
         }
         break;
 
-    // 9. MOVEMENTS (Modules/StockMovements)
+    case 'conversion-rules':
+        $reqBody = getJsonInput();
+        $isDelete = ($method === 'DELETE') || 
+                    ($method === 'POST' && (
+                        (isset($_POST['_method']) && strtoupper($_POST['_method']) === 'DELETE') ||
+                        (isset($reqBody['_method']) && strtoupper($reqBody['_method']) === 'DELETE')
+                    ));
+        if ($isDelete) {
+            require $rootDir . '/Modules/Conversion/actions/delete_rule.php';
+        } else {
+            require $rootDir . '/Modules/Conversion/actions/save_rule.php';
+        }
+        break;
+
+    // 8b. ACTIVE INVENTORY BATCHES (FEFO Tracking)
+    case 'batches':
+        require_once $rootDir . '/config/db.php';
+        require_once $rootDir . '/config/helpers.php';
+        $pdo = getDatabaseConnection();
+        $batchProdId = (int)($_GET['product_id'] ?? ($_GET['id'] ?? 0));
+        $batches = getProductBatches($pdo, $batchProdId);
+        jsonResponse([
+            'success' => true,
+            'count' => count($batches),
+            'batches' => $batches,
+            'data' => $batches
+        ]);
+        break;
+
+    // 9. INVENTORY LEDGER / MOVEMENTS (Modules/StockMovements)
+    case 'inventory':
     case 'movements':
         require $rootDir . '/Modules/StockMovements/actions/get_movements.php';
         break;
 
     // 10. FORECASTS (Modules/Forecast)
+    case 'forecast':
     case 'forecasts':
         if ($idParam === 'purchase-order' || $actionParam === 'purchase-order') {
             require $rootDir . '/Modules/Forecast/actions/create_po.php';
@@ -249,4 +321,13 @@ switch ($resource) {
         ]);
         break;
 }
+} catch (Throwable $e) {
+    http_response_code(500);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode([
+        'success' => false,
+        'error' => $e->getMessage()
+    ]);
+}
+
 

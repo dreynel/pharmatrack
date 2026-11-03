@@ -19,24 +19,34 @@ try {
     // Support stock increment / direct restock
     $stockIncrement = (int)($input['stock_increment'] ?? ($input['quantity'] ?? ($_POST['stock_increment'] ?? 0)));
     if ($stockIncrement > 0) {
-        $checkStmt = $pdo->prepare("SELECT name, stock FROM products WHERE id = ? FOR UPDATE");
+        $checkStmt = $pdo->prepare("SELECT name, stock, cost_price, batch_no, expiry_date FROM products WHERE id = ? FOR UPDATE");
         $checkStmt->execute([$id]);
         $prod = $checkStmt->fetch();
 
         if ($prod) {
-            $prevStock = (int)$prod['stock'];
-            $newStock = $prevStock + $stockIncrement;
+            $ledEntry = postInventoryEntry($pdo, [
+                'product_id' => $id,
+                'product_name' => $prod['name'],
+                'transaction_code' => 'StockIn',
+                'transaction_id' => $id,
+                'reference_no' => 'RESTOCK-' . $id,
+                'impact' => +$stockIncrement,
+                'unit_cost' => (float)$prod['cost_price'],
+                'batch_no' => $prod['batch_no'],
+                'expiry_date' => $prod['expiry_date'],
+                'remarks' => 'Direct restock increment'
+            ]);
 
-            $pdo->prepare("UPDATE products SET stock = ?, updated_at = NOW() WHERE id = ?")
-                ->execute([$newStock, $id]);
+            $prevStock = (int)$ledEntry['previous_balance'];
+            $newStock = (int)$ledEntry['running_balance'];
+            $movCode = $ledEntry['entry_no'] ?: generateRefNo('MOV');
 
-            $movCode = generateRefNo('MOV');
             $pdo->prepare("
                 INSERT INTO stock_movements (
                     movement_code, timestamp, product_id, product_name, type,
                     qty_change, previous_stock, new_stock, reference_id, remarks, created_at, updated_at
                 ) VALUES (
-                    ?, NOW(), ?, ?, 'RECEIVING', ?, ?, ?, ?, 'Direct restock increment', NOW(), NOW()
+                    ?, NOW(), ?, ?, 'STOCK_IN', ?, ?, ?, ?, 'Direct restock increment', NOW(), NOW()
                 )
             ")->execute([$movCode, $id, $prod['name'], $stockIncrement, $prevStock, $newStock, 'RESTOCK-' . $id]);
 
@@ -48,6 +58,12 @@ try {
         }
     }
 
+    // Check if manual stock adjustment is being requested during product update
+    $curStmt = $pdo->prepare("SELECT name, stock, cost_price FROM products WHERE id = ?");
+    $curStmt->execute([$id]);
+    $curProd = $curStmt->fetch();
+    $oldStock = (int)($curProd['stock'] ?? 0);
+
     $stmt = $pdo->prepare("
         UPDATE products SET 
             name = COALESCE(?, name),
@@ -58,7 +74,6 @@ try {
             uom = COALESCE(?, uom),
             unit_price = COALESCE(?, unit_price),
             cost_price = COALESCE(?, cost_price),
-            stock = COALESCE(?, stock),
             reorder_point = COALESCE(?, reorder_point),
             batch_no = COALESCE(?, batch_no),
             expiry_date = COALESCE(?, expiry_date),
@@ -75,12 +90,27 @@ try {
         $input['uom'] ?? null,
         isset($input['unit_price']) ? (float)$input['unit_price'] : (isset($input['unitPrice']) ? (float)$input['unitPrice'] : null),
         isset($input['cost_price']) ? (float)$input['cost_price'] : (isset($input['costPrice']) ? (float)$input['costPrice'] : null),
-        isset($input['stock']) ? (int)$input['stock'] : null,
         isset($input['reorder_point']) ? (int)$input['reorder_point'] : (isset($input['reorderPoint']) ? (int)$input['reorderPoint'] : null),
         $input['batch_no'] ?? ($input['batchNo'] ?? null),
         $input['expiry_date'] ?? ($input['expiryDate'] ?? null),
         $id
     ]);
+
+    if (isset($input['stock']) && is_numeric($input['stock'])) {
+        $requestedStock = (int)$input['stock'];
+        $delta = $requestedStock - $oldStock;
+        if ($delta !== 0) {
+            postInventoryEntry($pdo, [
+                'product_id' => $id,
+                'product_name' => $input['name'] ?? ($curProd['name'] ?? ''),
+                'transaction_code' => 'Adjustment',
+                'transaction_id' => $id,
+                'reference_no' => 'ADJ-' . $id,
+                'impact' => $delta,
+                'remarks' => 'Manual stock adjustment in Product Registry'
+            ]);
+        }
+    }
 
     $fetchStmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
     $fetchStmt->execute([$id]);

@@ -11,9 +11,12 @@ require_once __DIR__ . '/../../../config/session.php';
 $pdo = getDatabaseConnection();
 
 $type = sanitizeString($_GET['type'] ?? 'sales');
-$range = sanitizeString($_GET['range'] ?? 'month');
+$range = sanitizeString($_GET['range'] ?? 'all');
 $startDate = sanitizeString($_GET['start_date'] ?? '');
 $endDate = sanitizeString($_GET['end_date'] ?? '');
+$filterDate = sanitizeString($_GET['date'] ?? '');
+$filterMonth = sanitizeString($_GET['month'] ?? '');
+$filterYear = sanitizeString($_GET['year'] ?? '');
 
 try {
     switch ($type) {
@@ -24,14 +27,25 @@ try {
             if (!empty($startDate) && !empty($endDate)) {
                 $whereClause = "DATE(s.created_at) BETWEEN ? AND ?";
                 $params = [$startDate, $endDate];
-            } elseif ($range === 'today') {
+            } elseif (!empty($filterDate)) {
+                $whereClause = "DATE(s.created_at) = ?";
+                $params = [$filterDate];
+            } elseif ($range === 'today' || $range === 'daily') {
                 $whereClause = "DATE(s.created_at) = CURRENT_DATE()";
+            } elseif (!empty($filterMonth)) {
+                $whereClause = "DATE_FORMAT(s.created_at, '%Y-%m') = ?";
+                $params = [$filterMonth];
+            } elseif ($range === 'monthly') {
+                $whereClause = "DATE_FORMAT(s.created_at, '%Y-%m') = DATE_FORMAT(CURRENT_DATE(), '%Y-%m')";
+            } elseif (!empty($filterYear)) {
+                $whereClause = "YEAR(s.created_at) = ?";
+                $params = [(int)$filterYear];
+            } elseif ($range === 'year' || $range === 'yearly') {
+                $whereClause = "YEAR(s.created_at) = YEAR(CURRENT_DATE())";
             } elseif ($range === 'week') {
                 $whereClause = "s.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
             } elseif ($range === 'month') {
                 $whereClause = "s.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)";
-            } elseif ($range === 'year') {
-                $whereClause = "s.created_at >= DATE_SUB(NOW(), INTERVAL 365 DAY)";
             }
 
             // Summary metrics

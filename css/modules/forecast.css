@@ -19,11 +19,25 @@
   font-family: var(--font-heading);
   font-size: 1.25rem;
   font-weight: 800;
-  color: var(--primary);
+  color: #008779;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.35rem;
+}
+
+body.cyber-theme .forecast-banner {
+  background: rgba(13, 21, 38, 0.85) !important;
+  border-color: rgba(0, 242, 254, 0.25) !important;
+}
+
+body.cyber-theme .forecast-banner-content h3 {
+  color: #00f2fe !important;
+  text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+}
+
+body.cyber-theme .forecast-banner-content p {
+  color: #94a3b8 !important;
 }
 
 .forecast-banner-content p {
@@ -31,4 +45,322 @@
   color: var(--text-muted);
   max-width: 650px;
 }
+
+/* ==========================================================================
+   Linear Regression On-Page Explainer Card
+   ========================================================================== */
+
+.forecast-explainer-card {
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+  overflow: hidden;
+}
+
+.forecast-explainer-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(0, 168, 150, 0.12);
+  color: #008779;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.explainer-formula-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.explainer-formula-box:hover {
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+}
+
+.formula-code-snippet {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  line-height: 1.5;
+}
+
+.explainer-advisory-tip,
+.explainer-defense-tip {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.explainer-advisory-tip strong,
+.explainer-defense-tip strong {
+  color: #14532d !important;
+}
+
+/* Cyber-Theme Overrides for Forecast Explainer */
+body.cyber-theme .forecast-explainer-card {
+  background: rgba(13, 21, 38, 0.88) !important;
+  border-color: rgba(0, 242, 254, 0.22) !important;
+  box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(14px) !important;
+}
+
+body.cyber-theme .forecast-explainer-badge {
+  background: rgba(0, 242, 254, 0.18) !important;
+  color: #00f2fe !important;
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.3) !important;
+}
+
+body.cyber-theme .explainer-formula-box {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border-color: rgba(0, 242, 254, 0.18) !important;
+}
+
+body.cyber-theme .explainer-formula-box:hover {
+  border-color: rgba(0, 242, 254, 0.35) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.cyber-theme .formula-code-snippet {
+  background: rgba(10, 16, 30, 0.95) !important;
+  border-color: rgba(0, 242, 254, 0.2) !important;
+  color: #38bdf8 !important;
+}
+
+body.cyber-theme .explainer-advisory-tip,
+body.cyber-theme .explainer-defense-tip {
+  background: rgba(6, 78, 59, 0.25) !important;
+  border-color: rgba(52, 211, 153, 0.35) !important;
+  color: #a7f3d0 !important;
+}
+
+body.cyber-theme .explainer-advisory-tip strong,
+body.cyber-theme .explainer-defense-tip strong {
+  color: #34d399 !important;
+}
+
+/* Abbreviations Legend Box */
+.explainer-legend-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  font-size: 0.78rem;
+}
+
+.legend-item .badge {
+  font-size: 0.72rem;
+  padding: 0.25rem 0.45rem;
+  min-width: 36px;
+  text-align: center;
+}
+
+body.cyber-theme .explainer-legend-box {
+  background: rgba(10, 16, 30, 0.85) !important;
+  border-color: rgba(0, 242, 254, 0.18) !important;
+}
+
+body.cyber-theme .legend-item {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border-color: rgba(0, 242, 254, 0.15) !important;
+  color: #cbd5e1 !important;
+}
+
+
+/* ==========================================================================
+   OLS Modal Guide Styling (Light & Cyber Themes)
+   ========================================================================== */
+
+.ols-modal-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.ols-header-card {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.ols-header-card h4 {
+  color: #166534;
+}
+
+.ols-header-card p {
+  color: #15803d;
+}
+
+.ols-formula-block {
+  background: var(--bg-card-hover, #f8fafc);
+  border-left: 4px solid var(--primary);
+  padding: 0.65rem 0.85rem;
+  margin-bottom: 0.6rem;
+  font-family: monospace;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+}
+
+.ols-sub-box {
+  background: var(--bg-card-hover, #f8fafc);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 6px;
+  padding: 0.65rem;
+  color: var(--text-main, #1e293b);
+}
+
+.ols-tip-box {
+  background: #fdf2f8;
+  border: 1px solid #fbcfe8;
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  font-size: 0.82rem;
+  color: #9d174d;
+}
+
+body.cyber-theme .ols-modal-card {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border-color: rgba(0, 242, 254, 0.22) !important;
+  color: #e2e8f0 !important;
+}
+
+body.cyber-theme .ols-header-card {
+  background: rgba(6, 78, 59, 0.3) !important;
+  border-color: rgba(52, 211, 153, 0.35) !important;
+}
+
+body.cyber-theme .ols-header-card h4 {
+  color: #34d399 !important;
+}
+
+body.cyber-theme .ols-header-card p {
+  color: #a7f3d0 !important;
+}
+
+body.cyber-theme .ols-formula-block {
+  background: rgba(10, 16, 30, 0.95) !important;
+  border-left-color: #00f2fe !important;
+  color: #00f2fe !important;
+}
+
+body.cyber-theme .ols-sub-box {
+  background: rgba(10, 16, 30, 0.85) !important;
+  border-color: rgba(0, 242, 254, 0.18) !important;
+  color: #cbd5e1 !important;
+}
+
+body.cyber-theme .ols-tip-box {
+  background: rgba(76, 5, 25, 0.3) !important;
+  border-color: rgba(244, 114, 182, 0.35) !important;
+  color: #fbcfe8 !important;
+}
+
+/* Forecast Algorithm Select in Cyber Theme */
+body.cyber-theme #forecast-algorithm-select {
+  background-color: rgba(10, 16, 30, 0.95) !important;
+  border-color: rgba(0, 242, 254, 0.25) !important;
+  color: #00f2fe !important;
+}
+
+body.cyber-theme #forecast-algorithm-select option {
+  background: #0f172a !important;
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   Modalized Medicine Selection Styling
+   ========================================================================== */
+
+.forecast-med-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #e2e8f0);
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-bottom: 0.45rem;
+  user-select: none;
+}
+
+.forecast-med-item:hover {
+  border-color: #00a896;
+  background: #f0fdfa;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 168, 150, 0.1);
+}
+
+.forecast-med-item.is-selected {
+  border-color: #00a896;
+  background: rgba(0, 168, 150, 0.05);
+}
+
+.forecast-med-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #00a896;
+}
+
+/* Cyber-Deck (Dark) Theme Overrides */
+body.cyber-theme .forecast-med-item {
+  background: rgba(15, 23, 42, 0.9) !important;
+  border-color: rgba(0, 242, 254, 0.2) !important;
+  color: #f1f5f9 !important;
+}
+
+body.cyber-theme .forecast-med-item:hover {
+  background: rgba(15, 23, 42, 0.98) !important;
+  border-color: #00f2fe !important;
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.2) !important;
+}
+
+body.cyber-theme .forecast-med-item.is-selected {
+  background: rgba(0, 242, 254, 0.08) !important;
+  border-color: #00f2fe !important;
+}
+
+body.cyber-theme .forecast-med-item input[type="checkbox"] {
+  accent-color: #00f2fe !important;
+}
+
+body.cyber-theme #swal-med-actions-bar {
+  background: rgba(10, 16, 30, 0.9) !important;
+  border-color: rgba(0, 242, 254, 0.2) !important;
+}
+
+body.cyber-theme #swal-med-search,
+body.cyber-theme #swal-med-cat-filter {
+  background-color: rgba(10, 16, 30, 0.95) !important;
+  border-color: rgba(0, 242, 254, 0.25) !important;
+  color: #f1f5f9 !important;
+}
+
+body.cyber-theme #swal-med-search::placeholder {
+  color: #64748b !important;
+}
+
+
+
+
 

@@ -13,6 +13,8 @@ $filter = $_GET['filter'] ?? 'all';
 $search = $_GET['search'] ?? '';
 
 function formatProductRow(array $p): array {
+    $p['id'] = (int)$p['id'];
+    $p['stock'] = (int)($p['stock'] ?? 0);
     $p['category_name'] = $p['category_name'] ?? ($p['category'] ?? 'General');
     $p['category'] = $p['category_name'];
     $p['genericName'] = $p['generic_name'] ?? '';
@@ -23,13 +25,16 @@ function formatProductRow(array $p): array {
     $p['expiryDate'] = $p['expiry_date'] ?? '';
     $p['isBulk'] = !empty($p['is_bulk']);
     $p['conversionRate'] = (int)($p['conversion_rate'] ?? 1);
+    $p['childProductId'] = !empty($p['child_product_id']) ? (int)$p['child_product_id'] : null;
     return $p;
 }
 
 try {
     if ($productId > 0) {
         $stmt = $pdo->prepare("
-            SELECT p.*, COALESCE(c.name, p.category, 'General') as category_name 
+            SELECT p.*, 
+                   COALESCE((SELECT SUM(inv.quantity) FROM inventory inv WHERE inv.product_id = p.id), p.stock) as stock,
+                   COALESCE(c.name, p.category, 'General') as category_name 
             FROM products p 
             LEFT JOIN categories c ON p.category_id = c.id 
             WHERE p.id = ?
@@ -49,7 +54,9 @@ try {
         }
     }
 
-    $sql = "SELECT p.*, COALESCE(c.name, p.category, 'General') as category_name 
+    $sql = "SELECT p.*, 
+                   COALESCE((SELECT SUM(inv.quantity) FROM inventory inv WHERE inv.product_id = p.id), p.stock) as stock,
+                   COALESCE(c.name, p.category, 'General') as category_name 
             FROM products p 
             LEFT JOIN categories c ON p.category_id = c.id 
             WHERE 1=1";

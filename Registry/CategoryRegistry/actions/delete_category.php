@@ -16,10 +16,29 @@ if (!$id) {
 }
 
 try {
+    $stmt = $pdo->prepare("SELECT name FROM categories WHERE id = ?");
+    $stmt->execute([$id]);
+    $cat = $stmt->fetch();
+
+    if (!$cat) {
+        jsonResponse(['success' => false, 'error' => 'Category not found.'], 404);
+    }
+
+    $pStmt = $pdo->prepare("SELECT COUNT(*) FROM products WHERE category = ?");
+    $pStmt->execute([$cat['name']]);
+    $inUseCount = (int)$pStmt->fetchColumn();
+
+    if ($inUseCount > 0) {
+        jsonResponse([
+            'success' => false, 
+            'error' => "Cannot delete '{$cat['name']}' because {$inUseCount} product(s) are currently categorized under it. Please reassign those products first."
+        ], 409);
+    }
+
     $stmt = $pdo->prepare("DELETE FROM categories WHERE id = ?");
     $stmt->execute([$id]);
 
-    jsonResponse(['success' => true, 'message' => 'Category deleted successfully.']);
+    jsonResponse(['success' => true, 'message' => "Category '{$cat['name']}' deleted successfully."]);
 } catch (Exception $e) {
     jsonResponse(['success' => false, 'error' => $e->getMessage()], 500);
 }

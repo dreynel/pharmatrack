@@ -18,17 +18,12 @@ if (!$id) {
 try {
     $pdo->beginTransaction();
 
-    // 1. Fetch items to reverse stock
-    $itemStmt = $pdo->prepare("SELECT product_id, quantity FROM stock_in_items WHERE stock_in_id = ?");
-    $itemStmt->execute([$id]);
-    $items = $itemStmt->fetchAll();
+    $pStmt = $pdo->prepare("SELECT ref_no FROM stock_ins WHERE id = ? LIMIT 1");
+    $pStmt->execute([$id]);
+    $refNo = $pStmt->fetchColumn() ?: null;
 
-    $revertStmt = $pdo->prepare("UPDATE products SET stock = GREATEST(0, stock - ?) WHERE id = ?");
-    foreach ($items as $item) {
-        if (!empty($item['product_id']) && $item['quantity'] > 0) {
-            $revertStmt->execute([$item['quantity'], $item['product_id']]);
-        }
-    }
+    // 1. Remove StockIn entries from `inventory` ledger and recalculate product stock balances
+    deleteInventoryEntries($pdo, 'StockIn', $id, $refNo);
 
     // 2. Delete parent (cascade deletes children)
     $delStmt = $pdo->prepare("DELETE FROM stock_ins WHERE id = ?");

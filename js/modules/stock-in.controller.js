@@ -84,29 +84,25 @@ class StockInController {
     this.currentLogs = filtered;
 
     if (filtered.length === 0) {
-      container.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-5"><i class="ri-inbox-archive-line fs-1 d-block mb-2 text-secondary opacity-50"></i>No Stock In receipts found matching your query.</td></tr>`;
+      container.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-5">No documents found.</td></tr>`;
       if (docContainer) {
         docContainer.innerHTML = `
           <div class="doc-empty-state">
-            <i class="ri-file-download-line"></i>
-            <h4>No Shipment Selected</h4>
-            <p>Click on any delivery receipt on the right to inspect its itemized batch breakdown, or record a new delivery receipt.</p>
-            <button class="btn btn-sm btn-primary" onclick="window.stockInController.handleStockInModal()">
-              <i class="ri-add-line"></i> Receive New Shipment
-            </button>
+            <i class="ri-file-text-line"></i>
+            <h4>No Document Selected</h4>
+            <p>Select a document from the list on the left.</p>
           </div>
         `;
       }
       return;
     }
 
-    // Auto-select first item if current selection is invalid or null
     const hasSelection = filtered.some(l => String(l.id || l.ref_no || l.refNo) === String(this.selectedLogId));
     if (!hasSelection) {
       this.selectedLogId = filtered[0].id || filtered[0].ref_no || filtered[0].refNo;
     }
 
-    // Render Right Panel: Table of Shipments (Main Parent Records List)
+    // Left Panel: Clean 4-column Parent Documents List
     container.innerHTML = filtered.map(log => {
       const logKey = log.id || log.ref_no || log.refNo;
       const isSelected = String(logKey) === String(this.selectedLogId);
@@ -114,92 +110,48 @@ class StockInController {
       const refNo = log.ref_no || log.refNo || 'N/A';
       const supplierName = log.supplier_name || log.supplierName || 'General Distributor';
       const totalAmount = Number(log.total_amount ?? log.totalAmount ?? log.total_cost ?? 0);
-      const receivedBy = log.received_by || log.receivedBy || 'Pharmacist';
 
       return `
         <tr class="stock-selectable-row ${isSelected ? 'active-stock-row' : ''}" 
             data-log-id="${logKey}"
-            onclick="window.stockInController.selectRecord('${logKey}')"
-            title="Click to view children batches and receipt details in left panel">
-          <td class="py-2 px-3">
-            <div class="d-flex align-items-center gap-2 flex-wrap">
-              <span class="font-monospace fw-bold text-primary">${this.escapeHtml(refNo)}</span>
-              <span class="stock-active-badge-slot">
-                ${isSelected ? '<span class="stock-active-badge stock-active-badge-in">← Viewing</span>' : ''}
-              </span>
-            </div>
+            onclick="window.stockInController.selectRecord('${logKey}')">
+          <td>
+            <div class="font-monospace fw-bold text-dark">${this.escapeHtml(refNo)}</div>
+            <small class="text-muted">${this.escapeHtml(log.date)}</small>
           </td>
-          <td class="small text-muted py-2 px-3 text-nowrap">${log.date}</td>
-          <td class="py-2 px-3">
-            <span class="small fw-semibold text-dark text-truncate d-inline-block" style="max-width: 170px;" title="${this.escapeHtml(supplierName)}">
+          <td>
+            <div class="text-truncate" style="max-width: 160px;" title="${this.escapeHtml(supplierName)}">
               ${this.escapeHtml(supplierName)}
-            </span>
-          </td>
-          <td class="py-2 px-3 fw-bold small text-primary text-nowrap">
-            ₱${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </td>
-          <td class="py-2 px-3 small text-dark font-medium text-nowrap">
-            ${this.escapeHtml(receivedBy)}
-          </td>
-          <td class="py-2 px-2 text-end text-nowrap" onclick="event.stopPropagation()">
-            <div class="btn-group btn-group-sm">
-              <button type="button" class="btn btn-outline-secondary btn-sm py-1 px-2" title="Edit Parent Shipment" onclick="window.stockInController.editSelectedRecord('${logKey}')">
-                <i class="ri-edit-line"></i>
-              </button>
-              <button type="button" class="btn btn-outline-danger btn-sm py-1 px-2" title="Delete Shipment (Reverse Stock)" onclick="window.stockInController.deleteSelectedRecord('${logKey}')">
-                <i class="ri-delete-bin-line"></i>
-              </button>
             </div>
+          </td>
+          <td class="text-center text-muted">${items.length}</td>
+          <td class="text-end fw-semibold text-nowrap">
+            ₱${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </td>
         </tr>
       `;
     }).join('');
 
-    // Render Left Panel: Active Parent Document & Children Details
+    // Right Panel: Minimal Short Bond Paper Document Sheet
     const activeLog = filtered.find(l => String(l.id || l.ref_no || l.refNo) === String(this.selectedLogId)) || filtered[0];
     this.renderDocumentSlip(activeLog);
   }
 
-  /**
-   * Fast, in-memory record selector:
-   * Instantly highlights the clicked parent in the right table and updates the children on the left without API refetch!
-   */
   selectRecord(id) {
     if (String(this.selectedLogId) === String(id)) return;
     this.selectedLogId = id;
 
-    // 1. Instantly update active highlight in the right panel table
     const tableBody = document.getElementById('stockin-table-body');
     if (tableBody) {
       tableBody.querySelectorAll('tr.stock-selectable-row').forEach(row => {
         const rowId = row.getAttribute('data-log-id');
-        const isActive = String(rowId) === String(id);
-        if (isActive) {
-          row.classList.add('active-stock-row');
-          const badgeSlot = row.querySelector('.stock-active-badge-slot');
-          if (badgeSlot) {
-            badgeSlot.innerHTML = `<span class="stock-active-badge stock-active-badge-in">← Viewing</span>`;
-          }
-        } else {
-          row.classList.remove('active-stock-row');
-          const badgeSlot = row.querySelector('.stock-active-badge-slot');
-          if (badgeSlot) {
-            badgeSlot.innerHTML = '';
-          }
-        }
+        row.classList.toggle('active-stock-row', String(rowId) === String(id));
       });
     }
 
-    // 2. Instantly render the left panel details per selected parent
     const selectedLog = this.currentLogs.find(l => String(l.id || l.ref_no || l.refNo) === String(id));
     if (selectedLog) {
       this.renderDocumentSlip(selectedLog);
-    }
-
-    // 3. Smooth scroll to left panel if on mobile/small stacked screens
-    const docContainer = document.getElementById('stockin-document-container');
-    if (docContainer && window.innerWidth < 1200) {
-      docContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }
 
@@ -210,12 +162,9 @@ class StockInController {
     if (!log) {
       container.innerHTML = `
         <div class="doc-empty-state">
-          <i class="ri-file-download-line"></i>
-          <h4>No Shipment Selected</h4>
-          <p>Click on any delivery receipt on the right to inspect its itemized batch breakdown.</p>
-          <button class="btn btn-sm btn-primary" onclick="window.stockInController.handleStockInModal()">
-            <i class="ri-add-line"></i> Receive New Shipment
-          </button>
+          <i class="ri-file-text-line"></i>
+          <h4>No Document Selected</h4>
+          <p>Select a document from the list on the left.</p>
         </div>
       `;
       return;
@@ -232,7 +181,7 @@ class StockInController {
     const notes = log.notes || log.remarks || '';
     const logKey = log.id || log.ref_no || log.refNo;
 
-    const itemsRows = items.map((item, idx) => {
+    const itemsRows = items.map(item => {
       const name = item.product_name || item.name || 'Unnamed Product';
       const qty = Number(item.quantity ?? item.qty ?? 0);
       const cost = Number(item.cost_price ?? item.costPrice ?? item.cost ?? 0);
@@ -242,169 +191,75 @@ class StockInController {
 
       return `
         <tr>
-          <td class="text-center text-muted fw-bold">${idx + 1}</td>
           <td>
-            <strong class="text-dark d-block text-truncate" style="max-width: 180px;">${this.escapeHtml(name)}</strong>
-            <small class="text-muted d-flex align-items-center gap-1 mt-0.5">
-              <i class="ri-qr-code-line text-secondary"></i> Batch: <code class="font-monospace text-primary bg-light px-1 py-0.5 rounded border border-light-subtle">${this.escapeHtml(batchNo)}</code>
-            </small>
+            <div class="fw-semibold text-dark">${this.escapeHtml(name)}</div>
+            <small class="text-muted">Batch: ${this.escapeHtml(batchNo)} · Exp: ${this.escapeHtml(expiryDate)}</small>
           </td>
-          <td class="text-nowrap">
-            <span class="badge bg-light text-secondary border">
-              <i class="ri-calendar-line"></i> ${this.escapeHtml(expiryDate)}
-            </span>
-          </td>
-          <td class="text-center text-nowrap">
-            <span class="badge bg-success-subtle text-success border border-success-subtle fw-bold">
-              +${qty}
-            </span>
-          </td>
-          <td class="text-end text-muted text-nowrap">₱${cost.toFixed(2)}</td>
-          <td class="text-end fw-bold text-dark text-nowrap">₱${lineTotal.toFixed(2)}</td>
+          <td class="text-center fw-semibold">+${qty}</td>
+          <td class="text-end text-muted">₱${cost.toFixed(2)}</td>
+          <td class="text-end fw-semibold">₱${lineTotal.toFixed(2)}</td>
         </tr>
       `;
     }).join('');
 
     container.innerHTML = `
       <div class="doc-slip">
-        <!-- Document Parent Header & Action Toolbar -->
         <div class="doc-header">
-          <div class="doc-header-title">
-            <div class="doc-header-badges">
-              <span class="badge bg-primary-subtle text-primary border border-primary-subtle text-uppercase fw-bold">
-                Parent DR #${this.escapeHtml(refNo)}
-              </span>
-              <span class="badge bg-success-subtle text-success border border-success-subtle">
-                <i class="ri-checkbox-circle-fill"></i> Goods Received
-              </span>
-            </div>
-            <h4>
-              <i class="ri-file-check-line text-primary"></i> Delivery Receipt Voucher
-            </h4>
+          <div>
+            <h4>${this.escapeHtml(refNo)}</h4>
+            <div class="doc-header-sub">${this.escapeHtml(date)}</div>
           </div>
-
-          <!-- Parent Action Buttons: Add, Edit, Delete -->
           <div class="doc-actions-toolbar">
-            <button 
-              type="button"
-              class="btn btn-sm btn-outline-primary"
-              title="Add New Delivery Receipt"
-              onclick="window.stockInController.handleStockInModal()"
-            >
-              <i class="ri-add-line"></i> Add New
+            <button type="button" class="doc-icon-btn" title="Print" onclick="window.stockInController.printSlip('${logKey}')">
+              <i class="ri-printer-line"></i>
             </button>
-            <button 
-              type="button"
-              class="btn btn-sm btn-outline-secondary"
-              title="Edit Parent Shipment Details"
-              onclick="window.stockInController.editSelectedRecord('${logKey}')"
-            >
-              <i class="ri-edit-line"></i> Edit
+            <button type="button" class="doc-icon-btn" title="Edit" onclick="window.stockInController.editSelectedRecord('${logKey}')">
+              <i class="ri-edit-line"></i>
             </button>
-            <button 
-              type="button"
-              class="btn btn-sm btn-outline-danger"
-              title="Delete This Shipment (Reverse Inventory)"
-              onclick="window.stockInController.deleteSelectedRecord('${logKey}')"
-            >
-              <i class="ri-delete-bin-line"></i> Delete
+            <button type="button" class="doc-icon-btn danger" title="Delete" onclick="window.stockInController.deleteSelectedRecord('${logKey}')">
+              <i class="ri-delete-bin-line"></i>
             </button>
           </div>
         </div>
 
-        <!-- Document Parent Metadata Grid (Bootstrap Grid) -->
-        <div class="row g-2 p-3 bg-light rounded-3 border mb-3">
-          <div class="col-6">
-            <div class="doc-meta-item">
-              <label>DR / Reference #</label>
-              <div class="doc-meta-code">${this.escapeHtml(refNo)}</div>
-            </div>
+        <div class="doc-meta-box">
+          <div class="doc-meta-item">
+            <label>Supplier</label>
+            <div class="doc-meta-val">${this.escapeHtml(supplierName)}</div>
           </div>
-          <div class="col-6">
-            <div class="doc-meta-item">
-              <label>Date Received</label>
-              <div class="doc-meta-val">${this.escapeHtml(date)}</div>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="doc-meta-item">
-              <label>Supplier / Distributor</label>
-              <div class="doc-meta-val text-truncate" title="${this.escapeHtml(supplierName)}">${this.escapeHtml(supplierName)}</div>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="doc-meta-item">
-              <label>Received & Inspected By</label>
-              <div class="doc-meta-val">${this.escapeHtml(receivedBy)}</div>
-            </div>
+          <div class="doc-meta-item">
+            <label>Received By</label>
+            <div class="doc-meta-val">${this.escapeHtml(receivedBy)}</div>
           </div>
           ${notes ? `
-          <div class="col-12 pt-2 border-top">
+          <div class="doc-meta-notes">
             <div class="doc-meta-item">
-              <label>Remarks / Verification Note</label>
+              <label>Remarks</label>
               <div class="small text-muted">${this.escapeHtml(notes)}</div>
             </div>
           </div>
           ` : ''}
         </div>
 
-        <!-- Children Line Items Section (Highlighting Parent-Child Hierarchy) -->
-        <div class="mb-3">
-          <div class="doc-section-title">
-            <strong>
-              <i class="ri-git-commit-line text-primary"></i> Children Line Items (${totalItems})
-            </strong>
-            <span class="badge bg-success-subtle text-success border border-success-subtle">
-              +${totalUnits} units total
-            </span>
-          </div>
-
-          <div class="doc-items-table-wrapper">
-            <table class="doc-items-table">
-              <thead>
-                <tr>
-                  <th class="text-center" style="width: 35px;">#</th>
-                  <th>Medicine & Batch</th>
-                  <th>Expiry</th>
-                  <th class="text-center">Qty</th>
-                  <th class="text-end">Cost</th>
-                  <th class="text-end">Subtotal</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${itemsRows || '<tr><td colspan="6" class="text-center py-4 text-muted">No items attached to this receipt</td></tr>'}
-              </tbody>
-            </table>
-          </div>
+        <div class="doc-items-table-wrapper">
+          <table class="doc-items-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th class="text-center">Qty</th>
+                <th class="text-end">Cost</th>
+                <th class="text-end">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsRows || '<tr><td colspan="4" class="text-center py-4 text-muted">No items</td></tr>'}
+            </tbody>
+          </table>
         </div>
 
-        <!-- Grand Total Summary Bar -->
-        <div class="doc-valuation-card">
-          <div>
-            <div class="doc-val-label">Total Delivery Valuation</div>
-            <div class="doc-val-subtitle">${totalItems} line items · ${totalUnits} total units received</div>
-          </div>
-          <div class="doc-val-amount">
-            ₱${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </div>
-        </div>
-
-        <!-- Document Footer Actions -->
-        <div class="doc-footer-actions">
-          <button 
-            type="button"
-            class="btn btn-sm btn-outline-secondary" 
-            onclick="window.stockInController.printSlip('${logKey}')"
-          >
-            <i class="ri-printer-line"></i> Print Receiving Slip
-          </button>
-          <button 
-            type="button"
-            class="btn btn-sm btn-primary" 
-            onclick="window.stockInController.viewModalDetails('${logKey}')"
-          >
-            <i class="ri-zoom-in-line"></i> Full Slip Dialog
-          </button>
+        <div class="doc-bottom-sheet-footer">
+          <div class="doc-bottom-meta">${totalItems} ${totalItems === 1 ? 'item' : 'items'} (${totalUnits} units)</div>
+          <div class="doc-bottom-total">Total: ₱${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
         </div>
       </div>
     `;
@@ -416,13 +271,17 @@ class StockInController {
 
     const result = await SwalHelpers.showStockInModal(products, suppliers);
     if (result.isConfirmed && result.value) {
-      await window.mockApi.processStockIn(result.value);
-      this.selectedLogId = result.value.refNo || result.value.ref_no;
-      SwalHelpers.toast(`Stock In recorded: ${this.selectedLogId}`, 'success');
-      if (window.appController) {
-        await window.appController.refreshAllModules();
-      } else {
-        await this.render();
+      try {
+        const saved = await window.mockApi.processStockIn(result.value);
+        this.selectedLogId = saved?.id || saved?.stock_in_id || result.value.refNo || result.value.ref_no;
+        SwalHelpers.toast(`Stock In Document recorded: ${result.value.refNo || result.value.ref_no}`, 'success');
+        if (window.appController) {
+          await window.appController.refreshAllModules();
+        } else {
+          await this.render();
+        }
+      } catch (err) {
+        Swal.fire({ icon: 'error', title: 'Stock In Failed', text: err?.message || 'Could not record delivery receipt' });
       }
     }
   }
@@ -432,14 +291,17 @@ class StockInController {
     const log = this.currentLogs.find(l => String(l.id || l.ref_no || l.refNo) === String(logId));
     if (!log) return;
 
-    const suppliers = await window.mockApi.getSuppliers();
-    const result = await SwalHelpers.showEditStockInParentModal(log, suppliers);
+    const [suppliers, products] = await Promise.all([
+      window.mockApi.getSuppliers(),
+      window.mockApi.getProducts()
+    ]);
+    const result = await SwalHelpers.showEditStockInParentModal(log, suppliers, products);
 
     if (result.isConfirmed && result.value) {
       try {
-        await window.mockApi.updateStockIn(log.id || log.ref_no || log.refNo, result.value);
-        this.selectedLogId = result.value.refNo || result.value.ref_no || log.id;
-        SwalHelpers.toast(`Shipment #${this.selectedLogId} updated successfully!`, 'success');
+        await window.mockApi.updateStockIn(log.id, result.value);
+        this.selectedLogId = log.id;
+        SwalHelpers.toast(`Document #${result.value.refNo || log.refNo} & children updated!`, 'success');
         if (window.appController) {
           await window.appController.refreshAllModules();
         } else {
@@ -493,7 +355,7 @@ class StockInController {
       <tr style="border-bottom: 1px solid #f1f5f9;">
         <td style="padding: 0.6rem 0.75rem; text-align: center; color: #94a3b8;">${i + 1}</td>
         <td style="padding: 0.6rem 0.75rem;">
-          <strong style="color: #0f172a;">${this.escapeHtml(item.product_name || item.name || 'Unnamed')}</strong><br>
+          <strong style="color: var(--text-main, #0f172a);">${this.escapeHtml(item.product_name || item.name || 'Unnamed')}</strong><br>
           <small style="color: #64748b;">Batch: <code style="font-family: monospace; color: #00a896;">${this.escapeHtml(item.batch_no || item.batchNo || 'N/A')}</code> | Exp: ${this.escapeHtml(item.expiry_date || item.expiryDate || 'N/A')}</small>
         </td>
         <td style="padding: 0.6rem 0.75rem; text-align: center; font-weight: 700; color: #00a896;">+${item.quantity ?? item.qty ?? 0}</td>
@@ -509,10 +371,10 @@ class StockInController {
 
     Swal.fire({
       title: `📄 Delivery Receipt: ${ref}`,
-      width: '700px',
+      width: '980px',
       html: `
         <div style="text-align: left; font-size: 0.88rem;">
-          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem; margin-bottom: 1.25rem;">
+          <div style="background: var(--bg-card-hover, #f8fafc); border: 1px solid var(--border-color, #e2e8f0); border-radius: 12px; padding: 1rem; margin-bottom: 1.25rem;">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
               <div><strong>Supplier:</strong> ${this.escapeHtml(sup)}</div>
               <div><strong>Date:</strong> ${log.date}</div>
@@ -522,7 +384,7 @@ class StockInController {
             ${log.notes || log.remarks ? `<div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed #cbd5e1; font-size: 0.8rem; color: #64748b;"><strong>Notes:</strong> ${this.escapeHtml(log.notes || log.remarks)}</div>` : ''}
           </div>
 
-          <h4 style="font-size: 0.95rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main, #0f172a); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
             <i class="ri-list-check" style="color: #00a896;"></i> Children Line Items Received (${items.length}):
           </h4>
 
